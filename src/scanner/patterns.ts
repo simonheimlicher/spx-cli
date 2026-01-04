@@ -21,14 +21,17 @@ const MAX_BSP_NUMBER = 99;
 /**
  * Parse a work item directory name into structured data
  *
- * @param dirName - Directory name to parse (e.g., "capability-21_core-cli")
- * @returns Parsed work item with kind, number (0-indexed), and slug
+ * @param dirName - Directory name to parse
+ * @returns Parsed work item with kind, number, and slug
  * @throws Error if the directory name doesn't match the pattern or BSP number is invalid
  *
  * @example
  * ```typescript
  * parseWorkItemName("capability-21_core-cli")
  * // Returns: { kind: "capability", number: 20, slug: "core-cli" }
+ *
+ * parseWorkItemName("feature-21_pattern-matching")
+ * // Returns: { kind: "feature", number: 21, slug: "pattern-matching" }
  * ```
  */
 export function parseWorkItemName(dirName: string): WorkItem {
@@ -37,7 +40,7 @@ export function parseWorkItemName(dirName: string): WorkItem {
   if (!match) {
     throw new Error(
       `Invalid work item name: "${dirName}". Expected format: {kind}-{number}_{slug} ` +
-        `(e.g., "capability-21_core-cli")`
+        `(e.g., "capability-21_core-cli", "feature-21_pattern-matching")`
     );
   }
 
@@ -52,10 +55,13 @@ export function parseWorkItemName(dirName: string): WorkItem {
     );
   }
 
-  // Return with 0-indexed number (directory number - 1)
+  // Capabilities use 0-indexed numbers (directory number - 1)
+  // Features and stories use directory number as-is
+  const number = kind === "capability" ? bspNumber - 1 : bspNumber;
+
   return {
     kind,
-    number: bspNumber - 1,
+    number,
     slug,
   };
 }

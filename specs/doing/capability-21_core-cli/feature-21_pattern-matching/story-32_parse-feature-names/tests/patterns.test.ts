@@ -1,61 +1,9 @@
 /**
- * Level 1: Pure function tests for pattern matching
- * Stories: story-21_parse-capability-names, story-32_parse-feature-names
+ * Level 1: Pure function tests for feature pattern matching
+ * Story: story-32_parse-feature-names
  */
 import { describe, it, expect } from "vitest";
 import { parseWorkItemName } from "@/scanner/patterns";
-
-describe("parseWorkItemName - Capabilities", () => {
-  it("GIVEN valid capability name WHEN parsing THEN extracts kind, number, and slug", () => {
-    // Given
-    const dirName = "capability-21_core-cli";
-
-    // When
-    const result = parseWorkItemName(dirName);
-
-    // Then
-    expect(result).toEqual({
-      kind: "capability",
-      number: 20,
-      slug: "core-cli",
-    });
-  });
-
-  it("GIVEN capability with multi-word slug WHEN parsing THEN preserves kebab-case", () => {
-    // Given
-    const dirName = "capability-30_mcp-server-integration";
-
-    // When
-    const result = parseWorkItemName(dirName);
-
-    // Then
-    expect(result.slug).toBe("mcp-server-integration");
-  });
-
-  it("GIVEN capability with uppercase letters WHEN parsing THEN rejects pattern", () => {
-    // Given
-    const dirName = "capability-21_CoreCLI";
-
-    // When/Then
-    expect(() => parseWorkItemName(dirName)).toThrow("Invalid work item name");
-  });
-
-  it("GIVEN capability with invalid number WHEN parsing THEN rejects pattern", () => {
-    // Given
-    const dirName = "capability-5_too-low";
-
-    // When/Then
-    expect(() => parseWorkItemName(dirName)).toThrow("BSP number must be between 10 and 99");
-  });
-
-  it("GIVEN non-capability pattern WHEN parsing THEN returns error", () => {
-    // Given
-    const dirName = "random-directory";
-
-    // When/Then
-    expect(() => parseWorkItemName(dirName)).toThrow("Invalid work item name");
-  });
-});
 
 describe("parseWorkItemName - Features", () => {
   it("GIVEN valid feature name WHEN parsing THEN extracts kind, number, and slug", () => {
