@@ -30,7 +30,7 @@
 git add .
 
 # ✅ ALWAYS do this - stage only files related to your specific change
-git add src/scanner/patterns.ts test/unit/scanner/patterns.test.ts
+git add src/scanner/patterns.ts tests/unit/scanner/patterns.test.ts
 ```
 
 **Staging Rules:**
@@ -78,18 +78,18 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 ## Commit Types
 
-| Type         | Purpose                                        | SemVer Impact | Examples                                              |
-| ------------ | ---------------------------------------------- | ------------- | ----------------------------------------------------- |
-| **feat**     | New capability                                 | MINOR         | `feat: add work item scanner with pattern matching`   |
-| **fix**      | Bug fix                                        | PATCH         | `fix: handle missing tests directory gracefully`      |
-| **docs**     | Documentation changes                          | PATCH         | `docs: update CLI usage examples`                     |
-| **style**    | Code formatting (no logic change)              | PATCH         | `style: apply prettier formatting`                    |
-| **refactor** | Code restructure, architecture improvements    | PATCH         | `refactor: extract status logic into separate module` |
-| **perf**     | Performance improvements                       | PATCH         | `perf: optimize directory scanning with caching`      |
-| **test**     | Add or modify tests                            | PATCH         | `test: add integration tests for scanner`             |
-| **ci**       | CI/CD pipeline changes                         | PATCH         | `ci: add GitHub Actions workflow`                     |
-| **build**    | Build system or dependencies                   | PATCH         | `build: add zod dependency for config validation`     |
-| **ctx**      | Context, workflow, AI/human collaboration      | PATCH         | `ctx: add BSP numbering guidance to structure doc`    |
+| Type         | Purpose                                     | SemVer Impact | Examples                                              |
+| ------------ | ------------------------------------------- | ------------- | ----------------------------------------------------- |
+| **feat**     | New capability                              | MINOR         | `feat: add work item scanner with pattern matching`   |
+| **fix**      | Bug fix                                     | PATCH         | `fix: handle missing tests directory gracefully`      |
+| **docs**     | Documentation changes                       | PATCH         | `docs: update CLI usage examples`                     |
+| **style**    | Code formatting (no logic change)           | PATCH         | `style: apply prettier formatting`                    |
+| **refactor** | Code restructure, architecture improvements | PATCH         | `refactor: extract status logic into separate module` |
+| **perf**     | Performance improvements                    | PATCH         | `perf: optimize directory scanning with caching`      |
+| **test**     | Add or modify tests                         | PATCH         | `test: add integration tests for scanner`             |
+| **ci**       | CI/CD pipeline changes                      | PATCH         | `ci: add GitHub Actions workflow`                     |
+| **build**    | Build system or dependencies                | PATCH         | `build: add zod dependency for config validation`     |
+| **ctx**      | Context, workflow, AI/human collaboration   | PATCH         | `ctx: add BSP numbering guidance to structure doc`    |
 
 ## Type Selection Guidelines
 

@@ -16,14 +16,14 @@ You are the **orchestrating agent** for spx development. Your job is to coordina
 
 ## 🚨 Test Location Rule (Read This First)
 
-> **The production test suite (`test/`) MUST ALWAYS PASS.**
+> **The production test suite (`tests/`) MUST ALWAYS PASS.**
 
-| Writing new tests?       | Location             | May fail? |
-| ------------------------ | -------------------- | --------- |
-| New functionality (TDD)  | `specs/.../tests/`   | YES       |
-| After graduation (DONE)  | `test/`              | NO        |
+| Writing new tests?      | Location           | May fail? |
+| ----------------------- | ------------------ | --------- |
+| New functionality (TDD) | `specs/.../tests/` | YES       |
+| After graduation (DONE) | `tests/`           | NO        |
 
-**Never write failing tests directly in `test/`** — it breaks CI.
+**Never write failing tests directly in `tests/`** — it breaks CI.
 Write progress tests in `specs/.../tests/`, graduate them when done.
 
 See `context/4-testing-standards.md` for details.
@@ -54,6 +54,21 @@ See `context/4-testing-standards.md` for details.
 | **typescript-reviewer**  | Review, graduate, complete   | When code is ready for verification    |
 
 > **Note**: `typescript-auto` is invoked via `/auto` or `/plan` commands, not directly.
+
+### How to Invoke Skills
+
+Use the Skill tool with the skill name. The `/` prefix indicates a skill invocation:
+
+```
+/spec-workflow           # Assess project state
+/typescript-architect    # Produce ADRs
+/typescript-coder        # Implement or fix code
+/typescript-reviewer     # Review code
+/auto                    # Autonomous mode (fire and forget)
+/plan                    # Plan mode (show plan, wait for confirmation)
+```
+
+**Example**: To invoke the spec-workflow skill, use the Skill tool with `skill: "spec-workflow"`.
 
 ### Skill Dependencies
 
@@ -292,11 +307,11 @@ Use `/plan` when:
 
 ## Work Item States
 
-| State           | `tests/` Directory         | What Happened    | Next Action                  |
-| --------------- | -------------------------- | ---------------- | ---------------------------- |
-| **OPEN**        | Missing or empty           | Work not started | typescript-coder (implement) |
-| **IN PROGRESS** | Has test files, no DONE.md | Work underway    | typescript-reviewer or coder |
-| **DONE**        | Has DONE.md                | Complete         | Move to next work item       |
+| State           | `tests/` Directory                   | What Happened                                 | Next Action                  |
+| --------------- | ------------------------------------ | --------------------------------------------- | ---------------------------- |
+| **OPEN**        | Missing OR empty (no files)          | Work not started                              | typescript-coder (implement) |
+| **IN PROGRESS** | Has \*.test.ts files, no DONE.md     | Work underway                                 | typescript-reviewer or coder |
+| **DONE**        | Has DONE.md (tests may be graduated) | Complete, tests passed and possibly graduated | Move to next work item       |
 
 ---
 
@@ -371,7 +386,7 @@ You do not mark work items complete—the reviewer does this as part of APPROVED
 | ---------------- | -------------------------------------------------- |
 | Source code      | `src/`                                             |
 | CLI entry point  | `bin/spx.js`                                       |
-| Tests            | `test/`                                            |
+| Tests            | `tests/`                                           |
 | Methodology docs | `context/`                                         |
 | Work items       | `specs/doing/`, `specs/backlog/`, `specs/archive/` |
 | Decisions        | `specs/decisions/` or within capability/feature    |

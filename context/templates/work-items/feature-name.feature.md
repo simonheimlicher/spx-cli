@@ -7,7 +7,7 @@
 ## Testing Strategy
 
 > Features require **Level 1 + Level 2** to prove the feature works with real tools.
-> See [4-testing-standards.md](../../4-testing-standards.md)` for level definitions.
+> See [4-testing-standards.md](/context/4-testing-standards.md) for level definitions.
 
 ### Level Assignment
 
@@ -27,7 +27,7 @@ These tests verify that **real tools work together** as expected.
 ### FI1: [Primary integration test]
 
 ```typescript
-// test/integration/[feature-name].integration.test.ts
+// tests/integration/[feature-name].integration.test.ts
 import { hugoAvailable } from "./conftest";
 
 describe.skipIf(!hugoAvailable())("Feature: [Name]", () => {

@@ -5,19 +5,19 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@test": path.resolve(__dirname, "./test"),
+      "@test": path.resolve(__dirname, "./tests"),
     },
   },
   test: {
     globals: true,
     environment: "node",
-    include: ["test/**/*.test.ts", "specs/**/*.test.ts"],
+    include: ["tests/**/*.test.ts", "specs/**/*.test.ts"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
       exclude: [
         "node_modules/",
-        "test/",
+        "tests/",
         "dist/",
         "**/*.test.ts",
         "**/*.config.ts",

@@ -40,18 +40,19 @@ export interface FileSystemDependencies {
   existsSync: typeof import("fs").existsSync;
 }
 
-export async function scanSpecsDirectory(
-  root: string,
-  deps: FileSystemDependencies
-): Promise<WorkItem[]> {
+export async function scanSpecsDirectory(root: string, deps: FileSystemDependencies): Promise<WorkItem[]> {
   const entries = await deps.readdir(root, { withFileTypes: true });
   // ...
 }
 
 // In tests: Pass controlled dependencies
 const mockDeps: FileSystemDependencies = {
-  readdir: async () => [/* controlled result */],
-  stat: async () => ({ /* controlled stats */ }),
+  readdir: async () => [
+    /* controlled result */
+  ],
+  stat: async () => ({
+    /* controlled stats */
+  }),
   existsSync: () => true,
 };
 
@@ -151,10 +152,7 @@ Use functions with explicit dependencies. Only use classes for custom Errors.
 
 ```typescript
 // ✅ CORRECT: Functions with dependency injection
-export async function determineStatus(
-  itemPath: string,
-  deps: FileSystemDependencies
-): Promise<WorkItemStatus> {
+export async function determineStatus(itemPath: string, deps: FileSystemDependencies): Promise<WorkItemStatus> {
   // ...
 }
 
@@ -187,12 +185,12 @@ export class ScannerService {
 
 ### Naming Conventions
 
-| Type             | Convention       | Example               |
-| ---------------- | ---------------- | --------------------- |
-| Files            | kebab-case       | `work-item.ts`        |
-| Types/Interfaces | PascalCase       | `WorkItemTree`        |
-| Functions        | camelCase        | `scanWorkItems`       |
-| Constants        | UPPER_SNAKE_CASE | `DEFAULT_SPECS_ROOT`  |
+| Type             | Convention       | Example              |
+| ---------------- | ---------------- | -------------------- |
+| Files            | kebab-case       | `work-item.ts`       |
+| Types/Interfaces | PascalCase       | `WorkItemTree`       |
+| Functions        | camelCase        | `scanWorkItems`      |
+| Constants        | UPPER_SNAKE_CASE | `DEFAULT_SPECS_ROOT` |
 
 ### Export Pattern
 

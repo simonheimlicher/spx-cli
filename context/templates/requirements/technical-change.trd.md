@@ -1,5 +1,12 @@
 # Technical Requirements Document (TRD)
 
+> **Purpose**: This is an unbounded "wishful thinking" catalyst, NOT a work item.
+>
+> - No size constraints, no state assessment (OPEN/IN PROGRESS/DONE)
+> - User evaluates value BEFORE decomposition begins
+> - Spawns sized work items (capabilities/features/stories) AFTER value confirmed
+> - Can exist at any level: project root, capability/, or feature/
+
 ## Status of this Document: DoR Checklist
 
 | DoR checkbox          | Description                                                         |
@@ -65,7 +72,7 @@ import { execa } from "execa";
 describe("Capability: [Name]", () => {
   it("GIVEN [precondition] WHEN [action] THEN [outcome]", async () => {
     // Given
-    const projectDir = "test/fixtures/sample-project";
+    const projectDir = "tests/fixtures/sample-project";
 
     // When
     const { exitCode, stdout } = await execa("npx", ["your-cli", "command"], { cwd: projectDir });

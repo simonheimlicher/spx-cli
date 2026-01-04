@@ -16,7 +16,7 @@ describe("walkDirectory", () => {
 
   it("GIVEN directory with subdirectories WHEN walking THEN returns all paths", async () => {
     // Given
-    const fixtureRoot = path.join(__dirname, "../../../../../../test/fixtures/simple-tree");
+    const fixtureRoot = path.join(__dirname, "../../../../../../tests/fixtures/simple-tree");
 
     // When
     const entries = await walkDirectory(fixtureRoot);
@@ -29,7 +29,7 @@ describe("walkDirectory", () => {
 
   it("GIVEN nested directory structure WHEN walking THEN discovers all levels", async () => {
     // Given
-    const fixtureRoot = path.join(__dirname, "../../../../../../test/fixtures/nested-tree");
+    const fixtureRoot = path.join(__dirname, "../../../../../../tests/fixtures/nested-tree");
 
     // When
     const entries = await walkDirectory(fixtureRoot);
@@ -42,7 +42,7 @@ describe("walkDirectory", () => {
 
   it("GIVEN empty directory WHEN walking THEN returns empty array", async () => {
     // Given
-    const fixtureRoot = path.join(__dirname, "../../../../../../test/fixtures/empty-dir");
+    const fixtureRoot = path.join(__dirname, "../../../../../../tests/fixtures/empty-dir");
 
     // When
     const entries = await walkDirectory(fixtureRoot);
@@ -61,7 +61,7 @@ describe("walkDirectory", () => {
 
   it("GIVEN directory WHEN walking THEN returns DirectoryEntry objects", async () => {
     // Given
-    const fixtureRoot = path.join(__dirname, "../../../../../../test/fixtures/simple-tree");
+    const fixtureRoot = path.join(__dirname, "../../../../../../tests/fixtures/simple-tree");
 
     // When
     const entries = await walkDirectory(fixtureRoot);

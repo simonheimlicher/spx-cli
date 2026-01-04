@@ -10,12 +10,12 @@
     "build": "tsup",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:unit": "vitest run test/unit",
-    "test:integration": "vitest run test/integration",
-    "test:e2e": "vitest run test/e2e",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "vitest run tests/e2e",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src test --ext .ts",
-    "lint:fix": "eslint src test --ext .ts --fix"
+    "lint": "eslint src tests --ext .ts",
+    "lint:fix": "eslint src tests --ext .ts --fix"
   },
   "keywords": [
     "cli",

@@ -14,16 +14,16 @@
 
 ## 🚨 Progress Tests vs Regression Tests
 
-> **CRITICAL INVARIANT: The production test suite (`test/`) MUST ALWAYS PASS.**
+> **CRITICAL INVARIANT: The production test suite (`tests/`) MUST ALWAYS PASS.**
 >
-> This is the deployment gate. A failing test in `test/` means undeployable code.
+> This is the deployment gate. A failing test in `tests/` means undeployable code.
 
 ### The Two Test Locations
 
 | Location           | Name                 | May Fail? | Purpose                                |
 | ------------------ | -------------------- | --------- | -------------------------------------- |
 | `specs/.../tests/` | **Progress tests**   | YES       | TDD red-green cycle during development |
-| `test/`            | **Regression tests** | NO        | Protect working functionality          |
+| `tests/`           | **Regression tests** | NO        | Protect working functionality          |
 
 ### Why This Matters
 
@@ -31,7 +31,7 @@
 
 1. Write failing test in `specs/.../tests/` (RED)
 2. Implement code until test passes (GREEN)
-3. Graduate test to `test/` when work item complete
+3. Graduate test to `tests/` when work item complete
 
 **Regression tests** protect the codebase:
 
@@ -41,9 +41,9 @@
 
 ### The Rule
 
-> **⚠️ NEVER write tests directly in `test/`**
+> **⚠️ NEVER write tests directly in `tests/`**
 >
-> Writing a failing test in `test/` breaks CI until implementation is complete.
+> Writing a failing test in `tests/` breaks CI until implementation is complete.
 > Always write progress tests in `specs/.../tests/` first, then graduate them.
 
 ### Quick Decision
@@ -51,8 +51,8 @@
 ```
 Am I implementing new functionality?
 ├── YES → Write test in specs/.../tests/ (progress test)
-│         Graduate to test/ when DONE
-└── NO  → Modify existing test in test/ (regression test)
+│         Graduate to tests/ when DONE
+└── NO  → Modify existing test in tests/ (regression test)
           Must stay GREEN
 ```
 
@@ -73,20 +73,20 @@ npm run test:watch
 npm run test:coverage
 
 # Run specific level
-npm test -- test/unit/           # Level 1 only
-npm test -- test/integration/    # Level 2 only
-npm test -- test/e2e/            # Level 3 only
+npm test -- tests/unit/           # Level 1 only
+npm test -- tests/integration/    # Level 2 only
+npm test -- tests/e2e/            # Level 3 only
 ```
 
 ---
 
 ## The 3 Levels
 
-| Level | Type        | Speed | Infrastructure                    | Location            |
-| ----- | ----------- | ----- | --------------------------------- | ------------------- |
-| **1** | Unit        | <50ms | Node.js only                      | `test/unit/`        |
-| **2** | Integration | <1s   | Real filesystem, temp directories | `test/integration/` |
-| **3** | E2E         | <30s  | Full CLI + fixture repos          | `test/e2e/`         |
+| Level | Type        | Speed | Infrastructure                    | Location             |
+| ----- | ----------- | ----- | --------------------------------- | -------------------- |
+| **1** | Unit        | <50ms | Node.js only                      | `tests/unit/`        |
+| **2** | Integration | <1s   | Real filesystem, temp directories | `tests/integration/` |
+| **3** | E2E         | <30s  | Full CLI + fixture repos          | `tests/e2e/`         |
 
 ### Level 1: Unit Tests
 
@@ -101,7 +101,7 @@ Verify our code logic is correct using:
 **What IS external**: Git (optional for incremental mode)
 
 ```typescript
-// test/unit/status/state.test.ts
+// tests/unit/status/state.test.ts
 describe("determineStatus", () => {
   it("GIVEN tests/DONE.md exists WHEN determining status THEN returns DONE", () => {
     const mockDeps = {
@@ -125,7 +125,7 @@ Verify real filesystem operations with temporary directories:
 - No external tools, no Git
 
 ```typescript
-// test/integration/scanner.integration.test.ts
+// tests/integration/scanner.integration.test.ts
 import { mkdtemp, writeFile, mkdir } from "fs/promises";
 import { tmpdir } from "os";
 import { join } from "path";
@@ -156,12 +156,12 @@ Verify complete workflows:
 - Performance validation (<100ms target)
 
 ```typescript
-// test/e2e/cli.e2e.test.ts
+// tests/e2e/cli.e2e.test.ts
 describe("CLI E2E", () => {
   it("GIVEN fixture repo WHEN running spx status --json THEN returns valid JSON in <100ms", async () => {
     const startTime = Date.now();
     const { stdout } = await execa("node", ["dist/bin/spx.js", "status", "--json"], {
-      cwd: "test/fixtures/sample-repo",
+      cwd: "tests/fixtures/sample-repo",
     });
     const elapsed = Date.now() - startTime;
 
@@ -339,7 +339,7 @@ it("GIVEN Git installed WHEN checking availability THEN git command works", asyn
 ## Test Organization
 
 ```
-test/
+tests/
 ├── unit/                    # Level 1: Pure functions, DI
 │   ├── scanner/
 │   │   ├── patterns.test.ts
@@ -387,7 +387,7 @@ test/
 If optional dependencies are introduced (like Git):
 
 ```typescript
-// test/integration/conftest.ts
+// tests/integration/conftest.ts
 import { execaSync } from "execa";
 
 export function gitAvailable(): boolean {
@@ -414,7 +414,7 @@ describe.skipIf(!gitAvailable())("Git Integration", () => {
 ### Test Constants
 
 ```typescript
-// test/fixtures/constants.ts
+// tests/fixtures/constants.ts
 export const TEST_SPECS_ROOT = "specs";
 export const TEST_DOING_PATH = "doing";
 
@@ -433,7 +433,7 @@ export const WORK_ITEM_PATTERNS = {
 ### Test Factories
 
 ```typescript
-// test/fixtures/factories.ts
+// tests/fixtures/factories.ts
 import { FIXTURE_CAPABILITIES } from "./constants";
 import { mkdir, writeFile } from "fs/promises";
 import { join } from "path";

@@ -30,7 +30,7 @@ THEN [expected outcome/behavior]
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See [4-testing-standards.md](../../4-testing-standards.md)` for level definitions.
+> See [4-testing-standards.md](/context/4-testing-standards.md) for level definitions.
 
 ### Level Assignment
 
@@ -54,7 +54,7 @@ If you find yourself needing real binaries, consider:
 ## Unit Tests (Level 1)
 
 ```typescript
-// test/unit/{module}/{file}.test.ts
+// tests/unit/{module}/{file}.test.ts
 import { describe, it, expect, vi } from "vitest";
 import { createTestConfig } from "../../fixtures/factories";
 

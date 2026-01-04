@@ -2,20 +2,23 @@
 
 ## Overview
 
-This workflow transforms a naive vision into validated, working code through three phases:
+This workflow transforms unbounded vision into validated, working code through a fractal decomposition process:
 
-1. **Requirements** (PRD/TRD) - Capture the vision
+1. **Requirements** (PRD/TRD) - Unbounded "wishful thinking" catalyst
 2. **Decisions** (ADR) - Constrain architecture
 3. **Work Items** (Capability/Feature/Story) - Sized, testable implementation
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      REQUIREMENTS                           │
-│  PRD (user-focused)              TRD (system-focused)       │
-│  "What users want"               "What system needs"        │
+│                   REQUIREMENTS (Catalyst)                   │
+│  PRD/TRD - Unbounded wishful thinking                       │
+│  "What if we could..." at ANY level                         │
+│  No tests, no size limit, no state assessment               │
 └─────────────────────────┬───────────────────────────────────┘
                           │
-                          ▼
+                          ▼ User evaluates value
+                          │
+                          ▼ Decomposition begins
 ┌─────────────────────────────────────────────────────────────┐
 │                       DECISIONS                             │
 │  ADR (architecture)                                         │
@@ -27,34 +30,47 @@ This workflow transforms a naive vision into validated, working code through thr
 │                      WORK ITEMS                             │
 │  Capability ──► Feature ──► Story                           │
 │  (E2E tests)   (Integration)  (Unit tests)                  │
+│  Sized, bounded, state-assessed (OPEN/IN PROGRESS/DONE)     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
+**Fractal Nature**: Requirements can spawn decomposition at any level:
+
+- Project-level TRD → Multiple capabilities
+- Capability-level PRD → Multiple features
+- Feature-level TRD → Multiple stories
+
 ---
 
-## Phase 1: Requirements (Vision)
+## Phase 1: Requirements (Catalyst)
 
-**PRD and TRD capture the vision without implementation constraints.**
+**PRD and TRD are unbounded "wishful thinking" that catalyze decomposition.**
 
 ### TRD - Technical Requirements Document
 
 - **Audience**: Developers, system designers
-- **Focus**: What the system needs to do
-- **Size**: Unbounded - can be any scope
-- **No tests** - it's just vision
+- **Focus**: What the system could do
+- **Size**: **Unbounded** - no size constraints
+- **No tests, no state assessment** - pure vision
+- **Location**: Anywhere decomposition begins (project root, capability/, feature/)
 
-Example:
+Example at capability level (`specs/doing/capability-21_core-cli/core-cli.prd.md`):
 
 ```
-The system must:
-- Build Hugo sites to temp directory for consistent measurement
-- Serve static files via Caddy for auditing
-- Run LHCI collect, assert, and upload commands
-- Support URL sets from configuration
-- Generate JSON reports with scores
+The system should provide instant spec status analysis:
+- Scan entire spec tree in <100ms
+- Deterministic classification based on tests/ directory state
+- Multiple output formats for humans and agents
+- Replace slow LLM-based status checks
 ```
 
 **Output**: A vision document that says WHAT and WHY, not HOW or WHEN.
+
+**Key Difference from Work Items**:
+
+- Requirements are NOT assessed via OPEN/IN PROGRESS/DONE
+- User evaluates value BEFORE committing to decomposition
+- Work items only created AFTER user decides requirements have value
 
 ---
 
@@ -88,11 +104,11 @@ Trade-off: Extra dependency for consistent behavior.
 
 ADRs can live at three levels:
 
-| Level          | Location                   | Example                                     |
-| -------------- | -------------------------- | ------------------------------------------- |
-| **Project**    | `specs/decisions/`         | "Use Zod for runtime validation"            |
-| **Capability** | `capability-NN/decisions/` | "Context-aware pattern discovery"           |
-| **Feature**    | `feature-NN/decisions/`    | "JSON output schema for MCP compatibility"  |
+| Level          | Location                   | Example                                    |
+| -------------- | -------------------------- | ------------------------------------------ |
+| **Project**    | `specs/decisions/`         | "Use Zod for runtime validation"           |
+| **Capability** | `capability-NN/decisions/` | "Context-aware pattern discovery"          |
+| **Feature**    | `feature-NN/decisions/`    | "JSON output schema for MCP compatibility" |
 
 Narrower scope inherits from broader. Stories don't have ADRs—they inherit from their parent feature
 and capability.
@@ -114,19 +130,19 @@ and capability.
 Write the E2E test FIRST:
 
 ```typescript
-describe('Capability: Core CLI', () => {
-  it('GIVEN spx installed WHEN running status command THEN returns accurate results', async () => {
+describe("Capability: Core CLI", () => {
+  it("GIVEN spx installed WHEN running status command THEN returns accurate results", async () => {
     // Given: Specs repository with work items
-    const repoDir = 'test/fixtures/sample-repo';
+    const repoDir = "tests/fixtures/sample-repo";
 
     // When: Run spx status
-    const { exitCode, stdout } = await execa('npx', ['spx', 'status', '--json'], {
+    const { exitCode, stdout } = await execa("npx", ["spx", "status", "--json"], {
       cwd: repoDir,
     });
 
     // Then: Status returned correctly
     expect(exitCode).toBe(0);
-    expect(JSON.parse(stdout)).toHaveProperty('summary');
+    expect(JSON.parse(stdout)).toHaveProperty("summary");
   });
 });
 ```
@@ -140,15 +156,15 @@ describe('Capability: Core CLI', () => {
 - **Definition**: When integration tests pass, feature is DONE
 
 ```typescript
-describe('Feature: LHCI Runner', () => {
-  it('GIVEN URL set configured WHEN running LHCI THEN audits each URL', async () => {
+describe("Feature: LHCI Runner", () => {
+  it("GIVEN URL set configured WHEN running LHCI THEN audits each URL", async () => {
     const config = createTestConfig({
-      url_sets: { critical: ['/', '/about/'] },
+      url_sets: { critical: ["/", "/about/"] },
     });
 
     const result = await runLhci(config, mockDeps);
 
-    expect(mockDeps.execa).toHaveBeenCalledWith('npx', ['lhci', 'collect'], expect.anything());
+    expect(mockDeps.execa).toHaveBeenCalledWith("npx", ["lhci", "collect"], expect.anything());
   });
 });
 ```
@@ -161,15 +177,34 @@ describe('Feature: LHCI Runner', () => {
 
 **Stories are ORDERED. Each builds on the previous.**
 
-| Order | Story               | Enables            | Test Status        |
-| ----- | ------------------- | ------------------ | ------------------ |
-| 1     | Config loader       | Config parsed      | Compiles           |
-| 2     | Hugo build to temp  | Build works        | 🟢 Config feature  |
-| 3     | Caddy server        | Server starts      | Compiles           |
-| 4     | LHCI runner         | Audits run         | 🟢 LHCI feature    |
-| 5     | CLI integration     | Full flow works    | 🟢 **E2E**         |
+| Order | Story              | Enables         | Test Status       |
+| ----- | ------------------ | --------------- | ----------------- |
+| 1     | Config loader      | Config parsed   | Compiles          |
+| 2     | Hugo build to temp | Build works     | 🟢 Config feature |
+| 3     | Caddy server       | Server starts   | Compiles          |
+| 4     | LHCI runner        | Audits run      | 🟢 LHCI feature   |
+| 5     | CLI integration    | Full flow works | 🟢 **E2E**        |
 
 **Each story's value = moving tests from RED to GREEN.**
+
+### Inserting New Stories
+
+When you discover a missing story between existing stories, use BSP numbering to insert without renumbering:
+
+**Example**: Insert a story between story-18 and story-32:
+
+```
+new_number = floor((18 + 32) / 2) = 25
+→ Create story-25 between story-18 and story-32
+```
+
+This preserves existing story numbers and maintains stable references throughout the codebase.
+
+**See [1-structure.md](./1-structure.md#insertion-rules) for complete BSP insertion rules** including:
+
+- Case 1: First story in empty feature (use position 18)
+- Case 2: Insert between siblings (BSP midpoint)
+- Case 3: Append after last sibling (BSP to upper bound)
 
 ---
 
@@ -221,48 +256,48 @@ work-item/
 └── tests/                                      # State indicator
     ├── (empty or missing)                      # State 1: Not started
     ├── *.test.ts                               # State 2: In progress
-    └── DONE.md                                 # State 3: Complete
+    └── DONE.md                                 # State 3: Complete (*.test.ts may be absent if graduated)
 ```
 
-| State | `tests/` Directory           | Meaning          | Next Action                 |
-| ----- | ---------------------------- | ---------------- | --------------------------- |
-| 1     | Missing or empty             | Work not started | Write failing tests (RED)   |
-| 2     | Has test files, no `DONE.md` | Work in progress | Implement code (GREEN)      |
-| 3     | Has `DONE.md`                | Complete         | Verify or move on           |
+| State | `tests/` Directory                  | Meaning                                | Next Action               |
+| ----- | ----------------------------------- | -------------------------------------- | ------------------------- |
+| 1     | Missing OR empty (no files)         | Work not started                       | Write failing tests (RED) |
+| 2     | Has \*.test.ts files, no `DONE.md`  | Work in progress                       | Implement code (GREEN)    |
+| 3     | Has `DONE.md` (tests may be absent) | Complete - tests graduated to `tests/` | Verify or move on         |
 
 ### Completion by Work Item Level
 
-| Level          | Own Tests   | `DONE.md` Proves                  | Child Verification                  |
-| -------------- | ----------- | --------------------------------- | ----------------------------------- |
-| **Story**      | Unit        | Tests pass, requirements met      | N/A                                 |
-| **Feature**    | Integration | Integration tests pass            | All `story-*/tests/DONE.md` exist   |
-| **Capability** | E2E         | E2E tests pass                    | All `feature-*/tests/DONE.md` exist |
+| Level          | Own Tests   | `DONE.md` Proves             | Child Verification                  |
+| -------------- | ----------- | ---------------------------- | ----------------------------------- |
+| **Story**      | Unit        | Tests pass, requirements met | N/A                                 |
+| **Feature**    | Integration | Integration tests pass       | All `story-*/tests/DONE.md` exist   |
+| **Capability** | E2E         | E2E tests pass               | All `feature-*/tests/DONE.md` exist |
 
 ### Test Graduation
 
-> **🚨 CRITICAL INVARIANT: The production test suite (`test/`) MUST ALWAYS PASS.**
+> **🚨 CRITICAL INVARIANT: The production test suite (`tests/`) MUST ALWAYS PASS.**
 >
-> This is the deployment gate. A failing test in `test/` means the codebase is undeployable.
+> This is the deployment gate. A failing test in `tests/` means the codebase is undeployable.
 
 #### Why Two Test Locations Exist
 
-| Location             | Name                 | May Fail? | Purpose                                |
-| -------------------- | -------------------- | --------- | -------------------------------------- |
-| `specs/.../tests/`   | **Progress tests**   | YES       | TDD red-green cycle during development |
-| `test/`              | **Regression tests** | NO        | Protect working functionality          |
+| Location           | Name                 | May Fail? | Purpose                                |
+| ------------------ | -------------------- | --------- | -------------------------------------- |
+| `specs/.../tests/` | **Progress tests**   | YES       | TDD red-green cycle during development |
+| `tests/`           | **Regression tests** | NO        | Protect working functionality          |
 
 **Progress tests** live in `specs/` because they are allowed to fail during development. This is TDD: write failing tests first (RED), implement until they pass (GREEN), then graduate.
 
-**Regression tests** live in `test/` and must always pass. They prevent breaking changes to working functionality.
+**Regression tests** live in `tests/` and must always pass. They prevent breaking changes to working functionality.
 
-> **⚠️ NEVER write tests directly in `test/`** — this would break CI until implementation is complete. Always write progress tests in `specs/.../tests/` first, then graduate them.
+> **⚠️ NEVER write tests directly in `tests/`** — this would break CI until implementation is complete. Always write progress tests in `specs/.../tests/` first, then graduate them.
 
 #### Graduation Process
 
 When a work item is complete, tests graduate from specs to the production test suite:
 
 1. **Refactor code to production quality** - No TODOs, fully typed
-2. **Move tests** from `specs/doing/.../story-XX/tests/` → `test/{unit,integration,e2e}/`
+2. **Move tests** from `specs/doing/.../story-XX/tests/` → `tests/{unit,integration,e2e}/`
 3. **Create DONE.md** documenting graduation
 
 ---
