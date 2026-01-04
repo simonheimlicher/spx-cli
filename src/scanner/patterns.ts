@@ -2,6 +2,7 @@
  * Pattern matching for work item directory names
  */
 import type { WorkItem, WorkItemKind } from "../types.js";
+import { validateBSPNumber } from "./validation.js";
 
 /**
  * Regex pattern for work item directory names
@@ -11,12 +12,6 @@ import type { WorkItem, WorkItemKind } from "../types.js";
  * - slug: kebab-case identifier (lowercase, hyphens only)
  */
 const WORK_ITEM_PATTERN = /^(capability|feature|story)-(\d+)_([a-z][a-z0-9-]*)$/;
-
-/**
- * BSP number range validation
- */
-const MIN_BSP_NUMBER = 10;
-const MAX_BSP_NUMBER = 99;
 
 /**
  * Parse a work item directory name into structured data
@@ -48,12 +43,8 @@ export function parseWorkItemName(dirName: string): WorkItem {
   const bspNumber = parseInt(match[2], 10);
   const slug = match[3];
 
-  // Validate BSP number range
-  if (bspNumber < MIN_BSP_NUMBER || bspNumber > MAX_BSP_NUMBER) {
-    throw new Error(
-      `BSP number must be between ${MIN_BSP_NUMBER} and ${MAX_BSP_NUMBER}, got ${bspNumber}`
-    );
-  }
+  // Validate BSP number range using validation module
+  validateBSPNumber(bspNumber);
 
   // Capabilities use 0-indexed numbers (directory number - 1)
   // Features and stories use directory number as-is

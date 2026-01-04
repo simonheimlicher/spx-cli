@@ -4,3 +4,4 @@
 
 export * from "./types.js";
 export * from "./scanner/patterns.js";
+export * from "./scanner/validation.js";

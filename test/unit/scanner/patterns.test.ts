@@ -236,3 +236,32 @@ describe("parseWorkItemName - Edge Cases", () => {
     expect(result.kind).toBe("capability");
   });
 });
+
+describe("parseWorkItemName - BSP Validation Integration", () => {
+  it("GIVEN work item with valid BSP number WHEN parsing THEN succeeds", () => {
+    // Given
+    const dirName = "capability-50_test";
+
+    // When
+    const result = parseWorkItemName(dirName);
+
+    // Then
+    expect(result.number).toBe(49); // capability-50 → 49 (0-indexed)
+  });
+
+  it("GIVEN work item with BSP number too low WHEN parsing THEN throws error", () => {
+    // Given
+    const dirName = "capability-09_test";
+
+    // When/Then
+    expect(() => parseWorkItemName(dirName)).toThrow("BSP number must be between 10 and 99");
+  });
+
+  it("GIVEN work item with BSP number too high WHEN parsing THEN throws error", () => {
+    // Given
+    const dirName = "feature-100_test";
+
+    // When/Then
+    expect(() => parseWorkItemName(dirName)).toThrow("BSP number must be between 10 and 99");
+  });
+});
