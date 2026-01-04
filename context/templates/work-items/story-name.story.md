@@ -30,7 +30,7 @@ THEN [expected outcome/behavior]
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See [4-testing-standards.md](../../4-testing-standards.md)` for level definitions.
 
 ### Level Assignment
 
@@ -92,7 +92,7 @@ describe("[Module/Function]", () => {
 
 ### Relevant ADRs
 
-1. `specs/decisions/adr-001_project-architecture.md` - Overall architecture decisions
+1. `specs/decisions/adr-001_hugolit-architecture.md` - Overall architecture decisions
 2. `specs/doing/capability-NN_{slug}/decisions/` - Capability-specific decisions (if applicable)
 
 ## Quality Requirements

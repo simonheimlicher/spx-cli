@@ -9,7 +9,7 @@ This file marks the work item as complete and provides evidence that all require
 
 ## Test Coverage by Level
 
-> See `context/4-testing-standards.md` for level definitions.
+> See [4-testing-standards.md](../../4-testing-standards.md)` for level definitions.
 
 | Level | Required For | Status | Test Count |
 | ----- | ------------ | ------ | ---------- |
