@@ -19,6 +19,42 @@
 | `context/4-testing-standards.md` | Writing tests, determining test approach   |
 | `context/5-commit-standards.md`  | Ready to commit changes                    |
 
+## 🚨 VALIDATION GATE (MANDATORY BEFORE COMMIT)
+
+**NEVER commit without passing validation.** This is non-negotiable.
+
+```bash
+# Full validation pipeline (circular deps → ESLint → TypeScript)
+npm run validate
+
+# Quick verification before committing
+npm run validate && npm test
+```
+
+### Pre-Commit Checklist
+
+Before committing ANY changes:
+
+- [ ] **`npm run validate`** passes (all 3 steps: circular deps, ESLint, TypeScript)
+- [ ] **`npm test`** shows 0 failed tests
+- [ ] **`npm run build`** succeeds
+
+### Available Validation Commands
+
+| Command                       | Purpose                                   |
+| ----------------------------- | ----------------------------------------- |
+| `npm run validate`            | Full validation (circular → ESLint → tsc) |
+| `npm run validate:production` | Production scope only                     |
+| `npm run lint`                | ESLint only                               |
+| `npm run lint:fix`            | Auto-fix ESLint issues                    |
+| `npm run typecheck`           | TypeScript only                           |
+| `npm run circular`            | Check for circular dependencies           |
+| `npm run knip`                | Find unused code                          |
+| `npm run format`              | Format code with Prettier                 |
+| `npm run format:check`        | Check formatting without changing files   |
+
+---
+
 ### Foundational Skills
 
 **Testing**: This project follows the `typescript-testing` skill at `~/Code/context/claude/typescript/skills/typescript-testing/`.
@@ -34,6 +70,29 @@ The skill defines the 3-level testing system (Unit → Integration → E2E) and 
 ### Then
 
 - Check `specs/doing/` for active work items
+
+### Finding Work Items
+
+**IMPORTANT**: Use the `spx` CLI to check project status instead of manually searching directories.
+
+```bash
+# Get current project status (fast, deterministic)
+node bin/spx.js status
+
+# This replaces manual directory traversal and is much faster
+```
+
+**Why use spx status:**
+
+- ✅ Fast: <100ms vs 1-2 minutes with manual searching
+- ✅ Deterministic: Reliable DONE/IN PROGRESS/OPEN classification
+- ✅ Complete: Shows full hierarchy with status rollup
+- ✅ Accurate: Uses tests/DONE.md for status determination
+
+**When to use manual search:**
+
+- Only when you need to read specific story/feature content
+- For examining ADRs or detailed requirements
 
 ## Project Overview
 
