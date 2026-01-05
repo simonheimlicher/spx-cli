@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "tsup",
+    "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:unit": "vitest run tests/unit",
@@ -15,8 +16,17 @@
     "test:e2e": "vitest run tests/e2e",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src tests --ext .ts",
-    "lint:fix": "eslint src tests --ext .ts --fix"
+    "typecheck:production": "tsc --project tsconfig.production.json",
+    "lint": "npx tsx scripts/run/validate.ts lint",
+    "lint:fix": "eslint . --config eslint.config.ts --fix",
+    "lint:production": "ESLINT_PRODUCTION_ONLY=1 npx tsx scripts/run/validate.ts lint",
+    "validate": "npx tsx scripts/run/validate.ts",
+    "validate:production": "npx tsx scripts/run/validate.ts --scope production",
+    "knip": "npx tsx scripts/run/validate.ts knip",
+    "circular": "npx madge --circular --extensions ts src/",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
   },
   "keywords": [
     "cli",
@@ -28,16 +38,26 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/eslint-config-prettier": "^6.11.3",
     "@types/node": "^20.10.0",
-    "@typescript-eslint/eslint-plugin": "^6.13.0",
-    "@typescript-eslint/parser": "^6.13.0",
     "@vitest/coverage-v8": "^1.6.1",
-    "eslint": "^8.54.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "globals": "^17.0.0",
+    "husky": "^9.1.7",
+    "jsonc-parser": "^3.3.1",
+    "knip": "^5.80.0",
+    "madge": "^8.0.0",
+    "prettier": "^3.7.4",
     "tsup": "^8.0.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.3.3",
+    "typescript-eslint": "^8.51.0",
     "vitest": "^1.0.4"
   },
   "dependencies": {
+    "chalk": "^5.6.2",
     "commander": "^11.1.0"
   }
 }

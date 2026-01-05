@@ -1,0 +1,4 @@
+{
+  "exclude": ["context/**/*", "specs/**/*", "docs/**/*"],
+  "extends": "./tsconfig.json"
+}
