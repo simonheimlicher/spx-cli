@@ -191,3 +191,143 @@ export async function hasDoneMd(testsPath: string): Promise<boolean> {
     throw error;
   }
 }
+
+/**
+ * Custom error for status determination failures
+ */
+export class StatusDeterminationError extends Error {
+  constructor(
+    public readonly workItemPath: string,
+    public readonly cause: unknown
+  ) {
+    const errorMessage =
+      cause instanceof Error ? cause.message : String(cause);
+    super(`Failed to determine status for ${workItemPath}: ${errorMessage}`);
+    this.name = "StatusDeterminationError";
+  }
+}
+
+/**
+ * Determines the status of a work item by checking its tests/ directory
+ *
+ * This is the main orchestration function that combines all status checks:
+ * 1. Checks if tests/ directory exists
+ * 2. Checks if tests/ has DONE.md
+ * 3. Checks if tests/ is empty (excluding DONE.md)
+ * 4. Determines final status based on these flags
+ *
+ * Performance: Uses caching strategy to minimize filesystem calls.
+ * All checks for a single work item are performed in one pass.
+ *
+ * @param workItemPath - Absolute path to the work item directory
+ * @returns Promise resolving to OPEN, IN_PROGRESS, or DONE
+ * @throws {StatusDeterminationError} If work item doesn't exist or has permission errors
+ *
+ * @example
+ * ```typescript
+ * // Work item with no tests directory
+ * await getWorkItemStatus('/path/to/story-21');
+ * // => "OPEN"
+ *
+ * // Work item with tests but no DONE.md
+ * await getWorkItemStatus('/path/to/story-32');
+ * // => "IN_PROGRESS"
+ *
+ * // Work item with DONE.md
+ * await getWorkItemStatus('/path/to/story-43');
+ * // => "DONE"
+ * ```
+ */
+export async function getWorkItemStatus(
+  workItemPath: string
+): Promise<WorkItemStatus> {
+  try {
+    // Step 0: Verify work item path exists
+    try {
+      await access(workItemPath);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+        throw new Error(`Work item not found: ${workItemPath}`);
+      }
+      // Permission error or other failure
+      throw error;
+    }
+
+    // Step 1: Check if tests/ directory exists
+    const testsPath = path.join(workItemPath, "tests");
+    let hasTests: boolean;
+    try {
+      await access(testsPath);
+      hasTests = true;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+        hasTests = false;
+      } else {
+        // Permission error or other failure
+        throw error;
+      }
+    }
+
+    // Early return if no tests directory
+    if (!hasTests) {
+      return determineStatus({
+        hasTestsDir: false,
+        hasDoneMd: false,
+        testsIsEmpty: true,
+      });
+    }
+
+    // Step 2: Read tests/ directory once (caching strategy)
+    // This single readdir call gives us all the data we need
+    const entries = await readdir(testsPath);
+
+    // Step 3: Check for DONE.md (from cached entries)
+    const hasDone = entries.includes("DONE.md");
+    if (hasDone) {
+      // Verify it's a file, not a directory
+      const donePath = path.join(testsPath, "DONE.md");
+      const stats = await stat(donePath);
+      if (!stats.isFile()) {
+        // DONE.md is a directory, treat as no DONE.md
+        return determineStatus({
+          hasTestsDir: true,
+          hasDoneMd: false,
+          testsIsEmpty: isEmptyFromEntries(entries),
+        });
+      }
+    }
+
+    // Step 4: Check if empty (from cached entries)
+    const isEmpty = isEmptyFromEntries(entries);
+
+    // Step 5: Determine final status
+    return determineStatus({
+      hasTestsDir: true,
+      hasDoneMd: hasDone,
+      testsIsEmpty: isEmpty,
+    });
+  } catch (error) {
+    // Wrap all errors with work item context
+    throw new StatusDeterminationError(workItemPath, error);
+  }
+}
+
+/**
+ * Helper: Check if directory is empty from readdir entries
+ * @param entries - Directory entries from readdir
+ * @returns true if no test files (excluding DONE.md and dotfiles)
+ */
+function isEmptyFromEntries(entries: string[]): boolean {
+  const testFiles = entries.filter((entry) => {
+    // Exclude DONE.md
+    if (entry === "DONE.md") {
+      return false;
+    }
+    // Exclude dotfiles (.gitkeep, .DS_Store, etc.)
+    if (entry.startsWith(".")) {
+      return false;
+    }
+    return true;
+  });
+  return testFiles.length === 0;
+}
