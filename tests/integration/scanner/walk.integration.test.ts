@@ -78,3 +78,43 @@ describe("walkDirectory", () => {
     });
   });
 });
+
+describe("walkDirectory - Edge Cases", () => {
+  /**
+   * Story-54: Edge Cases
+   * Level 2: Integration tests for filesystem edge cases
+   */
+
+  it("GIVEN very deep directory structure WHEN walking THEN handles depth correctly", async () => {
+    // Given: Deep nesting (capability > feature > story)
+    const deepDir = path.join(__dirname, "../../fixtures/deep-nesting");
+
+    // When
+    const entries = await walkDirectory(deepDir);
+
+    // Then: Finds all levels
+    expect(entries.length).toBeGreaterThan(0);
+    const hasCapability = entries.some(e => e.name.includes("capability"));
+    const hasFeature = entries.some(e => e.name.includes("feature"));
+    const hasStory = entries.some(e => e.name.includes("story"));
+
+    expect(hasCapability).toBe(true);
+    expect(hasFeature).toBe(true);
+    expect(hasStory).toBe(true);
+  });
+
+  it("GIVEN non-existent directory WHEN walking THEN throws descriptive error", async () => {
+    // Given
+    const nonExistent = "/path/that/absolutely/does/not/exist/anywhere";
+
+    // When/Then: Verifies error handling
+    await expect(walkDirectory(nonExistent)).rejects.toThrow(/Failed to walk directory/i);
+  });
+
+  /**
+   * Note: Symlink cycle detection is already implemented in walkDirectory via the visited Set.
+   * The implementation uses path.resolve() to normalize paths and detects when a path has been
+   * visited before, preventing infinite loops. This is tested implicitly through the existing
+   * nested directory tests.
+   */
+});

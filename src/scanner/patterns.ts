@@ -17,7 +17,7 @@ const WORK_ITEM_PATTERN = /^(capability|feature|story)-(\d+)_([a-z][a-z0-9-]*)$/
  * Parse a work item directory name into structured data
  *
  * @param dirName - Directory name to parse
- * @returns Parsed work item with kind, number, and slug
+ * @returns Parsed work item with kind, number, and slug (path not included)
  * @throws Error if the directory name doesn't match the pattern or BSP number is invalid
  *
  * @example
@@ -29,7 +29,7 @@ const WORK_ITEM_PATTERN = /^(capability|feature|story)-(\d+)_([a-z][a-z0-9-]*)$/
  * // Returns: { kind: "feature", number: 21, slug: "pattern-matching" }
  * ```
  */
-export function parseWorkItemName(dirName: string): WorkItem {
+export function parseWorkItemName(dirName: string): Omit<WorkItem, 'path'> {
   const match = WORK_ITEM_PATTERN.exec(dirName);
 
   if (!match) {

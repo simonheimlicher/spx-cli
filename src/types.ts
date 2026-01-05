@@ -18,7 +18,7 @@ export interface WorkItem {
   /** URL-safe slug identifier */
   slug: string;
   /** Full filesystem path to work item directory */
-  path?: string;
+  path: string;
 }
 
 /**
