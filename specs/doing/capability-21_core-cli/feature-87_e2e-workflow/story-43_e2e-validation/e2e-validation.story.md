@@ -62,11 +62,11 @@ Error scenarios:
 
 ### Level Assignment
 
-| Component              | Level | Justification                        |
-| ---------------------- | ----- | ------------------------------------ |
-| Performance benchmarks | 3     | Real CLI execution, timing           |
-| Format validation      | 3     | Full CLI workflow                    |
-| Error handling         | 3     | Real process exit codes and stderr   |
+| Component              | Level | Justification                      |
+| ---------------------- | ----- | ---------------------------------- |
+| Performance benchmarks | 3     | Real CLI execution, timing         |
+| Format validation      | 3     | Full CLI workflow                  |
+| Error handling         | 3     | Real process exit codes and stderr |
 
 ### When to Escalate
 
@@ -82,10 +82,10 @@ This story uses Level 3 because:
 
 ```typescript
 // tests/e2e/performance.e2e.test.ts
-import { describe, it, expect, afterEach } from "vitest";
-import { execa } from "execa";
 import { createFixture, PRESETS } from "@/tests/helpers/fixture-generator";
 import type { MaterializedFixture } from "@/tests/helpers/fixture-writer";
+import { execa } from "execa";
+import { afterEach, describe, expect, it } from "vitest";
 
 describe("E2E: Performance", () => {
   let fixture: MaterializedFixture;
@@ -98,7 +98,11 @@ describe("E2E: Performance", () => {
     fixture = await createFixture(PRESETS.SHALLOW_50);
 
     const startTime = Date.now();
-    const { stdout, exitCode } = await execa("node", ["bin/spx.js", "status", "--json"], {
+    const { stdout, exitCode } = await execa("node", [
+      "bin/spx.js",
+      "status",
+      "--json",
+    ], {
       cwd: fixture.path,
     });
     const elapsed = Date.now() - startTime;
@@ -107,7 +111,9 @@ describe("E2E: Performance", () => {
     expect(elapsed).toBeLessThan(100);
 
     const result = JSON.parse(stdout);
-    expect(result.summary.done + result.summary.inProgress + result.summary.open)
+    expect(
+      result.summary.done + result.summary.inProgress + result.summary.open,
+    )
       .toBeGreaterThanOrEqual(50);
   });
 
@@ -145,9 +151,9 @@ describe("E2E: Performance", () => {
 
 ```typescript
 // tests/e2e/formats.e2e.test.ts
-import { describe, it, expect, afterEach } from "vitest";
-import { execa } from "execa";
 import { createFixture, PRESETS } from "@/tests/helpers/fixture-generator";
+import { execa } from "execa";
+import { afterEach, describe, expect, it } from "vitest";
 
 describe("E2E: Output Formats", () => {
   let fixture: MaterializedFixture;
@@ -172,7 +178,11 @@ describe("E2E: Output Formats", () => {
   it("GIVEN fixture WHEN running status --json THEN produces valid JSON", async () => {
     fixture = await createFixture(PRESETS.FAN_10_LEVEL_3);
 
-    const { stdout, exitCode } = await execa("node", ["bin/spx.js", "status", "--json"], {
+    const { stdout, exitCode } = await execa("node", [
+      "bin/spx.js",
+      "status",
+      "--json",
+    ], {
       cwd: fixture.path,
     });
 
@@ -188,8 +198,9 @@ describe("E2E: Output Formats", () => {
     fixture = await createFixture(PRESETS.FAN_10_LEVEL_3);
 
     const { stdout, exitCode } = await execa(
-      "node", ["bin/spx.js", "status", "--format", "markdown"],
-      { cwd: fixture.path }
+      "node",
+      ["bin/spx.js", "status", "--format", "markdown"],
+      { cwd: fixture.path },
     );
 
     expect(exitCode).toBe(0);
@@ -200,8 +211,9 @@ describe("E2E: Output Formats", () => {
     fixture = await createFixture(PRESETS.FAN_10_LEVEL_3);
 
     const { stdout, exitCode } = await execa(
-      "node", ["bin/spx.js", "status", "--format", "table"],
-      { cwd: fixture.path }
+      "node",
+      ["bin/spx.js", "status", "--format", "table"],
+      { cwd: fixture.path },
     );
 
     expect(exitCode).toBe(0);
@@ -212,17 +224,22 @@ describe("E2E: Output Formats", () => {
     fixture = await createFixture(PRESETS.FAN_10_LEVEL_3);
 
     const { stdout: jsonOut } = await execa(
-      "node", ["bin/spx.js", "status", "--json"],
-      { cwd: fixture.path }
+      "node",
+      ["bin/spx.js", "status", "--json"],
+      { cwd: fixture.path },
     );
     const jsonData = JSON.parse(jsonOut);
-    const expectedTotal = jsonData.summary.done + jsonData.summary.inProgress + jsonData.summary.open;
+    const expectedTotal = jsonData.summary.done + jsonData.summary.inProgress
+      + jsonData.summary.open;
 
     const { stdout: textOut } = await execa(
-      "node", ["bin/spx.js", "status"],
-      { cwd: fixture.path }
+      "node",
+      ["bin/spx.js", "status"],
+      { cwd: fixture.path },
     );
-    const textLines = textOut.split("\n").filter(l => l.match(/capability-|feature-|story-/));
+    const textLines = textOut.split("\n").filter(l =>
+      l.match(/capability-|feature-|story-/)
+    );
     expect(textLines.length).toBe(expectedTotal);
   });
 });
@@ -232,11 +249,11 @@ describe("E2E: Output Formats", () => {
 
 ```typescript
 // tests/e2e/errors.e2e.test.ts
-import { describe, it, expect } from "vitest";
 import { execa } from "execa";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { describe, expect, it } from "vitest";
 
 describe("E2E: Error Scenarios", () => {
   it("GIVEN directory without specs/ WHEN running status THEN shows error", async () => {
@@ -244,8 +261,9 @@ describe("E2E: Error Scenarios", () => {
 
     try {
       const { exitCode, stderr } = await execa(
-        "node", ["bin/spx.js", "status"],
-        { cwd: emptyDir, reject: false }
+        "node",
+        ["bin/spx.js", "status"],
+        { cwd: emptyDir, reject: false },
       );
 
       expect(exitCode).toBe(1);
@@ -257,8 +275,9 @@ describe("E2E: Error Scenarios", () => {
 
   it("GIVEN invalid format option WHEN running status THEN shows error", async () => {
     const { exitCode, stderr } = await execa(
-      "node", ["bin/spx.js", "status", "--format", "invalid"],
-      { reject: false }
+      "node",
+      ["bin/spx.js", "status", "--format", "invalid"],
+      { reject: false },
     );
 
     expect(exitCode).toBe(1);
@@ -267,8 +286,9 @@ describe("E2E: Error Scenarios", () => {
 
   it("GIVEN invalid command WHEN running spx THEN shows help", async () => {
     const { exitCode, stderr } = await execa(
-      "node", ["bin/spx.js", "notacommand"],
-      { reject: false }
+      "node",
+      ["bin/spx.js", "notacommand"],
+      { reject: false },
     );
 
     expect(exitCode).toBe(1);
@@ -284,7 +304,10 @@ describe("E2E: Error Scenarios", () => {
   });
 
   it("GIVEN --version flag WHEN running spx THEN shows version", async () => {
-    const { exitCode, stdout } = await execa("node", ["bin/spx.js", "--version"]);
+    const { exitCode, stdout } = await execa("node", [
+      "bin/spx.js",
+      "--version",
+    ]);
 
     expect(exitCode).toBe(0);
     expect(stdout).toMatch(/\d+\.\d+\.\d+/);

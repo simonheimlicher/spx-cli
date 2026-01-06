@@ -77,7 +77,7 @@ const PRESETS = {
 
 ### Generated File Structure
 
-Only valid files per `context/1-structure.md` are generated. No noise files.
+Only valid files per `specs/templates/structure.yaml` are generated. No noise files.
 
 ```
 {tmpdir}/spx-fixture-{uuid}/
@@ -131,12 +131,12 @@ All names generated via faker.js:
 3. Materialized fixture passes `spx status` without errors
 4. Cleanup removes all fixture files and directories
 5. Seeded generation produces reproducible results
-6. All generated files conform to `context/1-structure.md`
+6. All generated files conform to `specs/templates/structure.yaml`
 
 ## Constraints
 
 - Fixtures MUST be created in `os.tmpdir()`, never in the repository
 - All E2E tests MUST call `cleanup()` in finally block or afterEach hook
-- Generator MUST produce valid BSP numbers (per `context/1-structure.md`: 21, 32, 43, 54, 65...)
+- Generator MUST produce valid BSP numbers (per `specs/templates/structure.yaml`: 21, 32, 43, 54, 65...)
 - Generated names MUST pass existing pattern matchers in `src/scanner/`
-- Generated files MUST conform to `context/1-structure.md` - no noise files
+- Generated files MUST conform to `specs/templates/structure.yaml` - no noise files

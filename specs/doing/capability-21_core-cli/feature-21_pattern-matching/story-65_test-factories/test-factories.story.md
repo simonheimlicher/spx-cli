@@ -42,7 +42,7 @@ THEN create valid work items with randomized but valid values
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
@@ -64,8 +64,12 @@ This story stays at Level 1 because:
 
 ```typescript
 // test/unit/fixtures/factories.test.ts
-import { describe, it, expect } from "vitest";
-import { createWorkItemName, createWorkItem, createRandomWorkItem } from "../../fixtures/factories";
+import { describe, expect, it } from "vitest";
+import {
+  createRandomWorkItem,
+  createWorkItem,
+  createWorkItemName,
+} from "../../fixtures/factories";
 
 describe("createWorkItemName", () => {
   /**
@@ -196,7 +200,7 @@ describe("createRandomWorkItem", () => {
 
 ```typescript
 // test/fixtures/factories.ts (implementation reference)
-import { WORK_ITEM_KINDS, DEFAULT_BSP_NUMBER } from "./constants";
+import { DEFAULT_BSP_NUMBER, WORK_ITEM_KINDS } from "./constants";
 
 export interface WorkItem {
   kind: "capability" | "feature" | "story";
@@ -204,13 +208,19 @@ export interface WorkItem {
   slug: string;
 }
 
-export function createWorkItemName(params: { kind: WorkItem["kind"]; number?: number; slug?: string }): string {
+export function createWorkItemName(params: {
+  kind: WorkItem["kind"];
+  number?: number;
+  slug?: string;
+}): string {
   const number = params.number ?? DEFAULT_BSP_NUMBER;
   const slug = params.slug ?? `test-${Math.random().toString(36).slice(2, 8)}`;
   return `${params.kind}-${String(number).padStart(2, "0")}_${slug}`;
 }
 
-export function createWorkItem(params: Partial<WorkItem> & { kind: WorkItem["kind"] }): WorkItem {
+export function createWorkItem(
+  params: Partial<WorkItem> & { kind: WorkItem["kind"] },
+): WorkItem {
   return {
     kind: params.kind,
     number: params.number ?? randomBSPNumber(),
@@ -238,8 +248,8 @@ function randomBSPNumber(): number {
 
 ### Relevant ADRs
 
-1. `context/4-testing-standards.md` - No arbitrary test data (use factories)
-2. `context/3-coding-standards.md` - TypeScript standards
+1. `docs/testing/standards.md`- No arbitrary test data (use factories)
+2. `docs/code/typescript.md` - TypeScript standards
 
 ## Quality Requirements
 
@@ -280,4 +290,4 @@ function randomBSPNumber(): number {
 
 This story is unique: **the test factories are themselves test infrastructure**. The tests in this story verify that our factory pattern works correctly. Once complete, all future tests (Stories 21-54 and beyond) will use these factories instead of creating test data manually.
 
-This establishes the "No arbitrary test data" principle from `context/4-testing-standards.md`.
+This establishes the "No arbitrary test data" principle from `docs/testing/standards.md`.

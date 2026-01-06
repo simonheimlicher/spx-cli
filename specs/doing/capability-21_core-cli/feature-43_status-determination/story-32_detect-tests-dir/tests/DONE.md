@@ -9,7 +9,7 @@
 ## Verification Results
 
 | Tool     | Status | Details                  |
-|----------|--------|--------------------------|
+| -------- | ------ | ------------------------ |
 | tsc      | PASS   | 0 errors                 |
 | eslint   | PASS   | 0 violations             |
 | vitest   | PASS   | 7/7 tests, 2ms execution |
@@ -34,15 +34,15 @@
 
 ### Tests Graduated
 
-| Requirement | Test Location                                                        |
-|-------------|----------------------------------------------------------------------|
-| FR1: Check if tests/ exists | `tests/integration/status/state.integration.test.ts::GIVEN work item with tests dir THEN returns true` |
-| FR1: No tests/ directory | `tests/integration/status/state.integration.test.ts::GIVEN work item without tests dir THEN returns false` |
-| FR1: Nonexistent path | `tests/integration/status/state.integration.test.ts::GIVEN nonexistent work item path THEN returns false` |
-| FR2: Empty tests directory | `tests/integration/status/state.integration.test.ts::GIVEN empty tests dir THEN returns true` |
-| FR2: Tests with files | `tests/integration/status/state.integration.test.ts::GIVEN tests dir with test files THEN returns false` |
-| FR2: DONE.md exclusion | `tests/integration/status/state.integration.test.ts::GIVEN tests dir with only DONE.md THEN returns true` |
-| FR2: Dotfile exclusion | `tests/integration/status/state.integration.test.ts::GIVEN tests dir with .gitkeep only THEN returns true` |
+| Requirement                 | Test Location                                                                                              |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| FR1: Check if tests/ exists | `tests/integration/status/state.integration.test.ts::GIVEN work item with tests dir THEN returns true`     |
+| FR1: No tests/ directory    | `tests/integration/status/state.integration.test.ts::GIVEN work item without tests dir THEN returns false` |
+| FR1: Nonexistent path       | `tests/integration/status/state.integration.test.ts::GIVEN nonexistent work item path THEN returns false`  |
+| FR2: Empty tests directory  | `tests/integration/status/state.integration.test.ts::GIVEN empty tests dir THEN returns true`              |
+| FR2: Tests with files       | `tests/integration/status/state.integration.test.ts::GIVEN tests dir with test files THEN returns false`   |
+| FR2: DONE.md exclusion      | `tests/integration/status/state.integration.test.ts::GIVEN tests dir with only DONE.md THEN returns true`  |
+| FR2: Dotfile exclusion      | `tests/integration/status/state.integration.test.ts::GIVEN tests dir with .gitkeep only THEN returns true` |
 
 ## Coverage Report
 

@@ -11,6 +11,7 @@ THEN produce aligned table with columns
 ```
 
 Format:
+
 ```
 | Level      | Number | Name                 | Status      |
 |------------|--------|----------------------|-------------|
@@ -27,18 +28,18 @@ Format:
 
 ### Level Assignment
 
-| Component       | Level | Justification           |
-| --------------- | ----- | ----------------------- |
-| Table generation| 1     | Pure string formatting  |
-| Column alignment| 1     | Pure logic              |
-| Border drawing  | 1     | Pure string manipulation|
+| Component        | Level | Justification            |
+| ---------------- | ----- | ------------------------ |
+| Table generation | 1     | Pure string formatting   |
+| Column alignment | 1     | Pure logic               |
+| Border drawing   | 1     | Pure string manipulation |
 
 ## Unit Tests (Level 1)
 
 ```typescript
 // test/unit/reporter/table.test.ts
-import { describe, it, expect } from "vitest";
 import { formatTable } from "@/reporter/table";
+import { describe, expect, it } from "vitest";
 
 describe("formatTable", () => {
   it("GIVEN tree WHEN formatting THEN includes table borders", () => {

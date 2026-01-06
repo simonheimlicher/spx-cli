@@ -11,6 +11,7 @@ THEN output next work item to work on (lowest numbered OPEN or IN_PROGRESS)
 ```
 
 Selection logic:
+
 1. Prefer IN_PROGRESS over OPEN
 2. Within same status, choose lowest BSP number
 3. If none found, output message
@@ -24,17 +25,17 @@ Selection logic:
 
 ### Level Assignment
 
-| Component           | Level | Justification              |
-| ------------------- | ----- | -------------------------- |
-| Next item selection | 1     | Pure sorting/filtering     |
-| Command execution   | 2     | Integration test with CLI  |
+| Component           | Level | Justification             |
+| ------------------- | ----- | ------------------------- |
+| Next item selection | 1     | Pure sorting/filtering    |
+| Command execution   | 2     | Integration test with CLI |
 
 ## Unit Tests (Level 1)
 
 ```typescript
 // test/unit/commands/next.test.ts
-import { describe, it, expect } from "vitest";
 import { findNextWorkItem } from "@/commands/next";
+import { describe, expect, it } from "vitest";
 
 describe("findNextWorkItem", () => {
   it("GIVEN IN_PROGRESS and OPEN items WHEN finding next THEN returns IN_PROGRESS with lowest number", () => {

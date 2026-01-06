@@ -29,14 +29,14 @@ THEN return true if no files (except DONE.md), false if has test files
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component             | Level | Justification                        |
-| --------------------- | ----- | ------------------------------------ |
-| Directory existence   | 2     | Requires real filesystem check       |
-| Directory empty check | 2     | Requires reading directory contents  |
+| Component             | Level | Justification                       |
+| --------------------- | ----- | ----------------------------------- |
+| Directory existence   | 2     | Requires real filesystem check      |
+| Directory empty check | 2     | Requires reading directory contents |
 
 ### When to Escalate
 
@@ -50,9 +50,9 @@ This story uses Level 2 because:
 
 ```typescript
 // test/integration/status/state.integration.test.ts
-import { describe, it, expect } from "vitest";
 import { hasTestsDirectory, isTestsDirectoryEmpty } from "@/status/state";
 import path from "path";
+import { describe, expect, it } from "vitest";
 
 describe("hasTestsDirectory", () => {
   /**
@@ -61,7 +61,10 @@ describe("hasTestsDirectory", () => {
 
   it("GIVEN work item with tests dir WHEN checking THEN returns true", async () => {
     // Given
-    const workItemPath = path.join(__dirname, "../../fixtures/work-items/with-tests");
+    const workItemPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/with-tests",
+    );
 
     // When
     const result = await hasTestsDirectory(workItemPath);
@@ -72,7 +75,10 @@ describe("hasTestsDirectory", () => {
 
   it("GIVEN work item without tests dir WHEN checking THEN returns false", async () => {
     // Given
-    const workItemPath = path.join(__dirname, "../../fixtures/work-items/no-tests");
+    const workItemPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/no-tests",
+    );
 
     // When
     const result = await hasTestsDirectory(workItemPath);
@@ -85,7 +91,10 @@ describe("hasTestsDirectory", () => {
 describe("isTestsDirectoryEmpty", () => {
   it("GIVEN empty tests dir WHEN checking THEN returns true", async () => {
     // Given
-    const testsPath = path.join(__dirname, "../../fixtures/work-items/empty-tests/tests");
+    const testsPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/empty-tests/tests",
+    );
 
     // When
     const result = await isTestsDirectoryEmpty(testsPath);
@@ -96,7 +105,10 @@ describe("isTestsDirectoryEmpty", () => {
 
   it("GIVEN tests dir with test files WHEN checking THEN returns false", async () => {
     // Given
-    const testsPath = path.join(__dirname, "../../fixtures/work-items/with-tests/tests");
+    const testsPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/with-tests/tests",
+    );
 
     // When
     const result = await isTestsDirectoryEmpty(testsPath);
@@ -107,7 +119,10 @@ describe("isTestsDirectoryEmpty", () => {
 
   it("GIVEN tests dir with only DONE.md WHEN checking THEN returns true", async () => {
     // Given
-    const testsPath = path.join(__dirname, "../../fixtures/work-items/only-done/tests");
+    const testsPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/only-done/tests",
+    );
 
     // When
     const result = await isTestsDirectoryEmpty(testsPath);
@@ -122,8 +137,8 @@ describe("isTestsDirectoryEmpty", () => {
 
 ### Relevant ADRs
 
-1. `context/3-coding-standards.md` - TypeScript standards
-2. `context/4-testing-standards.md` - Testing with Vitest
+1. `docs/code/typescript.md` - TypeScript standards
+2. `docs/testing/standards.md`- Testing with Vitest
 
 ## Quality Requirements
 

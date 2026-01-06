@@ -18,10 +18,10 @@ THEN sort children by BSP number ascending
 
 ### Level Assignment
 
-| Component     | Level | Justification              |
-| ------------- | ----- | -------------------------- |
-| BSP sorting   | 1     | Pure comparison function   |
-| Sort stability| 1     | Pure array sorting         |
+| Component      | Level | Justification            |
+| -------------- | ----- | ------------------------ |
+| BSP sorting    | 1     | Pure comparison function |
+| Sort stability | 1     | Pure array sorting       |
 
 ## Unit Tests (Level 1)
 
@@ -31,10 +31,22 @@ describe("buildTree - BSP Sorting", () => {
   it("GIVEN features with mixed BSP numbers WHEN building tree THEN sorted ascending", () => {
     // Given
     const workItems = [
-      { ...createWorkItem({ kind: "capability", number: 20, slug: "test" }), path: "/specs/capability-21_test" },
-      { ...createWorkItem({ kind: "feature", number: 65, slug: "feat3" }), path: "/specs/capability-21_test/feature-65_feat3" },
-      { ...createWorkItem({ kind: "feature", number: 32, slug: "feat1" }), path: "/specs/capability-21_test/feature-32_feat1" },
-      { ...createWorkItem({ kind: "feature", number: 43, slug: "feat2" }), path: "/specs/capability-21_test/feature-43_feat2" },
+      {
+        ...createWorkItem({ kind: "capability", number: 20, slug: "test" }),
+        path: "/specs/capability-21_test",
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 65, slug: "feat3" }),
+        path: "/specs/capability-21_test/feature-65_feat3",
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 32, slug: "feat1" }),
+        path: "/specs/capability-21_test/feature-32_feat1",
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 43, slug: "feat2" }),
+        path: "/specs/capability-21_test/feature-43_feat2",
+      },
     ];
 
     // When

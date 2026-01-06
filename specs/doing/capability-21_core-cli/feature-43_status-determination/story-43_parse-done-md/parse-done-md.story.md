@@ -29,14 +29,14 @@ THEN verify it's a regular file (not directory or symlink)
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component           | Level | Justification                   |
-| ------------------- | ----- | ------------------------------- |
-| DONE.md detection   | 2     | Requires real filesystem check  |
-| File type validation| 2     | Requires real file stat         |
+| Component            | Level | Justification                  |
+| -------------------- | ----- | ------------------------------ |
+| DONE.md detection    | 2     | Requires real filesystem check |
+| File type validation | 2     | Requires real file stat        |
 
 ### When to Escalate
 
@@ -50,9 +50,9 @@ This story uses Level 2 because:
 
 ```typescript
 // test/integration/status/state.integration.test.ts (continued)
-import { describe, it, expect } from "vitest";
 import { hasDoneMd } from "@/status/state";
 import path from "path";
+import { describe, expect, it } from "vitest";
 
 describe("hasDoneMd", () => {
   /**
@@ -61,7 +61,10 @@ describe("hasDoneMd", () => {
 
   it("GIVEN tests dir with DONE.md WHEN checking THEN returns true", async () => {
     // Given
-    const testsPath = path.join(__dirname, "../../fixtures/work-items/done-item/tests");
+    const testsPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/done-item/tests",
+    );
 
     // When
     const result = await hasDoneMd(testsPath);
@@ -72,7 +75,10 @@ describe("hasDoneMd", () => {
 
   it("GIVEN tests dir without DONE.md WHEN checking THEN returns false", async () => {
     // Given
-    const testsPath = path.join(__dirname, "../../fixtures/work-items/in-progress/tests");
+    const testsPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/in-progress/tests",
+    );
 
     // When
     const result = await hasDoneMd(testsPath);
@@ -83,7 +89,10 @@ describe("hasDoneMd", () => {
 
   it("GIVEN DONE.md as directory (not file) WHEN checking THEN returns false", async () => {
     // Given
-    const testsPath = path.join(__dirname, "../../fixtures/work-items/done-is-dir/tests");
+    const testsPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/done-is-dir/tests",
+    );
 
     // When
     const result = await hasDoneMd(testsPath);
@@ -94,7 +103,10 @@ describe("hasDoneMd", () => {
 
   it("GIVEN DONE.md with different case WHEN checking THEN returns false", async () => {
     // Given
-    const testsPath = path.join(__dirname, "../../fixtures/work-items/wrong-case/tests");
+    const testsPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/wrong-case/tests",
+    );
 
     // When
     const result = await hasDoneMd(testsPath);
@@ -109,8 +121,8 @@ describe("hasDoneMd", () => {
 
 ### Relevant ADRs
 
-1. `context/3-coding-standards.md` - TypeScript standards
-2. `context/4-testing-standards.md` - Testing with Vitest
+1. `docs/code/typescript.md` - TypeScript standards
+2. `docs/testing/standards.md`- Testing with Vitest
 
 ## Quality Requirements
 

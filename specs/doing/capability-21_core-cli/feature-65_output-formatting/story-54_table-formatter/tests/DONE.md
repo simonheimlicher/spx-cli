@@ -3,8 +3,9 @@
 ## Implementation Summary
 
 Implemented table formatter that renders trees with:
+
 - Aligned table with dynamic column widths
-- Indented level column (Capability, "  Feature", "    Story")
+- Indented level column (Capability, " Feature", " Story")
 - Columns: Level | Number | Name | Status
 - Display number conversion (capability: internal+1, others: as-is)
 
@@ -16,6 +17,7 @@ Implemented table formatter that renders trees with:
 ## Tests
 
 All 7 unit tests pass:
+
 - Includes table borders
 - Includes header row with column names
 - Includes separator row

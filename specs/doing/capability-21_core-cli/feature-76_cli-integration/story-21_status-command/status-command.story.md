@@ -31,18 +31,18 @@ THEN walk dirs → determine status → build tree → format output
 
 ### Level Assignment
 
-| Component            | Level | Justification                 |
-| -------------------- | ----- | ----------------------------- |
-| Command routing      | 2     | Requires Commander.js         |
-| Component wiring     | 2     | Integration of all features   |
-| Stdout handling      | 2     | Requires real process.stdout  |
+| Component        | Level | Justification                |
+| ---------------- | ----- | ---------------------------- |
+| Command routing  | 2     | Requires Commander.js        |
+| Component wiring | 2     | Integration of all features  |
+| Stdout handling  | 2     | Requires real process.stdout |
 
 ## Integration Tests (Level 2)
 
 ```typescript
 // test/integration/cli/status.integration.test.ts
-import { describe, it, expect } from "vitest";
 import { execa } from "execa";
+import { describe, expect, it } from "vitest";
 
 describe("spx status command", () => {
   it("GIVEN fixture repo WHEN running status THEN outputs tree", async () => {

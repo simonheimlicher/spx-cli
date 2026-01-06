@@ -8,12 +8,12 @@
 
 ## Verification Results
 
-| Tool     | Status | Details                  |
-|----------|--------|--------------------------|
-| tsc      | PASS   | 0 errors                 |
-| eslint   | PASS   | 0 violations (src/)      |
-| vitest   | PASS   | 266/266 tests (+12 new)  |
-| CLI      | PASS   | Manual verification OK   |
+| Tool   | Status | Details                 |
+| ------ | ------ | ----------------------- |
+| tsc    | PASS   | 0 errors                |
+| eslint | PASS   | 0 violations (src/)     |
+| vitest | PASS   | 266/266 tests (+12 new) |
+| CLI    | PASS   | Manual verification OK  |
 
 ## Implementation Summary
 
@@ -127,6 +127,7 @@ The next command provides full context to help the user locate the work item:
 story-32_next-command is now COMPLETE.
 
 The next command successfully:
+
 - ✅ Finds next work item with correct priority (FR1)
 - ✅ Implements selection logic (IN_PROGRESS > OPEN, lowest BSP) (FR1)
 - ✅ Shows helpful message when no items found (FR1)

@@ -29,7 +29,7 @@ THEN correctly identify the kind for each
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
@@ -51,7 +51,7 @@ This story stays at Level 1 because:
 
 ```typescript
 // test/unit/scanner/patterns.test.ts (continued from Story 21)
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { parseWorkItemName } from "../../../src/scanner/patterns";
 
 describe("parseWorkItemName - Features", () => {
@@ -105,7 +105,9 @@ describe("parseWorkItemName - Features", () => {
     const dirName = "feature-100_too-high";
 
     // When/Then
-    expect(() => parseWorkItemName(dirName)).toThrow("BSP number must be between 10 and 99");
+    expect(() => parseWorkItemName(dirName)).toThrow(
+      "BSP number must be between 10 and 99",
+    );
   });
 });
 
@@ -130,8 +132,8 @@ describe("parseWorkItemName - Kind Detection", () => {
 
 ### Relevant ADRs
 
-1. `context/3-coding-standards.md` - TypeScript standards
-2. `context/4-testing-standards.md` - Testing with Vitest
+1. `docs/code/typescript.md` - TypeScript standards
+2. `docs/testing/standards.md`- Testing with Vitest
 
 ## Quality Requirements
 

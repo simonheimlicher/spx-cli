@@ -11,6 +11,7 @@ THEN verify all invariants hold (no cycles, correct hierarchy, etc.)
 ```
 
 Constraints:
+
 - Stories only under features
 - Features only under capabilities
 - No cycles
@@ -24,18 +25,18 @@ Constraints:
 
 ### Level Assignment
 
-| Component           | Level | Justification         |
-| ------------------- | ----- | --------------------- |
-| Hierarchy validation| 1     | Pure structure check  |
-| Duplicate detection | 1     | Pure comparison       |
-| Cycle detection     | 1     | Pure graph traversal  |
+| Component            | Level | Justification        |
+| -------------------- | ----- | -------------------- |
+| Hierarchy validation | 1     | Pure structure check |
+| Duplicate detection  | 1     | Pure comparison      |
+| Cycle detection      | 1     | Pure graph traversal |
 
 ## Unit Tests (Level 1)
 
 ```typescript
 // test/unit/tree/validate.test.ts
-import { describe, it, expect } from "vitest";
 import { validateTree } from "@/tree/validate";
+import { describe, expect, it } from "vitest";
 
 describe("validateTree", () => {
   it("GIVEN valid tree WHEN validating THEN returns true", () => {

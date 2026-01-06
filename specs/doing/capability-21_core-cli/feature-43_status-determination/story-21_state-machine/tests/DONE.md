@@ -8,12 +8,12 @@
 
 ## Verification Results
 
-| Tool     | Status | Details                  |
-|----------|--------|--------------------------|
-| tsc      | PASS   | 0 errors                 |
-| eslint   | PASS   | 0 violations             |
-| vitest   | PASS   | 5/5 tests, <50ms         |
-| coverage | PASS   | 100% (all metrics)       |
+| Tool     | Status | Details            |
+| -------- | ------ | ------------------ |
+| tsc      | PASS   | 0 errors           |
+| eslint   | PASS   | 0 violations       |
+| vitest   | PASS   | 5/5 tests, <50ms   |
+| coverage | PASS   | 100% (all metrics) |
 
 ## Implementation Summary
 
@@ -30,13 +30,13 @@
 
 ### Tests Graduated
 
-| Requirement | Test Location                                                        |
-|-------------|----------------------------------------------------------------------|
-| FR1: Three-state model | `tests/unit/status/state.test.ts::GIVEN no tests dir THEN OPEN` |
-| FR1: Three-state model | `tests/unit/status/state.test.ts::GIVEN empty tests dir THEN OPEN` |
+| Requirement            | Test Location                                                              |
+| ---------------------- | -------------------------------------------------------------------------- |
+| FR1: Three-state model | `tests/unit/status/state.test.ts::GIVEN no tests dir THEN OPEN`            |
+| FR1: Three-state model | `tests/unit/status/state.test.ts::GIVEN empty tests dir THEN OPEN`         |
 | FR1: IN_PROGRESS state | `tests/unit/status/state.test.ts::GIVEN files no DONE.md THEN IN_PROGRESS` |
-| FR1: DONE state | `tests/unit/status/state.test.ts::GIVEN DONE.md and files THEN DONE` |
-| FR2: Edge case | `tests/unit/status/state.test.ts::GIVEN only DONE.md THEN DONE` |
+| FR1: DONE state        | `tests/unit/status/state.test.ts::GIVEN DONE.md and files THEN DONE`       |
+| FR2: Edge case         | `tests/unit/status/state.test.ts::GIVEN only DONE.md THEN DONE`            |
 
 ## Coverage Report
 

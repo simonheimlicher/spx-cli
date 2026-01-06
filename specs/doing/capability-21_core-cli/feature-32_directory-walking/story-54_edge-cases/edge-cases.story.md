@@ -41,15 +41,15 @@ THEN normalize path separators consistently
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component            | Level | Justification                           |
-| -------------------- | ----- | --------------------------------------- |
-| Permission errors    | 2     | Requires real filesystem permissions    |
-| Symlink detection    | 2     | Requires real symlinks                  |
-| Path normalization   | 1     | Pure function                           |
+| Component          | Level | Justification                        |
+| ------------------ | ----- | ------------------------------------ |
+| Permission errors  | 2     | Requires real filesystem permissions |
+| Symlink detection  | 2     | Requires real symlinks               |
+| Path normalization | 1     | Pure function                        |
 
 ### When to Escalate
 
@@ -63,10 +63,10 @@ This story uses Level 2 for filesystem-specific edge cases:
 
 ```typescript
 // test/integration/scanner/walk.integration.test.ts (continued)
-import { describe, it, expect } from "vitest";
 import { walkSpecs } from "@/scanner/walk";
 import fs from "fs/promises";
 import path from "path";
+import { describe, expect, it } from "vitest";
 
 describe("walkSpecs - Edge Cases", () => {
   /**
@@ -78,7 +78,9 @@ describe("walkSpecs - Edge Cases", () => {
     const restrictedDir = path.join(__dirname, "../../fixtures/restricted");
 
     // When/Then
-    await expect(walkSpecs(restrictedDir)).rejects.toThrow(/permission|EACCES/i);
+    await expect(walkSpecs(restrictedDir)).rejects.toThrow(
+      /permission|EACCES/i,
+    );
   });
 
   it("GIVEN directory with circular symlink WHEN walking THEN avoids infinite loop", async () => {
@@ -103,9 +105,9 @@ describe("walkSpecs - Edge Cases", () => {
     const workItems = await walkSpecs(deepDir);
 
     // Then: Finds all levels
-    expect(workItems.some(w => w.kind === "capability")).toBe(true);
-    expect(workItems.some(w => w.kind === "feature")).toBe(true);
-    expect(workItems.some(w => w.kind === "story")).toBe(true);
+    expect(workItems.some((w) => w.kind === "capability")).toBe(true);
+    expect(workItems.some((w) => w.kind === "feature")).toBe(true);
+    expect(workItems.some((w) => w.kind === "story")).toBe(true);
   });
 });
 ```
@@ -114,8 +116,8 @@ describe("walkSpecs - Edge Cases", () => {
 
 ```typescript
 // test/unit/scanner/walk.test.ts (continued)
-import { describe, it, expect } from "vitest";
 import { normalizePath } from "@/scanner/walk";
+import { describe, expect, it } from "vitest";
 
 describe("Path normalization", () => {
   it("GIVEN Windows path WHEN normalizing THEN uses forward slashes", () => {
@@ -147,8 +149,8 @@ describe("Path normalization", () => {
 
 ### Relevant ADRs
 
-1. `context/3-coding-standards.md` - TypeScript standards
-2. `context/4-testing-standards.md` - Testing with Vitest
+1. `docs/code/typescript.md` - TypeScript standards
+2. `docs/testing/standards.md`- Testing with Vitest
 
 ## Quality Requirements
 

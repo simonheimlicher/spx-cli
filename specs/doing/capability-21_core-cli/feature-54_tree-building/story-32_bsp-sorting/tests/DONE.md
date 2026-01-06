@@ -8,21 +8,22 @@
 
 ## Verification Results
 
-| Tool     | Status | Details              |
-|----------|--------|----------------------|
-| tsc      | PASS   | 0 errors             |
-| eslint   | PASS   | 0 violations         |
-| vitest   | PASS   | 17/17 tests, 98.95% coverage |
+| Tool   | Status | Details                      |
+| ------ | ------ | ---------------------------- |
+| tsc    | PASS   | 0 errors                     |
+| eslint | PASS   | 0 violations                 |
+| vitest | PASS   | 17/17 tests, 98.95% coverage |
 
 ## Graduated Tests
 
-| Requirement | Test Location                              |
-|-------------|--------------------------------------------|
+| Requirement                      | Test Location                                            |
+| -------------------------------- | -------------------------------------------------------- |
 | FR1: Sort children by BSP number | `tests/unit/tree/build.test.ts::buildTree - BSP Sorting` |
 
 ## Implementation Summary
 
 Implemented BSP sorting for tree children per ADR-002 contract:
+
 - Children sorted by BSP number ascending (a.number - b.number)
 - Applies to all levels: capabilities, features, stories
 - Ensures contract compliance with Feature 65 formatters

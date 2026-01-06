@@ -3,6 +3,7 @@
 ## Implementation Summary
 
 Implemented text formatter that renders work item trees with:
+
 - Hierarchical indentation (0/2/4 spaces for capability/feature/story)
 - Chalk-colored status indicators (green/yellow/gray)
 - Display number conversion (capability: internal+1, others: as-is)
@@ -15,6 +16,7 @@ Implemented text formatter that renders work item trees with:
 ## Tests
 
 All 6 unit tests pass:
+
 - Tree with capability renders with no indentation
 - Features render with 2-space indentation
 - Stories render with 4-space indentation

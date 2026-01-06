@@ -30,15 +30,15 @@ THEN include full path for each work item
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component                  | Level | Justification                   |
-| -------------------------- | ----- | ------------------------------- |
-| Directory to WorkItem      | 1     | Pure data transformation        |
-| Path extraction            | 1     | Pure function                   |
-| List building              | 1     | Pure function over data         |
+| Component             | Level | Justification            |
+| --------------------- | ----- | ------------------------ |
+| Directory to WorkItem | 1     | Pure data transformation |
+| Path extraction       | 1     | Pure function            |
+| List building         | 1     | Pure function over data  |
 
 ### When to Escalate
 
@@ -52,8 +52,8 @@ This story stays at Level 1 because:
 
 ```typescript
 // test/unit/scanner/walk.test.ts (continued)
-import { describe, it, expect } from "vitest";
 import { buildWorkItemList } from "@/scanner/walk";
+import { describe, expect, it } from "vitest";
 
 describe("buildWorkItemList", () => {
   /**
@@ -64,7 +64,10 @@ describe("buildWorkItemList", () => {
     // Given
     const entries = [
       { name: "capability-21_core-cli", path: "/specs/capability-21_core-cli" },
-      { name: "feature-32_walk", path: "/specs/capability-21_core-cli/feature-32_walk" },
+      {
+        name: "feature-32_walk",
+        path: "/specs/capability-21_core-cli/feature-32_walk",
+      },
     ];
 
     // When
@@ -99,9 +102,10 @@ describe("buildWorkItemList", () => {
 
   it("GIVEN invalid directory entry WHEN building list THEN throws error", () => {
     // Given
-    const entries = [
-      { name: "invalid-pattern", path: "/specs/invalid-pattern" },
-    ];
+    const entries = [{
+      name: "invalid-pattern",
+      path: "/specs/invalid-pattern",
+    }];
 
     // When/Then
     expect(() => buildWorkItemList(entries)).toThrow("Invalid work item name");
@@ -124,8 +128,8 @@ describe("buildWorkItemList", () => {
 
 ### Relevant ADRs
 
-1. `context/3-coding-standards.md` - TypeScript standards
-2. `context/4-testing-standards.md` - Testing with Vitest
+1. `docs/code/typescript.md` - TypeScript standards
+2. `docs/testing/standards.md`- Testing with Vitest
 
 ## Quality Requirements
 

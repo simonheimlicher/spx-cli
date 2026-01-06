@@ -45,15 +45,15 @@ THEN identify duplicates and out-of-order sequences
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component                  | Level | Justification                  |
-| -------------------------- | ----- | ------------------------------ |
-| BSP range validation       | 1     | Pure function, number checking |
-| Error message generation   | 1     | Pure function                  |
-| Duplicate detection        | 1     | Pure function (if implemented) |
+| Component                | Level | Justification                  |
+| ------------------------ | ----- | ------------------------------ |
+| BSP range validation     | 1     | Pure function, number checking |
+| Error message generation | 1     | Pure function                  |
+| Duplicate detection      | 1     | Pure function (if implemented) |
 
 ### When to Escalate
 
@@ -67,8 +67,11 @@ This story stays at Level 1 because:
 
 ```typescript
 // test/unit/scanner/validation.test.ts
-import { describe, it, expect } from "vitest";
-import { isValidBSPNumber, validateBSPNumber } from "../../../src/scanner/validation";
+import { describe, expect, it } from "vitest";
+import {
+  isValidBSPNumber,
+  validateBSPNumber,
+} from "../../../src/scanner/validation";
 
 describe("isValidBSPNumber", () => {
   /**
@@ -149,7 +152,9 @@ describe("validateBSPNumber", () => {
     const number = 5;
 
     // When/Then
-    expect(() => validateBSPNumber(number)).toThrow("BSP number must be between 10 and 99, got 5");
+    expect(() => validateBSPNumber(number)).toThrow(
+      "BSP number must be between 10 and 99, got 5",
+    );
   });
 
   it("GIVEN number too high WHEN validating THEN throws descriptive error", () => {
@@ -157,7 +162,9 @@ describe("validateBSPNumber", () => {
     const number = 100;
 
     // When/Then
-    expect(() => validateBSPNumber(number)).toThrow("BSP number must be between 10 and 99, got 100");
+    expect(() => validateBSPNumber(number)).toThrow(
+      "BSP number must be between 10 and 99, got 100",
+    );
   });
 });
 ```
@@ -181,7 +188,9 @@ describe("parseWorkItemName - BSP Validation Integration", () => {
     const dirName = "capability-09_test";
 
     // When/Then
-    expect(() => parseWorkItemName(dirName)).toThrow("BSP number must be between 10 and 99");
+    expect(() => parseWorkItemName(dirName)).toThrow(
+      "BSP number must be between 10 and 99",
+    );
   });
 
   it("GIVEN work item with BSP number too high WHEN parsing THEN throws error", () => {
@@ -189,7 +198,9 @@ describe("parseWorkItemName - BSP Validation Integration", () => {
     const dirName = "feature-100_test";
 
     // When/Then
-    expect(() => parseWorkItemName(dirName)).toThrow("BSP number must be between 10 and 99");
+    expect(() => parseWorkItemName(dirName)).toThrow(
+      "BSP number must be between 10 and 99",
+    );
   });
 });
 ```
@@ -198,8 +209,8 @@ describe("parseWorkItemName - BSP Validation Integration", () => {
 
 ### Relevant ADRs
 
-1. `context/3-coding-standards.md` - TypeScript standards
-2. `context/4-testing-standards.md` - Testing with Vitest
+1. `docs/code/typescript.md` - TypeScript standards
+2. `docs/testing/standards.md`- Testing with Vitest
 
 ## Quality Requirements
 

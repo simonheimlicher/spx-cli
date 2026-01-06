@@ -11,6 +11,7 @@ THEN render hierarchical tree with proper indentation
 ```
 
 Output format:
+
 ```
 capability-21_core-cli [DONE]
   feature-32_directory-walking [IN_PROGRESS]
@@ -26,18 +27,18 @@ capability-21_core-cli [DONE]
 
 ### Level Assignment
 
-| Component         | Level | Justification            |
-| ----------------- | ----- | ------------------------ |
-| Text rendering    | 1     | Pure string formatting   |
-| Indentation logic | 1     | Pure function            |
-| Status display    | 1     | Pure string interpolation|
+| Component         | Level | Justification             |
+| ----------------- | ----- | ------------------------- |
+| Text rendering    | 1     | Pure string formatting    |
+| Indentation logic | 1     | Pure function             |
+| Status display    | 1     | Pure string interpolation |
 
 ## Unit Tests (Level 1)
 
 ```typescript
 // test/unit/reporter/text.test.ts
-import { describe, it, expect } from "vitest";
 import { formatText } from "@/reporter/text";
+import { describe, expect, it } from "vitest";
 
 describe("formatText", () => {
   it("GIVEN tree with capability WHEN formatting THEN renders with no indentation", () => {

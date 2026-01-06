@@ -12,7 +12,7 @@ The `specs/` directory tree is recursively traversed to discover all work items:
 ## Testing Strategy
 
 > Features require **Level 1 + Level 2** to prove the feature works with real tools.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
@@ -42,9 +42,9 @@ describe("Feature: Directory Walking", () => {
 
     // Then: All work items discovered
     expect(workItems).toHaveLength(12); // Known fixture count
-    expect(workItems.map(w => w.kind)).toContain("capability");
-    expect(workItems.map(w => w.kind)).toContain("feature");
-    expect(workItems.map(w => w.kind)).toContain("story");
+    expect(workItems.map((w) => w.kind)).toContain("capability");
+    expect(workItems.map((w) => w.kind)).toContain("feature");
+    expect(workItems.map((w) => w.kind)).toContain("story");
   });
 
   it("GIVEN directory with permissions error WHEN walking THEN handles gracefully", async () => {

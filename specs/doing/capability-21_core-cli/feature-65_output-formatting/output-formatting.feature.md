@@ -14,16 +14,16 @@ All formats support the same tree structure with consistent data.
 ## Testing Strategy
 
 > Features require **Level 1 + Level 2** to prove the feature works with real tools.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component        | Level | Justification                |
-| ---------------- | ----- | ---------------------------- |
-| Text formatter   | 1     | Pure string rendering        |
-| JSON formatter   | 1     | Pure data serialization      |
-| Markdown formatter | 1   | Pure string rendering        |
-| Table formatter  | 1     | Pure string rendering        |
+| Component          | Level | Justification           |
+| ------------------ | ----- | ----------------------- |
+| Text formatter     | 1     | Pure string rendering   |
+| JSON formatter     | 1     | Pure data serialization |
+| Markdown formatter | 1     | Pure string rendering   |
+| Table formatter    | 1     | Pure string rendering   |
 
 ### Escalation Rationale
 
@@ -71,6 +71,7 @@ Output formatting is the final step before presentation:
 - [ ] 100% type coverage
 
 **Proposed Stories**:
+
 - story-21: Text formatter (tree view)
 - story-32: JSON formatter (for MCP)
 - story-43: Markdown formatter (for docs)

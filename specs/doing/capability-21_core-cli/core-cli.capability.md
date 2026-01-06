@@ -11,19 +11,19 @@
 ## Testing Strategy
 
 > Capabilities require **all three levels** to prove end-to-end value delivery.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component            | Level | Justification                                           |
-| -------------------- | ----- | ------------------------------------------------------- |
-| Pattern matching     | 1     | Pure functions, regex operations                        |
-| Directory scanning   | 2     | Needs real filesystem operations                        |
-| Status determination | 2     | Needs real file structure and DONE.md detection         |
-| Tree building        | 1     | Pure data structure assembly                            |
-| Output formatting    | 1     | Pure rendering functions                                |
-| CLI integration      | 2     | Needs Commander.js framework                            |
-| Full workflow        | 3     | Needs complete environment + performance validation     |
+| Component            | Level | Justification                                       |
+| -------------------- | ----- | --------------------------------------------------- |
+| Pattern matching     | 1     | Pure functions, regex operations                    |
+| Directory scanning   | 2     | Needs real filesystem operations                    |
+| Status determination | 2     | Needs real file structure and DONE.md detection     |
+| Tree building        | 1     | Pure data structure assembly                        |
+| Output formatting    | 1     | Pure rendering functions                            |
+| CLI integration      | 2     | Needs Commander.js framework                        |
+| Full workflow        | 3     | Needs complete environment + performance validation |
 
 ### Escalation Rationale
 
@@ -45,7 +45,11 @@ describe("Capability: Core CLI", () => {
 
     // When: Execute full CLI workflow
     const startTime = Date.now();
-    const { stdout, exitCode } = await execa("node", ["dist/bin/spx.js", "status", "--json"], {
+    const { stdout, exitCode } = await execa("node", [
+      "dist/bin/spx.js",
+      "status",
+      "--json",
+    ], {
       cwd: fixtureRoot,
     });
     const elapsed = Date.now() - startTime;
@@ -73,15 +77,30 @@ describe("Capability: Core CLI - Output Formats", () => {
     const fixtureRoot = "test/fixtures/repos/sample-10-items";
 
     // JSON format
-    const jsonResult = await execa("node", ["dist/bin/spx.js", "status", "--json"], { cwd: fixtureRoot });
+    const jsonResult = await execa("node", [
+      "dist/bin/spx.js",
+      "status",
+      "--json",
+    ], {
+      cwd: fixtureRoot,
+    });
     expect(() => JSON.parse(jsonResult.stdout)).not.toThrow();
 
     // Text format (default)
-    const textResult = await execa("node", ["dist/bin/spx.js", "status"], { cwd: fixtureRoot });
+    const textResult = await execa("node", ["dist/bin/spx.js", "status"], {
+      cwd: fixtureRoot,
+    });
     expect(textResult.stdout).toContain("specs/doing/");
 
     // Table format
-    const tableResult = await execa("node", ["dist/bin/spx.js", "status", "--format", "table"], { cwd: fixtureRoot });
+    const tableResult = await execa("node", [
+      "dist/bin/spx.js",
+      "status",
+      "--format",
+      "table",
+    ], {
+      cwd: fixtureRoot,
+    });
     expect(tableResult.stdout).toMatch(/\|.*\|/); // Contains table borders
   });
 });

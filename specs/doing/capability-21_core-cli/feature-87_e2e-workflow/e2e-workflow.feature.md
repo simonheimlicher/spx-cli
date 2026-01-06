@@ -15,14 +15,14 @@ This feature contains the E2E tests that prove Capability-21 is complete.
 
 ### Relevant ADRs
 
-1. **ADR-003: E2E Fixture Generation Strategy** - Programmatic fixture generation with faker.js
+1. [**ADR-003: E2E Fixture Generation Strategy**](specs/doing/capability-21_core-cli/decisions/adr-003_e2e-fixture-generation.md) - Programmatic fixture generation with faker.js
    - `generateFixtureTree(config)` - Pure function to create tree structure
    - `materializeFixture(tree)` - Write to `os.tmpdir()`, return cleanup handle
    - `PRESETS` object with `MINIMAL`, `SHALLOW_50`, `DEEP_50`, `FAN_10_LEVEL_3`
 
 ## Testing Strategy
 
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
@@ -47,7 +47,7 @@ This feature contains the E2E tests that prove Capability-21 is complete.
 
 ### story-21: Fixture Generator (Level 1)
 
-Implements `generateFixtureTree(config)` and `PRESETS` object. Pure function that creates tree structures with faker.js names following `context/1-structure.md`. Unit testable with no I/O.
+Implements `generateFixtureTree(config)` and `PRESETS` object. Pure function that creates tree structures with faker.js names following `specs/templates/structure.yaml`. Unit testable with no I/O.
 
 ### story-32: Fixture Writer (Level 2)
 
@@ -82,8 +82,9 @@ describe("Capability: Core CLI - E2E", () => {
       expect(elapsed).toBeLessThan(100);
 
       const result = JSON.parse(stdout);
-      expect(result.summary.done + result.summary.inProgress + result.summary.open)
-        .toBeGreaterThanOrEqual(50);
+      expect(
+        result.summary.done + result.summary.inProgress + result.summary.open,
+      ).toBeGreaterThanOrEqual(50);
     } finally {
       await fixture.cleanup();
     }
@@ -95,9 +96,7 @@ describe("Capability: Core CLI - E2E", () => {
     try {
       const formats = ["text", "json", "markdown", "table"];
       for (const format of formats) {
-        const args = format === "text"
-          ? ["status"]
-          : ["status", "--format", format];
+        const args = format === "text" ? ["status"] : ["status", "--format", format];
 
         const { exitCode } = await execa("node", ["bin/spx.js", ...args], {
           cwd: fixture.path,

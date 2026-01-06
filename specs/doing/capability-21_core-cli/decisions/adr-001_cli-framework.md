@@ -1,182 +1,103 @@
 # ADR 001: CLI Framework Selection
 
-## Context and Problem Statement
+## Problem
 
-### Problem
+spx requires both simple command execution (`spx status --json`) and interactive tree navigation (`spx browse`). We need a CLI framework that handles both modes elegantly without over-engineering the simple cases.
 
-```
-spx requires both simple command execution (spx status --json) and interactive
-tree navigation (spx browse). We need a CLI framework that handles both modes
-elegantly without over-engineering the simple cases.
-```
+## Context
 
-### Context
+- **Business**: spx replaces an LLM-based spec workflow skill with a deterministic CLI, requiring <100ms response times for non-interactive commands
+- **Technical**: TypeScript chosen for MCP SDK alignment; need command parsing + optional TUI capability; must support JSON output for MCP consumption
 
-- **Business Context**: spx replaces an LLM-based spec workflow skill with a deterministic CLI, requiring <100ms response times
-- **Technical Context**: TypeScript chosen for MCP SDK alignment; need command parsing + optional TUI capability
-- **Constraints**: Must support JSON output for MCP consumption; interactive mode for human navigation
+## Decision
 
-## Decision Drivers
+**Use Commander.js for command routing and Ink for interactive modes.**
 
-- [x] **Performance**: Commands must complete in <100ms
-- [x] **Maintainability**: Simple commands should remain simple to implement
-- [x] **Integration**: JSON output for MCP server; interactive mode for humans
-- [x] **Extensibility**: Room to grow into full TUI without rewrite
+## Rationale
 
-## Considered Options
+spx has two distinct interaction modes that benefit from specialized tools:
 
-### Option 1: Commander.js Only
+1. **Fire-and-forget commands** (status, next, done) — Commander handles these perfectly with minimal overhead. It's the industry standard, familiar to Node developers, and adds negligible startup time.
 
-**Description**: Lightweight command parser. Add interactivity later with separate libraries as needed.
+2. **Interactive navigation** (browse, tree exploration) — Ink provides full TUI capability with React's component model, enabling live-updating trees with keyboard navigation.
 
-### Pros of Option 1
+Alternatives considered:
 
-- ✅ Minimal footprint, fast startup
-- ✅ Industry standard, familiar to all Node developers
-- ✅ Perfect for non-interactive commands
+- **Commander-only**: Would require bolting on interactivity later with unknown libraries, risking fragmentation.
+- **oclif**: Heavy plugin architecture designed for large CLI suites; overkill for a focused tool.
+- **Clack**: Beautiful for guided prompts but prompt-oriented, not app-oriented. Limited for persistent TUI with live updates.
 
-### Cons of Option 1
+The Commander + Ink combination keeps simple things simple while enabling complex interactivity without architectural changes. Clack may be added later for specific flows like `spx init`.
 
-- ❌ No built-in interactivity; requires additional libraries
-- ❌ Fragmented approach if multiple interaction libraries added later
+## Trade-offs Accepted
 
-### Option 2: oclif
+- **Two libraries instead of one**: Acceptable given clear separation of concerns — Commander owns routing, Ink owns rendering.
+- **Ink requires React mental model**: Acceptable given its power for TUI and the ecosystem of primitives (select, spinner, text-input).
+- **Larger bundle than Commander-only**: Mitigated by tree-shaking and lazy-loading Ink only when interactive mode is invoked.
 
-**Description**: Full CLI framework by Salesforce with plugins, hooks, and structure.
+## Testing Strategy
 
-### Pros of Option 2
+> Consult `typescript-testing` skill for patterns and harness guidance.
 
-- ✅ Plugin architecture for extensibility
-- ✅ Built-in help generation and command discovery
-- ✅ Good for large CLI applications
+### Level Coverage
 
-### Cons of Option 2
+| Level           | Question Answered                                           | Scope                                               |
+| --------------- | ----------------------------------------------------------- | --------------------------------------------------- |
+| 1 (Unit)        | Do command handlers produce correct output for valid input? | Individual command modules (`status.ts`, `next.ts`) |
+| 2 (Integration) | Does the CLI parse args and route to correct handler?       | Commander program → handler → output                |
+| 3 (E2E)         | Does the installed CLI binary work for real user workflows? | Full `spx` binary execution against fixture repos   |
 
-- ❌ Heavy for a focused tool like spx
-- ❌ No interactivity built-in despite complexity
-- ❌ Opinionated structure adds overhead
+### Escalation Rationale
 
-### Option 3: Commander + Ink
+- **1 → 2**: Unit tests verify handlers in isolation but cannot verify Commander's argument parsing, option handling, or subcommand routing. Integration tests execute the program entry point with real argv.
+- **2 → 3**: Integration tests run in-process but cannot verify the built binary, shebang, PATH resolution, or real-world timing. E2E tests execute the actual installed `spx` command.
 
-**Description**: Commander for command routing; Ink (React for terminals) for interactive modes.
+### Test Harness
 
-### Pros of Option 3
+| Level | Harness           | Location/Dependency                                                             |
+| ----- | ----------------- | ------------------------------------------------------------------------------- |
+| 2     | CLI test executor | `tests/harness/cli-executor.ts` — wraps `execa` with timeout and output capture |
+| 3     | Fixture generator | ADR-003, `tests/harness/fixture-generator.ts` — generates realistic spec repos  |
 
-- ✅ Simple commands stay simple (Commander)
-- ✅ Full TUI capability when needed (Ink)
-- ✅ React model enables complex interactive trees
-- ✅ Ink ecosystem provides select, spinner, text-input primitives
+### Behaviors Verified
 
-### Cons of Option 3
+**Level 1 (Unit):**
 
-- ❌ Two libraries to understand
-- ❌ Ink requires React mental model
+- Status command handler returns correct structure for given WorkItemTree
+- JSON formatter produces valid, parseable JSON
+- Text formatter produces expected tree rendering
 
-### Option 4: Clack
+**Level 2 (Integration):**
 
-**Description**: Beautiful prompt library by the Astro team. Elegant out-of-box aesthetics.
+- `spx status --json` parses flags and invokes correct handler
+- `spx status --format=table` routes to table formatter
+- Unknown commands produce helpful error messages
+- `--help` flag works on all commands
 
-### Pros of Option 4
+**Level 3 (E2E):**
 
-- ✅ Stunning visual output with minimal code
-- ✅ Simple API for guided flows
-- ✅ Great for init wizards and confirmations
+- `spx status --json` completes in <100ms on 50-item fixture
+- `spx browse` renders tree and responds to keyboard input
+- Exit codes are correct (0 for success, 1 for error)
 
-### Cons of Option 4
+## Validation
 
-- ❌ Prompt-oriented, not app-oriented
-- ❌ Limited for persistent TUI (live updating tree)
-- ❌ Less flexible for complex navigation
+### How to Recognize Compliance
 
-## Decision Outcome
+You're following this decision if:
 
-**Chosen Option**: Commander + Ink
+- Non-interactive commands use Commander directly with no Ink dependency
+- Interactive commands use Ink components with Commander only for initial routing
+- New commands default to non-interactive unless they require live updates
 
-### Rationale
+### MUST
 
-```
-spx has two distinct interaction modes:
+- All non-interactive commands complete in <100ms
+- JSON output is machine-parseable (no ANSI codes, no trailing output)
+- Ink is lazy-loaded only when interactive mode is invoked
 
-1. Fire-and-forget commands (status, next, done) — Commander handles perfectly
-2. Interactive navigation (browse, tree exploration) — Ink provides full TUI
+### NEVER
 
-This combination keeps simple things simple while enabling complex interactivity
-without architectural changes. Clack may be added later for specific flows (spx init).
-```
-
-**Expected Benefits:**
-
-- Non-interactive commands have minimal overhead
-- Interactive mode can render live-updating trees with keyboard navigation
-- Architecture supports adding more TUI features without refactoring
-
-**Accepted Trade-offs:**
-
-- Two libraries instead of one; acceptable given clear separation of concerns
-- Ink requires React knowledge; acceptable given its power for TUI
-
-## Implementation Plan
-
-### Immediate Actions
-
-- [ ] Initialize project with Commander for command routing
-- [ ] Implement `status`, `next`, `done` as pure Commander commands
-- [ ] Add Ink for `browse` command with tree navigation
-
-### Success Metrics
-
-- **Non-interactive commands**: <100ms execution time
-- **Interactive mode**: Smooth 60fps rendering, keyboard navigation works
-- **Timeline**: Validate at v0.1.0
-
-## Consequences
-
-### Positive Consequences
-
-- Clean separation: Commander for CLI, Ink for TUI
-- Can ship non-interactive commands first, add browse later
-- Ink ecosystem provides battle-tested interactive primitives
-
-### Negative Consequences
-
-- Bundle size larger than Commander-only; mitigated by tree-shaking and lazy loading Ink
-
-## Compliance and Validation
-
-### Architecture Principles
-
-- [x] **Consistency**: Both libraries are mainstream TypeScript-friendly choices
-- [x] **Simplicity**: Simple commands use simple code; complexity only where needed
-- [x] **Scalability**: Can grow into full TUI without rewrite
-
-### Integration Tests Required
-
-```typescript
-describe("CLI Framework Validation", () => {
-  it("non-interactive commands complete under 100ms", async () => {
-    const start = Date.now();
-    await exec("spx status --json");
-    expect(Date.now() - start).toBeLessThan(100);
-  });
-
-  it("JSON output is valid and parseable", async () => {
-    const { stdout } = await exec("spx status --json");
-    expect(() => JSON.parse(stdout)).not.toThrow();
-  });
-
-  it("interactive mode renders without error", async () => {
-    const proc = spawn("spx", ["browse"]);
-    await waitForOutput(proc, "capability-");
-    proc.stdin.write("q"); // quit
-    expect(proc.exitCode).toBe(0);
-  });
-});
-```
-
-## Links and References
-
-**Supporting Documentation:**
-
-- Commander.js: <https://github.com/tj/commander.js>
-- Ink: <https://github.com/vadimdemedes/ink>
-- Clack: <https://github.com/bombshell-dev/clack>
+- Import Ink in non-interactive command paths
+- Use `console.log` for output in commands (use the output formatter interface)
+- Block the event loop in interactive mode (use async patterns)

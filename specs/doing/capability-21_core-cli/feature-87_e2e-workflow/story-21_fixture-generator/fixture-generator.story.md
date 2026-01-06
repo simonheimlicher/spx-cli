@@ -41,7 +41,7 @@ THEN produce identical names for same seed
 ### Relevant ADRs
 
 1. **ADR-003: E2E Fixture Generation Strategy** - Defines the two-function approach
-2. **context/1-structure.md** - Defines valid file structure for generated fixtures
+2. **specs/templates/structure.yaml** - Defines valid file structure for generated fixtures
 
 ### Types
 
@@ -79,12 +79,12 @@ const PRESETS: Record<string, FixtureConfig> = {
 
 ### Level Assignment
 
-| Component        | Level | Justification                        |
-| ---------------- | ----- | ------------------------------------ |
-| Tree generation  | 1     | Pure function, no I/O                |
-| BSP numbering    | 1     | Deterministic calculation            |
-| Status assignment| 1     | Random but seedable                  |
-| Faker.js naming  | 1     | Seeded randomness                    |
+| Component         | Level | Justification             |
+| ----------------- | ----- | ------------------------- |
+| Tree generation   | 1     | Pure function, no I/O     |
+| BSP numbering     | 1     | Deterministic calculation |
+| Status assignment | 1     | Random but seedable       |
+| Faker.js naming   | 1     | Seeded randomness         |
 
 ### When to Escalate
 
@@ -98,8 +98,8 @@ This story uses Level 1 only because:
 
 ```typescript
 // tests/unit/helpers/fixture-generator.test.ts
-import { describe, it, expect } from "vitest";
 import { generateFixtureTree, PRESETS } from "@/tests/helpers/fixture-generator";
+import { describe, expect, it } from "vitest";
 
 describe("generateFixtureTree", () => {
   it("GIVEN MINIMAL preset WHEN generating THEN produces 3 nodes", () => {
@@ -148,7 +148,7 @@ describe("generateFixtureTree", () => {
       expect(cap.number).toBeGreaterThanOrEqual(10);
       expect(cap.number).toBeLessThanOrEqual(99);
 
-      for (const feat of cap.children.filter(c => c.kind === "feature")) {
+      for (const feat of cap.children.filter((c) => c.kind === "feature")) {
         expect(feat.number).toBeGreaterThanOrEqual(10);
         expect(feat.number).toBeLessThanOrEqual(99);
       }
@@ -184,7 +184,7 @@ describe("PRESETS", () => {
 - [ ] `generateFixtureTree(config)` implemented
 - [ ] `PRESETS` object exported with 4 configurations
 - [ ] Seed support for reproducible generation
-- [ ] BSP numbers follow `context/1-structure.md` rules
+- [ ] BSP numbers follow `specs/templates/structure.yaml` rules
 - [ ] Slugs are valid (lowercase, hyphens, alphanumeric)
 - [ ] All Level 1 tests pass
 - [ ] faker.js added to devDependencies

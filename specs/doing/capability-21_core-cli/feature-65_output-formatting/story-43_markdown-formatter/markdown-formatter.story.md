@@ -11,6 +11,7 @@ THEN produce markdown with heading hierarchy
 ```
 
 Format:
+
 ```markdown
 # capability-21_core-cli
 
@@ -33,17 +34,17 @@ Status: DONE
 
 ### Level Assignment
 
-| Component         | Level | Justification         |
-| ----------------- | ----- | --------------------- |
-| Markdown generation| 1    | Pure string formatting|
-| Heading levels    | 1     | Pure logic            |
+| Component           | Level | Justification          |
+| ------------------- | ----- | ---------------------- |
+| Markdown generation | 1     | Pure string formatting |
+| Heading levels      | 1     | Pure logic             |
 
 ## Unit Tests (Level 1)
 
 ```typescript
 // test/unit/reporter/markdown.test.ts
-import { describe, it, expect } from "vitest";
 import { formatMarkdown } from "@/reporter/markdown";
+import { describe, expect, it } from "vitest";
 
 describe("formatMarkdown", () => {
   it("GIVEN tree WHEN formatting THEN uses # for capabilities", () => {

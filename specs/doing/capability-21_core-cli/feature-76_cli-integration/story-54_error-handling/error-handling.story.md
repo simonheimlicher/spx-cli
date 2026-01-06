@@ -42,24 +42,28 @@ THEN show descriptive error with path
 
 ### Level Assignment
 
-| Component             | Level | Justification                    |
-| --------------------- | ----- | -------------------------------- |
-| Command validation    | 2     | Requires CLI execution           |
-| Error message display | 2     | Requires real stderr             |
-| Exit codes            | 2     | Requires real process.exit       |
+| Component             | Level | Justification              |
+| --------------------- | ----- | -------------------------- |
+| Command validation    | 2     | Requires CLI execution     |
+| Error message display | 2     | Requires real stderr       |
+| Exit codes            | 2     | Requires real process.exit |
 
 ## Integration Tests (Level 2)
 
 ```typescript
 // test/integration/cli/errors.integration.test.ts
-import { describe, it, expect } from "vitest";
 import { execa } from "execa";
+import { describe, expect, it } from "vitest";
 
 describe("CLI Error Handling", () => {
   it("GIVEN invalid command WHEN running THEN shows help and exits with 1", async () => {
-    const { exitCode, stderr } = await execa("node", ["bin/spx.js", "invalid"], {
-      reject: false,
-    });
+    const { exitCode, stderr } = await execa(
+      "node",
+      ["bin/spx.js", "invalid"],
+      {
+        reject: false,
+      },
+    );
 
     expect(exitCode).toBe(1);
     expect(stderr).toMatch(/Unknown command|help/i);

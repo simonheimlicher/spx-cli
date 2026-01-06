@@ -15,16 +15,16 @@ CLI uses Commander.js for argument parsing and follows Unix conventions.
 ## Testing Strategy
 
 > Features require **Level 1 + Level 2** to prove the feature works with real tools.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component          | Level | Justification                      |
-| ------------------ | ----- | ---------------------------------- |
-| Command routing    | 2     | Requires Commander.js integration  |
-| Argument parsing   | 2     | Requires Commander.js framework    |
-| Output piping      | 2     | Requires real stdout handling      |
-| Error handling     | 2     | Requires real process.exit         |
+| Component        | Level | Justification                     |
+| ---------------- | ----- | --------------------------------- |
+| Command routing  | 2     | Requires Commander.js integration |
+| Argument parsing | 2     | Requires Commander.js framework   |
+| Output piping    | 2     | Requires real stdout handling     |
+| Error handling   | 2     | Requires real process.exit        |
 
 ### Escalation Rationale
 
@@ -48,7 +48,11 @@ describe("Feature: CLI Integration", () => {
   });
 
   it("GIVEN spx CLI WHEN running status --json THEN outputs valid JSON", async () => {
-    const { stdout, exitCode } = await execa("node", ["bin/spx.js", "status", "--json"], {
+    const { stdout, exitCode } = await execa("node", [
+      "bin/spx.js",
+      "status",
+      "--json",
+    ], {
       cwd: "test/fixtures/repos/simple",
     });
 
@@ -57,10 +61,14 @@ describe("Feature: CLI Integration", () => {
   });
 
   it("GIVEN invalid command WHEN running THEN shows help", async () => {
-    const { stderr, exitCode } = await execa("node", ["bin/spx.js", "invalid"], {
-      cwd: "test/fixtures/repos/simple",
-      reject: false,
-    });
+    const { stderr, exitCode } = await execa(
+      "node",
+      ["bin/spx.js", "invalid"],
+      {
+        cwd: "test/fixtures/repos/simple",
+        reject: false,
+      },
+    );
 
     expect(exitCode).not.toBe(0);
     expect(stderr).toContain("help");
@@ -84,6 +92,7 @@ CLI integration completes the user-facing interface:
 - [ ] 100% type coverage
 
 **Proposed Stories**:
+
 - story-21: Status command
 - story-32: Next command (find next work item)
 - story-43: Command options (--json, --format)

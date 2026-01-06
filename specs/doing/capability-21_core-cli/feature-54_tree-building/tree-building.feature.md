@@ -12,16 +12,16 @@ Work items are assembled into hierarchical tree structure:
 ## Testing Strategy
 
 > Features require **Level 1 + Level 2** to prove the feature works with real tools.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component              | Level | Justification                 |
-| ---------------------- | ----- | ----------------------------- |
-| Tree assembly          | 1     | Pure data structure building  |
-| Parent-child linking   | 1     | Pure function over data       |
-| Status rollup          | 1     | Pure aggregation function     |
-| BSP sorting            | 1     | Pure comparison function      |
+| Component            | Level | Justification                |
+| -------------------- | ----- | ---------------------------- |
+| Tree assembly        | 1     | Pure data structure building |
+| Parent-child linking | 1     | Pure function over data      |
+| Status rollup        | 1     | Pure aggregation function    |
+| BSP sorting          | 1     | Pure comparison function     |
 
 ### Escalation Rationale
 
@@ -69,6 +69,7 @@ Tree building enables:
 - [ ] 100% type coverage
 
 **Proposed Stories**:
+
 - story-21: Build parent-child relationships
 - story-32: Sort by BSP number
 - story-43: Aggregate status rollup

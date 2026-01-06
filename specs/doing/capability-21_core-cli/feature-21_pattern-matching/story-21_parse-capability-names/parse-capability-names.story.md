@@ -30,7 +30,7 @@ THEN return an error with a descriptive message
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
@@ -55,7 +55,7 @@ If you find yourself needing real directories, this is actually a Feature 32 con
 
 ```typescript
 // test/unit/scanner/patterns.test.ts
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { parseWorkItemName } from "../../../src/scanner/patterns";
 
 describe("parseWorkItemName - Capabilities", () => {
@@ -102,7 +102,9 @@ describe("parseWorkItemName - Capabilities", () => {
     const dirName = "capability-5_too-low";
 
     // When/Then
-    expect(() => parseWorkItemName(dirName)).toThrow("BSP number must be between 10 and 99");
+    expect(() => parseWorkItemName(dirName)).toThrow(
+      "BSP number must be between 10 and 99",
+    );
   });
 
   it("GIVEN non-capability pattern WHEN parsing THEN returns error", () => {
@@ -119,8 +121,8 @@ describe("parseWorkItemName - Capabilities", () => {
 
 ### Relevant ADRs
 
-1. `context/3-coding-standards.md` - TypeScript standards
-2. `context/4-testing-standards.md` - Testing with Vitest
+1. `docs/code/typescript.md` - TypeScript standards
+2. `docs/testing/standards.md`- Testing with Vitest
 
 ## Quality Requirements
 

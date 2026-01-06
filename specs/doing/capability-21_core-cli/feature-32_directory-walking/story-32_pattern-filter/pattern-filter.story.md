@@ -30,7 +30,7 @@ THEN exclude non-work-item directories
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
@@ -52,8 +52,8 @@ This story stays at Level 1 because:
 
 ```typescript
 // test/unit/scanner/walk.test.ts
-import { describe, it, expect } from "vitest";
 import { filterWorkItemDirectories } from "@/scanner/walk";
+import { describe, expect, it } from "vitest";
 
 describe("filterWorkItemDirectories", () => {
   /**
@@ -106,7 +106,7 @@ describe("filterWorkItemDirectories", () => {
 
     // Then
     expect(filtered).toHaveLength(2);
-    expect(filtered.map(f => f.name)).toEqual([
+    expect(filtered.map((f) => f.name)).toEqual([
       "capability-21_test",
       "feature-32_walk",
     ]);
@@ -118,8 +118,8 @@ describe("filterWorkItemDirectories", () => {
 
 ### Relevant ADRs
 
-1. `context/3-coding-standards.md` - TypeScript standards
-2. `context/4-testing-standards.md` - Testing with Vitest
+1. `docs/code/typescript.md` - TypeScript standards
+2. `docs/testing/standards.md`- Testing with Vitest
 
 ## Quality Requirements
 

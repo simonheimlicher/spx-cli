@@ -8,12 +8,12 @@
 
 ## Verification Results
 
-| Tool     | Status | Details                  |
-|----------|--------|--------------------------|
-| tsc      | PASS   | 0 errors                 |
-| eslint   | PASS   | 0 violations (src/)      |
-| vitest   | PASS   | 240/240 tests (+11 new)  |
-| coverage | PASS   | 100% validate.ts         |
+| Tool     | Status | Details                 |
+| -------- | ------ | ----------------------- |
+| tsc      | PASS   | 0 errors                |
+| eslint   | PASS   | 0 violations (src/)     |
+| vitest   | PASS   | 240/240 tests (+11 new) |
+| coverage | PASS   | 100% validate.ts        |
 
 ## Implementation Summary
 
@@ -34,19 +34,19 @@
 
 ### Tests Graduated
 
-| Requirement | Test Location |
-|-------------|---------------|
-| FR1: Valid tree passes | `tests/unit/tree/validate.test.ts::GIVEN valid simple tree THEN does not throw` |
-| FR1: Valid tree with features | `tests/unit/tree/validate.test.ts::GIVEN valid tree with features THEN does not throw` |
-| FR1: Valid tree with stories | `tests/unit/tree/validate.test.ts::GIVEN valid tree with stories THEN does not throw` |
-| FR1: Duplicate BSP (capabilities) | `tests/unit/tree/validate.test.ts::GIVEN duplicate BSP at capability level THEN throws` |
-| FR1: Duplicate BSP (features) | `tests/unit/tree/validate.test.ts::GIVEN duplicate BSP at feature level THEN throws` |
-| FR1: Duplicate BSP (stories) | `tests/unit/tree/validate.test.ts::GIVEN duplicate BSP at story level THEN throws` |
-| FR1: Story not under feature | `tests/unit/tree/validate.test.ts::GIVEN story not under feature THEN throws` |
-| FR1: Story with children | `tests/unit/tree/validate.test.ts::GIVEN story with children THEN throws` |
-| FR1: Feature not under capability | `tests/unit/tree/validate.test.ts::GIVEN feature not under capability THEN throws` |
-| FR1: Capability under capability | `tests/unit/tree/validate.test.ts::GIVEN capability under another capability THEN throws` |
-| FR1: Cycle detection | `tests/unit/tree/validate.test.ts::GIVEN tree with cycle THEN throws` |
+| Requirement                       | Test Location                                                                             |
+| --------------------------------- | ----------------------------------------------------------------------------------------- |
+| FR1: Valid tree passes            | `tests/unit/tree/validate.test.ts::GIVEN valid simple tree THEN does not throw`           |
+| FR1: Valid tree with features     | `tests/unit/tree/validate.test.ts::GIVEN valid tree with features THEN does not throw`    |
+| FR1: Valid tree with stories      | `tests/unit/tree/validate.test.ts::GIVEN valid tree with stories THEN does not throw`     |
+| FR1: Duplicate BSP (capabilities) | `tests/unit/tree/validate.test.ts::GIVEN duplicate BSP at capability level THEN throws`   |
+| FR1: Duplicate BSP (features)     | `tests/unit/tree/validate.test.ts::GIVEN duplicate BSP at feature level THEN throws`      |
+| FR1: Duplicate BSP (stories)      | `tests/unit/tree/validate.test.ts::GIVEN duplicate BSP at story level THEN throws`        |
+| FR1: Story not under feature      | `tests/unit/tree/validate.test.ts::GIVEN story not under feature THEN throws`             |
+| FR1: Story with children          | `tests/unit/tree/validate.test.ts::GIVEN story with children THEN throws`                 |
+| FR1: Feature not under capability | `tests/unit/tree/validate.test.ts::GIVEN feature not under capability THEN throws`        |
+| FR1: Capability under capability  | `tests/unit/tree/validate.test.ts::GIVEN capability under another capability THEN throws` |
+| FR1: Cycle detection              | `tests/unit/tree/validate.test.ts::GIVEN tree with cycle THEN throws`                     |
 
 ## Quality Metrics
 
@@ -77,6 +77,7 @@ npx eslint src/
 ## Validation Rules Implemented
 
 ### 1. Hierarchy Constraints
+
 - ✅ Capabilities can only be at root level
 - ✅ Features must be under capabilities (not under features or stories)
 - ✅ Stories must be under features (not under capabilities)
@@ -85,11 +86,13 @@ npx eslint src/
 - ✅ Features can only contain stories
 
 ### 2. Duplicate Detection
+
 - ✅ No duplicate BSP numbers at capability level
 - ✅ No duplicate BSP numbers at feature level (within same capability)
 - ✅ No duplicate BSP numbers at story level (within same feature)
 
 ### 3. Cycle Detection
+
 - ✅ Detects when a node appears in its own ancestry
 - ✅ Uses path-based cycle detection with visited set
 - ✅ Prevents infinite loops in tree traversal
@@ -106,6 +109,7 @@ npx eslint src/
 ### Error Messages
 
 All validation errors are instances of `TreeValidationError` with descriptive messages:
+
 - **Hierarchy**: "Hierarchy error: story \"slug\" must be under feature, found under capability"
 - **Duplicates**: "Duplicate BSP number detected: multiple features have number 21 at the same level"
 - **Cycles**: "Cycle detected: node at /path appears multiple times in tree"
@@ -113,6 +117,7 @@ All validation errors are instances of `TreeValidationError` with descriptive me
 ### Testing Strategy
 
 Used synthetic tree builders from `tests/helpers/tree-builder.ts` to create:
+
 - Valid trees (simple, with features, with stories)
 - Invalid trees (wrong hierarchy, duplicates, cycles)
 
@@ -121,6 +126,7 @@ All tests use Level 1 (pure functions, no external dependencies).
 ## Feature 54 Status
 
 Feature 54 (Tree Building) is now COMPLETE with all 4 stories done:
+
 - ✅ story-21: Parent-child relationships
 - ✅ story-32: BSP sorting
 - ✅ story-43: Status rollup

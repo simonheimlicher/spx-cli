@@ -3,6 +3,7 @@
 ## Implementation Summary
 
 Implemented markdown formatter that renders trees with:
+
 - Heading hierarchy (# for capabilities, ## for features, ### for stories)
 - Status lines after each heading
 - Display number conversion (capability: internal+1, others: as-is)
@@ -15,6 +16,7 @@ Implemented markdown formatter that renders trees with:
 ## Tests
 
 All 6 unit tests pass:
+
 - Uses # for capabilities
 - Uses ## for features
 - Uses ### for stories

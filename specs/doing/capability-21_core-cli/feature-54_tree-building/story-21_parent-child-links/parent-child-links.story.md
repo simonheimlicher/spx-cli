@@ -30,15 +30,15 @@ THEN capabilities contain features contain stories
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component             | Level | Justification                |
-| --------------------- | ----- | ---------------------------- |
-| Parent detection      | 1     | Pure path analysis           |
-| Child linking         | 1     | Pure data structure building |
-| Hierarchy assembly    | 1     | Pure tree construction       |
+| Component          | Level | Justification                |
+| ------------------ | ----- | ---------------------------- |
+| Parent detection   | 1     | Pure path analysis           |
+| Child linking      | 1     | Pure data structure building |
+| Hierarchy assembly | 1     | Pure tree construction       |
 
 ### When to Escalate
 
@@ -52,9 +52,9 @@ This story stays at Level 1 because:
 
 ```typescript
 // test/unit/tree/build.test.ts
-import { describe, it, expect } from "vitest";
 import { buildTree } from "@/tree/build";
 import { createWorkItem } from "@test/fixtures/factories";
+import { describe, expect, it } from "vitest";
 
 describe("buildTree - Parent-Child Links", () => {
   /**
@@ -64,8 +64,14 @@ describe("buildTree - Parent-Child Links", () => {
   it("GIVEN capability with feature WHEN building tree THEN feature is child of capability", () => {
     // Given
     const workItems = [
-      { ...createWorkItem({ kind: "capability", number: 20, slug: "test" }), path: "/specs/capability-21_test" },
-      { ...createWorkItem({ kind: "feature", number: 32, slug: "feat" }), path: "/specs/capability-21_test/feature-32_feat" },
+      {
+        ...createWorkItem({ kind: "capability", number: 20, slug: "test" }),
+        path: "/specs/capability-21_test",
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 32, slug: "feat" }),
+        path: "/specs/capability-21_test/feature-32_feat",
+      },
     ];
 
     // When
@@ -80,9 +86,18 @@ describe("buildTree - Parent-Child Links", () => {
   it("GIVEN feature with story WHEN building tree THEN story is child of feature", () => {
     // Given
     const workItems = [
-      { ...createWorkItem({ kind: "capability", number: 20, slug: "test" }), path: "/specs/capability-21_test" },
-      { ...createWorkItem({ kind: "feature", number: 32, slug: "feat" }), path: "/specs/capability-21_test/feature-32_feat" },
-      { ...createWorkItem({ kind: "story", number: 21, slug: "story" }), path: "/specs/capability-21_test/feature-32_feat/story-21_story" },
+      {
+        ...createWorkItem({ kind: "capability", number: 20, slug: "test" }),
+        path: "/specs/capability-21_test",
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 32, slug: "feat" }),
+        path: "/specs/capability-21_test/feature-32_feat",
+      },
+      {
+        ...createWorkItem({ kind: "story", number: 21, slug: "story" }),
+        path: "/specs/capability-21_test/feature-32_feat/story-21_story",
+      },
     ];
 
     // When
@@ -97,9 +112,18 @@ describe("buildTree - Parent-Child Links", () => {
   it("GIVEN capability with multiple features WHEN building tree THEN all features linked", () => {
     // Given
     const workItems = [
-      { ...createWorkItem({ kind: "capability", number: 20, slug: "test" }), path: "/specs/capability-21_test" },
-      { ...createWorkItem({ kind: "feature", number: 32, slug: "feat1" }), path: "/specs/capability-21_test/feature-32_feat1" },
-      { ...createWorkItem({ kind: "feature", number: 43, slug: "feat2" }), path: "/specs/capability-21_test/feature-43_feat2" },
+      {
+        ...createWorkItem({ kind: "capability", number: 20, slug: "test" }),
+        path: "/specs/capability-21_test",
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 32, slug: "feat1" }),
+        path: "/specs/capability-21_test/feature-32_feat1",
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 43, slug: "feat2" }),
+        path: "/specs/capability-21_test/feature-43_feat2",
+      },
     ];
 
     // When
@@ -112,7 +136,10 @@ describe("buildTree - Parent-Child Links", () => {
   it("GIVEN orphan work items WHEN building tree THEN throws error", () => {
     // Given: Story without parent feature
     const workItems = [
-      { ...createWorkItem({ kind: "story", number: 21, slug: "orphan" }), path: "/specs/story-21_orphan" },
+      {
+        ...createWorkItem({ kind: "story", number: 21, slug: "orphan" }),
+        path: "/specs/story-21_orphan",
+      },
     ];
 
     // When/Then
@@ -125,8 +152,8 @@ describe("buildTree - Parent-Child Links", () => {
 
 ### Relevant ADRs
 
-1. `context/3-coding-standards.md` - TypeScript standards
-2. `context/4-testing-standards.md` - Testing with Vitest
+1. `docs/code/typescript.md` - TypeScript standards
+2. `docs/testing/standards.md`- Testing with Vitest
 
 ## Quality Requirements
 

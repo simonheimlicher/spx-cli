@@ -30,10 +30,10 @@ THEN output in specified format
 
 ### Level Assignment
 
-| Component        | Level | Justification                |
-| ---------------- | ----- | ---------------------------- |
-| Option parsing   | 2     | Requires Commander.js        |
-| Format switching | 2     | Integration test             |
+| Component        | Level | Justification         |
+| ---------------- | ----- | --------------------- |
+| Option parsing   | 2     | Requires Commander.js |
+| Format switching | 2     | Integration test      |
 
 ## Integration Tests (Level 2)
 
@@ -51,7 +51,12 @@ describe("spx status --json", () => {
 
 describe("spx status --format", () => {
   it("GIVEN --format markdown WHEN running status THEN outputs markdown", async () => {
-    const { stdout } = await execa("node", ["bin/spx.js", "status", "--format", "markdown"], {
+    const { stdout } = await execa("node", [
+      "bin/spx.js",
+      "status",
+      "--format",
+      "markdown",
+    ], {
       cwd: "test/fixtures/repos/simple",
     });
 
@@ -59,7 +64,12 @@ describe("spx status --format", () => {
   });
 
   it("GIVEN --format table WHEN running status THEN outputs table", async () => {
-    const { stdout } = await execa("node", ["bin/spx.js", "status", "--format", "table"], {
+    const { stdout } = await execa("node", [
+      "bin/spx.js",
+      "status",
+      "--format",
+      "table",
+    ], {
       cwd: "test/fixtures/repos/simple",
     });
 

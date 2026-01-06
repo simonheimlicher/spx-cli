@@ -8,12 +8,12 @@
 
 ## Verification Results
 
-| Tool     | Status | Details                  |
-|----------|--------|--------------------------|
-| tsc      | PASS   | 0 errors                 |
-| eslint   | PASS   | 0 violations (src/)      |
-| vitest   | PASS   | 254/254 tests (+3 new)   |
-| CLI      | PASS   | Manual verification OK   |
+| Tool   | Status | Details                |
+| ------ | ------ | ---------------------- |
+| tsc    | PASS   | 0 errors               |
+| eslint | PASS   | 0 violations (src/)    |
+| vitest | PASS   | 254/254 tests (+3 new) |
+| CLI    | PASS   | Manual verification OK |
 
 ## Implementation Summary
 
@@ -124,6 +124,7 @@ The `statusCommand()` function orchestrates all features in the correct order:
 ### Testing Strategy
 
 Used Level 2 integration tests per ADR and feature spec:
+
 - Real Commander.js framework (not mocked)
 - Real filesystem fixtures (not synthetic)
 - Real subprocess execution with execa (not mocked)
@@ -135,6 +136,7 @@ This ensures the CLI wiring works correctly with the actual CLI framework.
 story-21_status-command is now COMPLETE.
 
 The status command successfully:
+
 - ✅ Wires all features together (FR2)
 - ✅ Executes with `spx status` (FR1)
 - ✅ Outputs project status in text format (FR1)

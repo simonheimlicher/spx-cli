@@ -11,6 +11,7 @@ THEN parent status reflects aggregate of children
 ```
 
 Rules:
+
 - Any child IN_PROGRESS → parent IN_PROGRESS
 - All children DONE → parent DONE
 - All children OPEN → parent OPEN
@@ -24,10 +25,10 @@ Rules:
 
 ### Level Assignment
 
-| Component        | Level | Justification             |
-| ---------------- | ----- | ------------------------- |
-| Status aggregation | 1   | Pure boolean logic        |
-| Rollup rules     | 1     | Pure function             |
+| Component          | Level | Justification      |
+| ------------------ | ----- | ------------------ |
+| Status aggregation | 1     | Pure boolean logic |
+| Rollup rules       | 1     | Pure function      |
 
 ## Unit Tests (Level 1)
 
@@ -37,9 +38,21 @@ describe("buildTree - Status Rollup", () => {
   it("GIVEN all children DONE WHEN rolling up status THEN parent is DONE", () => {
     // Given
     const workItems = [
-      { ...createWorkItem({ kind: "capability", number: 20, slug: "test" }), path: "/specs/capability-21_test", status: undefined },
-      { ...createWorkItem({ kind: "feature", number: 32, slug: "feat1" }), path: "/specs/capability-21_test/feature-32_feat1", status: "DONE" },
-      { ...createWorkItem({ kind: "feature", number: 43, slug: "feat2" }), path: "/specs/capability-21_test/feature-43_feat2", status: "DONE" },
+      {
+        ...createWorkItem({ kind: "capability", number: 20, slug: "test" }),
+        path: "/specs/capability-21_test",
+        status: undefined,
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 32, slug: "feat1" }),
+        path: "/specs/capability-21_test/feature-32_feat1",
+        status: "DONE",
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 43, slug: "feat2" }),
+        path: "/specs/capability-21_test/feature-43_feat2",
+        status: "DONE",
+      },
     ];
 
     // When
@@ -52,9 +65,21 @@ describe("buildTree - Status Rollup", () => {
   it("GIVEN any child IN_PROGRESS WHEN rolling up status THEN parent is IN_PROGRESS", () => {
     // Given
     const workItems = [
-      { ...createWorkItem({ kind: "capability", number: 20, slug: "test" }), path: "/specs/capability-21_test", status: undefined },
-      { ...createWorkItem({ kind: "feature", number: 32, slug: "feat1" }), path: "/specs/capability-21_test/feature-32_feat1", status: "DONE" },
-      { ...createWorkItem({ kind: "feature", number: 43, slug: "feat2" }), path: "/specs/capability-21_test/feature-43_feat2", status: "IN_PROGRESS" },
+      {
+        ...createWorkItem({ kind: "capability", number: 20, slug: "test" }),
+        path: "/specs/capability-21_test",
+        status: undefined,
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 32, slug: "feat1" }),
+        path: "/specs/capability-21_test/feature-32_feat1",
+        status: "DONE",
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 43, slug: "feat2" }),
+        path: "/specs/capability-21_test/feature-43_feat2",
+        status: "IN_PROGRESS",
+      },
     ];
 
     // When
@@ -67,9 +92,21 @@ describe("buildTree - Status Rollup", () => {
   it("GIVEN mixed DONE and OPEN WHEN rolling up status THEN parent is IN_PROGRESS", () => {
     // Given
     const workItems = [
-      { ...createWorkItem({ kind: "capability", number: 20, slug: "test" }), path: "/specs/capability-21_test", status: undefined },
-      { ...createWorkItem({ kind: "feature", number: 32, slug: "feat1" }), path: "/specs/capability-21_test/feature-32_feat1", status: "DONE" },
-      { ...createWorkItem({ kind: "feature", number: 43, slug: "feat2" }), path: "/specs/capability-21_test/feature-43_feat2", status: "OPEN" },
+      {
+        ...createWorkItem({ kind: "capability", number: 20, slug: "test" }),
+        path: "/specs/capability-21_test",
+        status: undefined,
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 32, slug: "feat1" }),
+        path: "/specs/capability-21_test/feature-32_feat1",
+        status: "DONE",
+      },
+      {
+        ...createWorkItem({ kind: "feature", number: 43, slug: "feat2" }),
+        path: "/specs/capability-21_test/feature-43_feat2",
+        status: "OPEN",
+      },
     ];
 
     // When

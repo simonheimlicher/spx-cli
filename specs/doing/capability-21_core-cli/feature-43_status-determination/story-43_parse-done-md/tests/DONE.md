@@ -8,22 +8,22 @@
 
 ## Verification Results
 
-| Tool     | Status | Details                          |
-|----------|--------|----------------------------------|
-| tsc      | PASS   | 0 errors                         |
-| eslint   | PASS   | 0 violations                     |
-| vitest   | PASS   | 135/135 tests, 91.19% coverage   |
+| Tool   | Status | Details                        |
+| ------ | ------ | ------------------------------ |
+| tsc    | PASS   | 0 errors                       |
+| eslint | PASS   | 0 violations                   |
+| vitest | PASS   | 135/135 tests, 91.19% coverage |
 
 ## Graduated Tests
 
 Tests graduated from `specs/.../story-43/tests/` to `tests/integration/status/state.integration.test.ts`:
 
-| Requirement | Test Location                                                  |
-|-------------|----------------------------------------------------------------|
-| FR1         | `tests/integration/status/state.integration.test.ts::hasDoneMd > GIVEN tests dir with DONE.md WHEN checking THEN returns true` |
-| FR1         | `tests/integration/status/state.integration.test.ts::hasDoneMd > GIVEN tests dir without DONE.md WHEN checking THEN returns false` |
+| Requirement | Test Location                                                                                                                            |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| FR1         | `tests/integration/status/state.integration.test.ts::hasDoneMd > GIVEN tests dir with DONE.md WHEN checking THEN returns true`           |
+| FR1         | `tests/integration/status/state.integration.test.ts::hasDoneMd > GIVEN tests dir without DONE.md WHEN checking THEN returns false`       |
 | FR2, QR2    | `tests/integration/status/state.integration.test.ts::hasDoneMd > GIVEN DONE.md as directory (not file) WHEN checking THEN returns false` |
-| QR1         | `tests/integration/status/state.integration.test.ts::hasDoneMd > GIVEN DONE.md with different case WHEN checking THEN returns false` |
+| QR1         | `tests/integration/status/state.integration.test.ts::hasDoneMd > GIVEN DONE.md with different case WHEN checking THEN returns false`     |
 
 ## Implementation
 

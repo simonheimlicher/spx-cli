@@ -30,15 +30,15 @@ THEN return deterministic status without I/O
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component            | Level | Justification                |
-| -------------------- | ----- | ---------------------------- |
-| State machine logic  | 1     | Pure function, boolean logic |
-| Status enumeration   | 1     | Type definition              |
-| State transitions    | 1     | Pure logic verification      |
+| Component           | Level | Justification                |
+| ------------------- | ----- | ---------------------------- |
+| State machine logic | 1     | Pure function, boolean logic |
+| Status enumeration  | 1     | Type definition              |
+| State transitions   | 1     | Pure logic verification      |
 
 ### When to Escalate
 
@@ -52,8 +52,8 @@ This story stays at Level 1 because:
 
 ```typescript
 // test/unit/status/state.test.ts
-import { describe, it, expect } from "vitest";
 import { determineStatus } from "@/status/state";
+import { describe, expect, it } from "vitest";
 
 describe("determineStatus", () => {
   /**
@@ -141,8 +141,8 @@ describe("determineStatus", () => {
 
 ### Relevant ADRs
 
-1. `context/3-coding-standards.md` - TypeScript standards
-2. `context/4-testing-standards.md` - Testing with Vitest
+1. `docs/code/typescript.md` - TypeScript standards
+2. `docs/testing/standards.md`- Testing with Vitest
 
 ## Quality Requirements
 

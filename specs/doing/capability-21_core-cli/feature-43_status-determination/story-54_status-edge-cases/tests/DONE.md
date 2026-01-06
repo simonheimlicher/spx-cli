@@ -8,12 +8,12 @@
 
 ## Verification Results
 
-| Tool     | Status | Details                  |
-|----------|--------|--------------------------|
-| tsc      | PASS   | 0 errors                 |
-| eslint   | PASS   | 0 violations (src/)      |
-| vitest   | PASS   | 199/199 tests            |
-| coverage | PASS   | 90.99% state.ts          |
+| Tool     | Status | Details             |
+| -------- | ------ | ------------------- |
+| tsc      | PASS   | 0 errors            |
+| eslint   | PASS   | 0 violations (src/) |
+| vitest   | PASS   | 199/199 tests       |
+| coverage | PASS   | 90.99% state.ts     |
 
 ## Implementation Summary
 
@@ -36,16 +36,16 @@
 
 ### Tests Graduated
 
-| Requirement | Test Location |
-|-------------|---------------|
-| FR1: Permission errors | `tests/integration/status/state.integration.test.ts::GIVEN non-existent work item THEN throws` |
-| FR2: Status orchestration (OPEN) | `tests/integration/status/state.integration.test.ts::GIVEN no tests dir THEN returns OPEN` |
+| Requirement                             | Test Location                                                                                             |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| FR1: Permission errors                  | `tests/integration/status/state.integration.test.ts::GIVEN non-existent work item THEN throws`            |
+| FR2: Status orchestration (OPEN)        | `tests/integration/status/state.integration.test.ts::GIVEN no tests dir THEN returns OPEN`                |
 | FR2: Status orchestration (IN_PROGRESS) | `tests/integration/status/state.integration.test.ts::GIVEN tests but no DONE.md THEN returns IN_PROGRESS` |
-| FR2: Status orchestration (DONE) | `tests/integration/status/state.integration.test.ts::GIVEN DONE.md THEN returns DONE` |
-| FR2: Empty tests dir | `tests/integration/status/state.integration.test.ts::GIVEN empty tests dir THEN returns OPEN` |
-| FR2: Only DONE.md | `tests/integration/status/state.integration.test.ts::GIVEN only DONE.md THEN returns DONE` |
-| FR2: DONE.md as directory | `tests/integration/status/state.integration.test.ts::GIVEN DONE.md as directory THEN returns IN_PROGRESS` |
-| FR3: Caching performance | `tests/integration/status/state.integration.test.ts::Status determination performance` |
+| FR2: Status orchestration (DONE)        | `tests/integration/status/state.integration.test.ts::GIVEN DONE.md THEN returns DONE`                     |
+| FR2: Empty tests dir                    | `tests/integration/status/state.integration.test.ts::GIVEN empty tests dir THEN returns OPEN`             |
+| FR2: Only DONE.md                       | `tests/integration/status/state.integration.test.ts::GIVEN only DONE.md THEN returns DONE`                |
+| FR2: DONE.md as directory               | `tests/integration/status/state.integration.test.ts::GIVEN DONE.md as directory THEN returns IN_PROGRESS` |
+| FR3: Caching performance                | `tests/integration/status/state.integration.test.ts::Status determination performance`                    |
 
 ## Coverage Report
 

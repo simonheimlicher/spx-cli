@@ -10,7 +10,7 @@ WHEN calling materializeFixture(tree)
 THEN create directory structure in os.tmpdir() and return MaterializedFixture
 ```
 
-Creates actual filesystem structure matching `context/1-structure.md`.
+Creates actual filesystem structure matching `specs/templates/structure.yaml`.
 
 #### Files created/modified
 
@@ -45,15 +45,15 @@ THEN generate tree and materialize in one call
 ### Relevant ADRs
 
 1. **ADR-003: E2E Fixture Generation Strategy** - Defines materialization approach
-2. **context/1-structure.md** - Defines valid file structure
+2. **specs/templates/structure.yaml** - Defines valid file structure
 
 ### Types
 
 ```typescript
 interface MaterializedFixture {
-  path: string;                   // Absolute path to fixture root
-  cleanup: () => Promise<void>;   // Removes fixture directory
-  config: FixtureConfig;          // Original config for reference
+  path: string; // Absolute path to fixture root
+  cleanup: () => Promise<void>; // Removes fixture directory
+  config: FixtureConfig; // Original config for reference
 }
 
 // Convenience wrapper
@@ -62,7 +62,7 @@ async function createFixture(config: FixtureConfig): Promise<MaterializedFixture
 
 ### Generated Structure
 
-Per `context/1-structure.md`, only valid files are created:
+Per `specs/templates/structure.yaml`, only valid files are created:
 
 ```
 {tmpdir}/spx-fixture-{uuid}/
@@ -86,12 +86,12 @@ Per `context/1-structure.md`, only valid files are created:
 
 ### Level Assignment
 
-| Component          | Level | Justification                      |
-| ------------------ | ----- | ---------------------------------- |
-| Directory creation | 2     | Real filesystem I/O in tmpdir      |
-| File writing       | 2     | Actual file contents               |
-| Cleanup            | 2     | Must verify deletion               |
-| Structure validity | 2     | Must match context/1-structure.md  |
+| Component          | Level | Justification                             |
+| ------------------ | ----- | ----------------------------------------- |
+| Directory creation | 2     | Real filesystem I/O in tmpdir             |
+| File writing       | 2     | Actual file contents                      |
+| Cleanup            | 2     | Must verify deletion                      |
+| Structure validity | 2     | Must match specs/templates/structure.yaml |
 
 ### When to Escalate
 
@@ -105,10 +105,10 @@ This story uses Level 2 because:
 
 ```typescript
 // tests/integration/helpers/fixture-writer.test.ts
-import { describe, it, expect, afterEach } from "vitest";
-import { existsSync, readdirSync } from "node:fs";
 import { generateFixtureTree, PRESETS } from "@/tests/helpers/fixture-generator";
 import { materializeFixture } from "@/tests/helpers/fixture-writer";
+import { existsSync, readdirSync } from "node:fs";
+import { afterEach, describe, expect, it } from "vitest";
 
 describe("materializeFixture", () => {
   const fixtures: Array<{ cleanup: () => Promise<void> }> = [];
@@ -143,7 +143,7 @@ describe("materializeFixture", () => {
     fixtures.push(fixture);
 
     const doing = `${fixture.path}/specs/doing`;
-    const caps = readdirSync(doing).filter(d => d.startsWith("capability-"));
+    const caps = readdirSync(doing).filter((d) => d.startsWith("capability-"));
     expect(caps.length).toBe(1);
 
     const capDir = `${doing}/${caps[0]}`;
@@ -174,7 +174,7 @@ describe("materializeFixture", () => {
 
     const storyTests = findStoryTestsDir(fixture.path);
     const files = readdirSync(storyTests);
-    expect(files.some(f => f.endsWith(".test.ts"))).toBe(true);
+    expect(files.some((f) => f.endsWith(".test.ts"))).toBe(true);
     expect(files.includes("DONE.md")).toBe(false);
   });
 
@@ -213,7 +213,7 @@ describe("materializeFixture", () => {
     const decisions = `${capDir}/decisions`;
     expect(existsSync(decisions)).toBe(true);
 
-    const adrs = readdirSync(decisions).filter(f => f.startsWith("adr-"));
+    const adrs = readdirSync(decisions).filter((f) => f.startsWith("adr-"));
     expect(adrs.length).toBe(2);
   });
 });
@@ -238,7 +238,7 @@ describe("createFixture", () => {
 - [ ] `materializeFixture(tree)` implemented
 - [ ] `cleanup()` reliably removes all files
 - [ ] `createFixture(config)` convenience wrapper
-- [ ] Generated structure matches `context/1-structure.md`
+- [ ] Generated structure matches `specs/templates/structure.yaml`
 - [ ] Only valid files created (no noise)
 - [ ] All Level 2 tests pass
 - [ ] Fixtures created in `os.tmpdir()` only

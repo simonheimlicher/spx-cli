@@ -11,6 +11,7 @@ THEN produce valid, parseable JSON with full tree data
 ```
 
 Schema:
+
 ```json
 {
   "summary": {
@@ -38,18 +39,18 @@ Schema:
 
 ### Level Assignment
 
-| Component        | Level | Justification             |
-| ---------------- | ----- | ------------------------- |
-| JSON serialization| 1    | Pure data transformation  |
-| Summary calculation| 1   | Pure aggregation          |
-| Schema validation| 1     | Pure structure check      |
+| Component           | Level | Justification            |
+| ------------------- | ----- | ------------------------ |
+| JSON serialization  | 1     | Pure data transformation |
+| Summary calculation | 1     | Pure aggregation         |
+| Schema validation   | 1     | Pure structure check     |
 
 ## Unit Tests (Level 1)
 
 ```typescript
 // test/unit/reporter/json.test.ts
-import { describe, it, expect } from "vitest";
 import { formatJSON } from "@/reporter/json";
+import { describe, expect, it } from "vitest";
 
 describe("formatJSON", () => {
   it("GIVEN tree WHEN formatting THEN produces valid JSON", () => {

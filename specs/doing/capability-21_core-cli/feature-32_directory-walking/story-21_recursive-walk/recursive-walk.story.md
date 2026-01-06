@@ -30,15 +30,15 @@ THEN follow symlinks but avoid infinite loops
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component            | Level | Justification                            |
-| -------------------- | ----- | ---------------------------------------- |
-| Directory traversal  | 2     | Requires real filesystem operations      |
-| Path normalization   | 1     | Pure function (but uses in Level 2 test) |
-| Symlink detection    | 2     | Requires real symlinks                   |
+| Component           | Level | Justification                            |
+| ------------------- | ----- | ---------------------------------------- |
+| Directory traversal | 2     | Requires real filesystem operations      |
+| Path normalization  | 1     | Pure function (but uses in Level 2 test) |
+| Symlink detection   | 2     | Requires real symlinks                   |
 
 ### When to Escalate
 
@@ -52,9 +52,9 @@ This story uses Level 2 because:
 
 ```typescript
 // test/integration/scanner/walk.integration.test.ts
-import { describe, it, expect } from "vitest";
 import { walkDirectory } from "@/scanner/walk";
 import path from "path";
+import { describe, expect, it } from "vitest";
 
 describe("walkDirectory", () => {
   /**
@@ -70,7 +70,7 @@ describe("walkDirectory", () => {
 
     // Then
     expect(entries.length).toBeGreaterThan(0);
-    expect(entries.every(e => e.path.startsWith(fixtureRoot))).toBe(true);
+    expect(entries.every((e) => e.path.startsWith(fixtureRoot))).toBe(true);
   });
 
   it("GIVEN nested directory structure WHEN walking THEN discovers all levels", async () => {
@@ -81,7 +81,7 @@ describe("walkDirectory", () => {
     const entries = await walkDirectory(fixtureRoot);
 
     // Then
-    const depths = entries.map(e => e.path.split(path.sep).length);
+    const depths = entries.map((e) => e.path.split(path.sep).length);
     expect(Math.max(...depths)).toBeGreaterThan(3); // Has nested structure
   });
 
@@ -110,8 +110,8 @@ describe("walkDirectory", () => {
 
 ### Relevant ADRs
 
-1. `context/3-coding-standards.md` - TypeScript standards
-2. `context/4-testing-standards.md` - Testing with Vitest
+1. `docs/code/typescript.md` - TypeScript standards
+2. `docs/testing/standards.md`- Testing with Vitest
 
 ## Quality Requirements
 

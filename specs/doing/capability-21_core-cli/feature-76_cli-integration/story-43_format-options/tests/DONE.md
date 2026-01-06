@@ -8,12 +8,12 @@
 
 ## Verification Results
 
-| Tool     | Status | Details                  |
-|----------|--------|--------------------------|
-| tsc      | PASS   | 0 errors                 |
-| eslint   | PASS   | 0 violations (src/)      |
-| vitest   | PASS   | 272/272 tests (+6 new)   |
-| CLI      | PASS   | Manual verification OK   |
+| Tool   | Status | Details                |
+| ------ | ------ | ---------------------- |
+| tsc    | PASS   | 0 errors               |
+| eslint | PASS   | 0 violations (src/)    |
+| vitest | PASS   | 272/272 tests (+6 new) |
+| CLI    | PASS   | Manual verification OK |
 
 ## Implementation Summary
 
@@ -74,6 +74,7 @@ npx eslint src/
 ## CLI Output Examples
 
 ### JSON Format
+
 ```bash
 $ node bin/spx.js status --json
 {
@@ -87,6 +88,7 @@ $ node bin/spx.js status --json
 ```
 
 ### Markdown Format
+
 ```bash
 $ node bin/spx.js status --format markdown
 # capability-21_core-cli
@@ -100,6 +102,7 @@ Status: DONE
 ```
 
 ### Table Format
+
 ```bash
 $ node bin/spx.js status --format table
 | Kind       | Number | Slug                    | Status      |
@@ -110,6 +113,7 @@ $ node bin/spx.js status --format table
 ```
 
 ### Text Format (default)
+
 ```bash
 $ node bin/spx.js status
 capability-21_core-cli [IN_PROGRESS]
@@ -132,6 +136,7 @@ Priority: `--json` flag overrides `--format` option for backwards compatibility.
 ### Format Validation
 
 Invalid formats are caught at CLI level with helpful error:
+
 ```
 Error: Invalid format "invalid". Must be one of: text, json, markdown, table
 ```
@@ -139,6 +144,7 @@ Error: Invalid format "invalid". Must be one of: text, json, markdown, table
 ### Format Switching
 
 The `statusCommand()` function uses a switch statement to select the appropriate formatter:
+
 - `formatText()` - Default, tree view with indentation
 - `formatJSON()` - Structured data with summary
 - `formatMarkdown()` - Headers and sections
@@ -151,6 +157,7 @@ All formatters consume the same `WorkItemTree` structure, ensuring consistency a
 story-43_format-options is now COMPLETE.
 
 The format options successfully:
+
 - ✅ Support --json flag (FR1)
 - ✅ Support --format option for all formats (FR2)
 - ✅ Validate format input

@@ -8,21 +8,22 @@
 
 ## Verification Results
 
-| Tool     | Status | Details              |
-|----------|--------|----------------------|
-| tsc      | PASS   | 0 errors             |
-| eslint   | PASS   | 0 violations         |
-| vitest   | PASS   | 17/17 tests, 98.95% coverage |
+| Tool   | Status | Details                      |
+| ------ | ------ | ---------------------------- |
+| tsc    | PASS   | 0 errors                     |
+| eslint | PASS   | 0 violations                 |
+| vitest | PASS   | 17/17 tests, 98.95% coverage |
 
 ## Graduated Tests
 
-| Requirement | Test Location                              |
-|-------------|--------------------------------------------|
+| Requirement                         | Test Location                                              |
+| ----------------------------------- | ---------------------------------------------------------- |
 | FR1: Aggregate status from children | `tests/unit/tree/build.test.ts::buildTree - Status Rollup` |
 
 ## Implementation Summary
 
 Implemented recursive status rollup from children to parents:
+
 - **Rollup Rules**:
   - Any child IN_PROGRESS → parent IN_PROGRESS
   - All children DONE → parent DONE

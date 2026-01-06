@@ -3,6 +3,7 @@
 ## Implementation Summary
 
 Implemented JSON formatter that produces structured output with:
+
 - Summary statistics (counts capabilities + features only, NOT stories)
 - 2-space indentation
 - Full tree data with nested structure
@@ -16,6 +17,7 @@ Implemented JSON formatter that produces structured output with:
 ## Tests
 
 All 7 unit tests pass:
+
 - Produces valid JSON
 - Includes summary with done/inProgress/open counts
 - Counts capabilities and features only (stories excluded)

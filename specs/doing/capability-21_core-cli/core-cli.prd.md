@@ -82,7 +82,7 @@ proven by 1000x speed improvement and 100% token elimination for status queries.
   - `json` (agents/automation)
   - `md` (copy/paste into specs/docs)
   - `table` (compact overview)
-- Context-aware discovery: read `context/1-structure.md` for custom patterns if present
+- Context-aware discovery: read `specs/templates/structure.yaml` for custom patterns if present
 - Stable sorting by `(kindOrder, number, slug)` for deterministic output
 
 ### Explicit Non-Goals (MVP)
@@ -154,7 +154,7 @@ Feature: spx CLI
     And respects implicit ordering (lower numbers first)
 
   Scenario: Context-aware discovery
-    Given context/1-structure.md defines a non-default specs root
+    Given specs/templates/structure.yaml defines a non-default specs root
     When the CLI scans the project
     Then it should use the context-defined root and patterns
     And print warnings if context discovery fails
@@ -262,7 +262,7 @@ spx/
 │   ├── status/
 │   │   ├── index.ts        # Status public API
 │   │   ├── state.ts        # DONE/IN PROGRESS/OPEN state machine
-│   │   └── context.ts      # Context discovery (context/1-structure.md)
+│   │   └── context.ts      # Context discovery (specs/templates/structure.yaml)
 │   ├── reporter/
 │   │   ├── index.ts        # Reporter public API
 │   │   ├── text.ts         # Text tree output
@@ -300,7 +300,7 @@ spx/
 
 - **Likelihood**: Medium — users may customize directory patterns
 - **Impact**: Medium — CLI returns incorrect status for non-standard layouts
-- **Mitigation**: Support `spx.config.json` for custom patterns, read `context/1-structure.md` if present, provide clear error messages
+- **Mitigation**: Support `spx.config.json` for custom patterns, read `specs/templates/structure.yaml` if present, provide clear error messages
 
 ### Risk: MCP ecosystem immaturity
 

@@ -41,15 +41,15 @@ THEN cache filesystem checks within single operation
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component                | Level | Justification                        |
-| ------------------------ | ----- | ------------------------------------ |
-| Permission errors        | 2     | Requires real restricted permissions |
-| Status orchestration     | 2     | Integrates all filesystem checks     |
-| Caching strategy         | 1     | Pure logic, but tested in Level 2    |
+| Component            | Level | Justification                        |
+| -------------------- | ----- | ------------------------------------ |
+| Permission errors    | 2     | Requires real restricted permissions |
+| Status orchestration | 2     | Integrates all filesystem checks     |
+| Caching strategy     | 1     | Pure logic, but tested in Level 2    |
 
 ### When to Escalate
 
@@ -63,9 +63,9 @@ This story uses Level 2 for integration:
 
 ```typescript
 // test/integration/status/state.integration.test.ts (continued)
-import { describe, it, expect } from "vitest";
 import { getWorkItemStatus } from "@/status/state";
 import path from "path";
+import { describe, expect, it } from "vitest";
 
 describe("getWorkItemStatus", () => {
   /**
@@ -74,7 +74,10 @@ describe("getWorkItemStatus", () => {
 
   it("GIVEN work item with no tests dir WHEN getting status THEN returns OPEN", async () => {
     // Given
-    const workItemPath = path.join(__dirname, "../../fixtures/work-items/open-item");
+    const workItemPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/open-item",
+    );
 
     // When
     const status = await getWorkItemStatus(workItemPath);
@@ -85,7 +88,10 @@ describe("getWorkItemStatus", () => {
 
   it("GIVEN work item with tests but no DONE.md WHEN getting status THEN returns IN_PROGRESS", async () => {
     // Given
-    const workItemPath = path.join(__dirname, "../../fixtures/work-items/in-progress-item");
+    const workItemPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/in-progress-item",
+    );
 
     // When
     const status = await getWorkItemStatus(workItemPath);
@@ -96,7 +102,10 @@ describe("getWorkItemStatus", () => {
 
   it("GIVEN work item with DONE.md WHEN getting status THEN returns DONE", async () => {
     // Given
-    const workItemPath = path.join(__dirname, "../../fixtures/work-items/done-item");
+    const workItemPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/done-item",
+    );
 
     // When
     const status = await getWorkItemStatus(workItemPath);
@@ -107,10 +116,15 @@ describe("getWorkItemStatus", () => {
 
   it("GIVEN work item with permission error WHEN getting status THEN throws descriptive error", async () => {
     // Given
-    const workItemPath = path.join(__dirname, "../../fixtures/work-items/restricted-item");
+    const workItemPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/restricted-item",
+    );
 
     // When/Then
-    await expect(getWorkItemStatus(workItemPath)).rejects.toThrow(/permission|EACCES/i);
+    await expect(getWorkItemStatus(workItemPath)).rejects.toThrow(
+      /permission|EACCES/i,
+    );
   });
 
   it("GIVEN non-existent work item WHEN getting status THEN throws error", async () => {
@@ -118,14 +132,19 @@ describe("getWorkItemStatus", () => {
     const workItemPath = "/path/that/does/not/exist";
 
     // When/Then
-    await expect(getWorkItemStatus(workItemPath)).rejects.toThrow(/not found|ENOENT/i);
+    await expect(getWorkItemStatus(workItemPath)).rejects.toThrow(
+      /not found|ENOENT/i,
+    );
   });
 });
 
 describe("Status determination performance", () => {
   it("GIVEN work item WHEN getting status multiple times THEN uses cached results", async () => {
     // Given
-    const workItemPath = path.join(__dirname, "../../fixtures/work-items/done-item");
+    const workItemPath = path.join(
+      __dirname,
+      "../../fixtures/work-items/done-item",
+    );
 
     // When
     const start = Date.now();
@@ -147,8 +166,8 @@ describe("Status determination performance", () => {
 
 ### Relevant ADRs
 
-1. `context/3-coding-standards.md` - TypeScript standards
-2. `context/4-testing-standards.md` - Testing with Vitest
+1. `docs/code/typescript.md` - TypeScript standards
+2. `docs/testing/standards.md`- Testing with Vitest
 
 ## Quality Requirements
 

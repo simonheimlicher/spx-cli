@@ -13,15 +13,15 @@ Status determination is deterministic (no LLM calls) and fast (<1ms per work ite
 ## Testing Strategy
 
 > Features require **Level 1 + Level 2** to prove the feature works with real tools.
-> See `context/4-testing-standards.md` for level definitions.
+> See `docs/testing/standards.md`for level definitions.
 
 ### Level Assignment
 
-| Component          | Level | Justification                               |
-| ------------------ | ----- | ------------------------------------------- |
-| State machine      | 1     | Pure function, boolean logic                |
-| DONE.md detection  | 2     | Requires real filesystem checks             |
-| tests/ inspection  | 2     | Requires real directory reading             |
+| Component         | Level | Justification                   |
+| ----------------- | ----- | ------------------------------- |
+| State machine     | 1     | Pure function, boolean logic    |
+| DONE.md detection | 2     | Requires real filesystem checks |
+| tests/ inspection | 2     | Requires real directory reading |
 
 ### Escalation Rationale
 
@@ -70,6 +70,7 @@ Status determination enables:
 - [ ] 100% type coverage
 
 **Proposed Stories**:
+
 - story-21: Implement state machine
 - story-32: Detect tests/ directory
 - story-43: Parse DONE.md
