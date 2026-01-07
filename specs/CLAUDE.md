@@ -56,6 +56,37 @@ specs/{doing,backlog,archive}/
 
 **Fractal nature**: PRD at capability level spawns features. TRD at feature level spawns stories. Stories are atomic—no children.
 
+### specs/ vs docs/ (Critical Distinction)
+
+| Directory  | Purpose                                                                     | Lifespan  | Contents                                                                                                                                             |
+| ---------- | --------------------------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **specs/** | Ephemeral requirements, decisions and work items for *changing* the product | Temporary | Hierarchical work items (capabilities, features, stories) with progress tests in `tests` and decisions (ADR) in `decisions` at the appropriate level |
+| **docs/**  | Enduring documentation of the product *as it is*                            | Permanent | Architecture, coding standards, testing standards                                                                                                    |
+
+**Rules**:
+
+- **specs/** is your todo list for making changes. Once work is DONE, it moves to archive.
+- **docs/** documents how the product actually works, for humans to read and understand.
+- **ADRs live in specs/**, not docs/. They guide the work, then archive with the work item.
+- Enduring standards (TypeScript style, testing principles) live in **docs/**, not specs/.
+
+### Infrastructure Work as Capabilities
+
+Non-product infrastructure work (CI/CD, validation scripts, build tooling) should be modeled as capabilities:
+
+**Example**: Validation script refactoring
+
+- Create `capability-15_infrastructure/` (low BSP = high priority)
+- Features underneath: `feature-21_testable-validation/`
+- ADR in feature: `feature-21_testable-validation/decisions/adr-001_single-file-di.md`
+- This capability is **pseudo-enduring**: the capability directory stays in `doing/` permanently, but individual features within it complete normally and graduate their tests
+
+**Why low BSP numbers for infrastructure?**
+
+- Infrastructure capabilities block product work
+- Use BSP 10-19 range for infrastructure
+- Use BSP 20+ for product capabilities
+
 ---
 
 ## READ: Status and What to Work On Next
@@ -94,9 +125,9 @@ This applies at every level:
 
 **Example** from `spx status`:
 
-```
-feature-48_test-harness [OPEN]
-feature-87_e2e-workflow [IN_PROGRESS]    ← Should not have started!
+```text
+feature-48_test-harness [OPEN]        ← Was added chronologically after feature-87 but that depends on it
+feature-87_e2e-workflow [IN_PROGRESS] ← Was already in progress and the need for test harness was discovered
 ```
 
 **Next work item**: `feature-48_test-harness` → its first OPEN story.

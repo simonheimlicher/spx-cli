@@ -30,7 +30,7 @@ Standards documentation lives in `docs/` for human reference. Agent-specific ins
 
 ## 🚨 VALIDATION GATE (MANDATORY BEFORE COMMIT)
 
-**NEVER commit without passing validation.** This is non-negotiable.
+**NEVER commit without passing validation.** This is *non-negotiable*.
 
 ```bash
 # Full validation pipeline (circular deps → ESLint → TypeScript)
