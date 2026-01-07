@@ -82,23 +82,34 @@ npm test -- tests/e2e/            # Level 3 only
 
 ## The 3 Levels
 
-| Level | Type        | Speed | Infrastructure                    | Location             |
-| ----- | ----------- | ----- | --------------------------------- | -------------------- |
-| **1** | Unit        | <50ms | Node.js only                      | `tests/unit/`        |
-| **2** | Integration | <1s   | Real filesystem, temp directories | `tests/integration/` |
-| **3** | E2E         | <30s  | Full CLI + fixture repos          | `tests/e2e/`         |
+| Level | Type        | Speed | Infrastructure                                               | Location             |
+| ----- | ----------- | ----- | ------------------------------------------------------------ | -------------------- |
+| **1** | Unit        | <50ms | Standard developer tools (git, node, npm, npx, curl, python) | `tests/unit/`        |
+| **2** | Integration | <1s   | Project-specific tools OR virtualized environments           | `tests/integration/` |
+| **3** | E2E         | <30s  | External dependencies (GitHub, network, Chrome)              | `tests/e2e/`         |
 
 ### Level 1: Unit Tests
 
-Verify our code logic is correct using:
+Fast unit testing that depends only on CLI tools installed by default on modern macOS and Linux developer machines.
+
+**Standard developer tools (always available):**
+
+- `git`, `node`, `npm`, `npx`, `curl`, `python`
+- Node.js built-ins: `fs`, `path`, `os`, `crypto`
+- OS temporary directories via `os.tmpdir()`
+
+**Testing approach:**
 
 - Dependency injection with controlled implementations
 - Pure function testing
-- Temporary directories (ephemeral, reentrant)
+- **CRITICAL: MUST use `os.tmpdir()` exclusively - never write outside temp directories**
+- Fast execution thanks to SSDs (<50ms typical)
 
-**What's NOT external**: `fs`, `path`, `os`, Node.js built-ins when mocked via DI
+The developer has bigger problems if git, node, npm, or curl are not available. These are NOT external dependencies - they're part of the standard developer environment.
 
-**What IS external**: Git (optional for incremental mode)
+**What's NOT external**: Standard developer CLI tools (git, node, npm, npx, curl, python), Node.js standard library
+
+**What IS external**: Project-specific tools (Claude Code, Hugo), containers, network services
 
 ```typescript
 // tests/unit/status/state.test.ts
@@ -118,11 +129,19 @@ describe("determineStatus", () => {
 
 ### Level 2: Integration Tests
 
-Verify real filesystem operations with temporary directories:
+Integration testing covers two scenarios:
 
-- Real file creation, directory walking, pattern matching
-- Temp directories with fixture spec trees
-- No external tools, no Git
+**1. Project-specific CLI tools:**
+
+- Claude Code, Hugo, Caddy, TypeScript compiler
+- Tools that are NOT installed by default on developer machines
+- Local execution only (no network)
+
+**2. Virtualized environments:**
+
+- Docker containers
+- Other containerized test environments
+- Creates additional dependencies beyond standard developer setup
 
 ```typescript
 // tests/integration/scanner.integration.test.ts
@@ -154,11 +173,17 @@ describe("Scanner Integration", () => {
 
 ### Level 3: E2E Tests
 
-Verify complete workflows:
+Maximum confidence testing with external dependencies:
 
-- Real CLI execution with fixtures
-- Full `spx status`, `spx next`, `spx tree` commands
-- Performance validation (<100ms target)
+- Network services (GitHub API, external repos)
+- Chrome and browser-based tools
+- Full real-world workflows
+
+**Still respects filesystem boundaries:**
+
+- MUST still use `os.tmpdir()` exclusively
+- OR containerized environments with isolated filesystems
+- Never write to user directories or system locations
 
 ```typescript
 // tests/e2e/cli.e2e.test.ts
@@ -384,15 +409,15 @@ tests/
 
 ## Level Assignment by Component
 
-| Component            | Level | Justification                            |
-| -------------------- | ----- | ---------------------------------------- |
-| Pattern matching     | 1     | Pure function, regex operations          |
-| Status determination | 1     | Pure function with file existence checks |
-| Path building        | 1     | Pure function, no I/O                    |
-| Directory scanning   | 2     | Needs real filesystem operations         |
-| Work item detection  | 2     | Needs real directory structure           |
-| Full CLI workflows   | 3     | Needs complete environment + fixtures    |
-| Performance targets  | 3     | Needs realistic conditions               |
+| Component            | Level | Justification                                         |
+| -------------------- | ----- | ----------------------------------------------------- |
+| Pattern matching     | 1     | Pure function, regex operations                       |
+| Status determination | 1     | Pure function with file existence checks              |
+| Path building        | 1     | Pure function, no I/O                                 |
+| Directory scanning   | 1     | FS operations with `os.tmpdir()` and standard tools   |
+| Work item detection  | 1     | Uses FS and git (both standard developer tools)       |
+| Full CLI workflows   | 3     | Needs external dependencies (network, GitHub)         |
+| Performance targets  | 3     | Needs realistic conditions with external dependencies |
 
 ---
 
