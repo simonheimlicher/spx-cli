@@ -22,7 +22,7 @@
     "types": ["node", "vitest/globals"]
   },
   "exclude": ["node_modules", "dist", "docs/**/*", "vite.config.mts"],
-  "include": ["src/**/*", "bin/**/*", "test/**/*", "specs/**/*"],
+  "include": ["src/**/*", "bin/**/*", "scripts/**/*", "test/**/*", "specs/**/*"],
   // This tells ts-node to pre-load tsconfig-paths
   "ts-node": {
     "require": ["tsconfig-paths/register"]

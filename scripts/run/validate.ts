@@ -43,15 +43,7 @@
 import chalk from "chalk";
 import { spawn } from "child_process";
 import { Command } from "commander";
-import {
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  rmSync,
-  statSync,
-  writeFileSync,
-} from "fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "fs";
 import { mkdtemp } from "fs/promises";
 import * as JSONC from "jsonc-parser";
 import madge from "madge";
@@ -103,38 +95,32 @@ let outputMode: OutputMode = OUTPUT_MODES.HUMAN;
  */
 const log = {
   /** Always shown - errors and failures (agent needs to fix these) */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  error: (message?: any, ...optionalParams: any[]) => console.error(message, ...optionalParams),
+  error: (message?: string, ...optionalParams: unknown[]) => console.error(message, ...optionalParams),
 
   /** Always shown - warnings */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  warn: (message?: any, ...optionalParams: any[]) => console.error(message, ...optionalParams),
+  warn: (message?: string, ...optionalParams: unknown[]) => console.error(message, ...optionalParams),
 
   /** Result/status messages - suppressed in AGENT mode (exit code is sufficient) */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  result: (message?: any, ...optionalParams: any[]) => {
+  result: (message?: string, ...optionalParams: unknown[]) => {
     if (outputMode === OUTPUT_MODES.HUMAN) console.error(message, ...optionalParams);
   },
 
   /** Progress info - HUMAN mode + NORMAL verbosity only */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  info: (message?: any, ...optionalParams: any[]) => {
+  info: (message?: string, ...optionalParams: unknown[]) => {
     if (outputMode === OUTPUT_MODES.HUMAN && logVerbosity === LOG_VERBOSITY.NORMAL) {
       console.info(message, ...optionalParams);
     }
   },
 
   /** Step progress - HUMAN mode + NORMAL verbosity only */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  step: (message?: any, ...optionalParams: any[]) => {
+  step: (message?: string, ...optionalParams: unknown[]) => {
     if (outputMode === OUTPUT_MODES.HUMAN && logVerbosity === LOG_VERBOSITY.NORMAL) {
       console.log(message, ...optionalParams);
     }
   },
 
   /** Debug output - HUMAN mode + NORMAL verbosity only */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  debug: (message?: any, ...optionalParams: any[]) => {
+  debug: (message?: string, ...optionalParams: unknown[]) => {
     if (outputMode === OUTPUT_MODES.HUMAN && logVerbosity === LOG_VERBOSITY.NORMAL) {
       console.log(colors.dim(message, ...optionalParams));
     }
@@ -180,8 +166,7 @@ async function parseStdinJson(): Promise<string | null> {
       }
       try {
         const input: HookInput = JSON.parse(data);
-        const filePath =
-          input.tool_input?.file_path || input.tool_input?.path || input.tool_input?.notebook_path;
+        const filePath = input.tool_input?.file_path || input.tool_input?.path || input.tool_input?.notebook_path;
         resolve(filePath || null);
       } catch {
         resolve(null);
@@ -353,8 +338,7 @@ function getEstimatedDuration(stepId: string): number {
 
   // Calculate moving average of recent runs
   const recentDurations = timingData.durations.slice(-5); // Last 5 runs
-  const average =
-    recentDurations.reduce((sum, duration) => sum + duration, 0) / recentDurations.length;
+  const average = recentDurations.reduce((sum, duration) => sum + duration, 0) / recentDurations.length;
   return Math.round(average);
 }
 
@@ -419,8 +403,7 @@ function startValidationStep(step: ValidationStep): void {
   const totalSteps = progressSteps.length;
 
   const estimatedDuration = getEstimatedDuration(step.id);
-  const estimatedText =
-    estimatedDuration > 0 ? colors.dim(` (~${Math.ceil(estimatedDuration / 1000)}s)`) : "";
+  const estimatedText = estimatedDuration > 0 ? colors.dim(` (~${Math.ceil(estimatedDuration / 1000)}s)`) : "";
 
   log.info(`🔄 Step ${stepNumber} of ${totalSteps}: ${step.description}${estimatedText}`);
 }
@@ -491,9 +474,9 @@ function completeValidationProgress(allResults: ValidationStepResult[]): boolean
     return false;
   } else {
     log.info(
-      "\n" +
-        colors.bold(colors.success(`✅ Build-time validation PASSED`)) +
-        colors.dim(` (${successCount} steps completed)`),
+      "\n"
+        + colors.bold(colors.success(`✅ Build-time validation PASSED`))
+        + colors.dim(` (${successCount} steps completed)`),
     );
     return true;
   }
@@ -564,8 +547,7 @@ const circularDependencyStep: ValidationStep = {
   id: "circular-deps",
   name: "Circular Dependencies",
   description: "Checking for circular dependencies",
-  enabled: (context) =>
-    !context.isFileSpecificMode && context.enabledValidations.TYPESCRIPT === true,
+  enabled: (context) => !context.isFileSpecificMode && context.enabledValidations.TYPESCRIPT === true,
   execute: async (context) => {
     const startTime = performance.now();
     try {
@@ -590,9 +572,9 @@ const knipStep: ValidationStep = {
   name: "Unused Code",
   description: "Detecting unused exports, dependencies, and files",
   enabled: (context) =>
-    context.enabledValidations.KNIP === true &&
-    validationEnabled(VALIDATION_KEYS.KNIP) &&
-    !context.isFileSpecificMode,
+    context.enabledValidations.KNIP === true
+    && validationEnabled(VALIDATION_KEYS.KNIP)
+    && !context.isFileSpecificMode,
   execute: async (context) => {
     const startTime = performance.now();
     try {
@@ -616,8 +598,7 @@ const eslintStep: ValidationStep = {
   id: "eslint",
   name: "ESLint",
   description: "Validating ESLint compliance",
-  enabled: (context) =>
-    context.enabledValidations.ESLINT === true && validationEnabled(VALIDATION_KEYS.ESLINT),
+  enabled: (context) => context.enabledValidations.ESLINT === true && validationEnabled(VALIDATION_KEYS.ESLINT),
   execute: async (context: ValidationContext) => {
     const startTime = performance.now();
     try {
@@ -641,8 +622,7 @@ const typescriptStep: ValidationStep = {
   id: "typescript",
   name: "TypeScript",
   description: "Validating TypeScript",
-  enabled: (context) =>
-    context.enabledValidations.TYPESCRIPT === true && validationEnabled(VALIDATION_KEYS.TYPESCRIPT),
+  enabled: (context) => context.enabledValidations.TYPESCRIPT === true && validationEnabled(VALIDATION_KEYS.TYPESCRIPT),
   execute: async (context) => {
     const startTime = performance.now();
     try {
@@ -963,13 +943,11 @@ async function validateESLint(context: ValidationContext): Promise<{
     if (!validatedFiles || validatedFiles.length === 0) {
       if (scope === VALIDATION_SCOPES.PRODUCTION) {
         // Production-only scope: match TypeScript scope
-        logMessage =
-          "🔄 Running ESLint validation (production scope - matching TypeScript scope)...";
+        logMessage = "🔄 Running ESLint validation (production scope - matching TypeScript scope)...";
         process.env.ESLINT_PRODUCTION_ONLY = "1"; // Signal production mode
       } else {
         // Full scope: match TypeScript full validation
-        logMessage =
-          "🔄 Running ESLint validation (full scope - matching TypeScript validation)...";
+        logMessage = "🔄 Running ESLint validation (full scope - matching TypeScript validation)...";
         delete process.env.ESLINT_PRODUCTION_ONLY; // Ensure it's not set
       }
     } else {
@@ -1269,8 +1247,7 @@ async function validateTypeScript(
   } else {
     // Full validation using tsc
     tool = "npx";
-    tscArgs =
-      mode === VALIDATION_SCOPES.FULL ? ["tsc", "--noEmit"] : ["tsc", "--project", configFile];
+    tscArgs = mode === VALIDATION_SCOPES.FULL ? ["tsc", "--noEmit"] : ["tsc", "--project", configFile];
     logMessage = `🔄 TypeScript validation: ${mode} scope using ${configFile}`;
     log.step(logMessage);
     log.debug(`🎯 Validating directories: ${typescriptScope.directories.join(", ")}`);
@@ -1374,8 +1351,7 @@ async function validate(
 
   // Prepare validation context
   const projectRoot = process.cwd();
-  const validatedFiles =
-    (filePaths && filePaths?.length > 0 && validateAndExpandFilePaths(filePaths)) || [];
+  const validatedFiles = (filePaths && filePaths?.length > 0 && validateAndExpandFilePaths(filePaths)) || [];
   const isFileSpecificMode = validatedFiles && validatedFiles?.length > 0;
   const mode = getValidationScope(options);
   const enabledValidations = getEnabledValidations(verb);
@@ -1404,18 +1380,18 @@ async function validate(
   if (isFileSpecificMode) {
     const fileCount = validatedFiles.length;
     log.info(
-      colors.bold(colors.info(`🎯 File-specific validation:`)) +
-        " " +
-        colors.dim(`${fileCount} file${fileCount > 1 ? "s" : ""}`),
+      colors.bold(colors.info(`🎯 File-specific validation:`))
+        + " "
+        + colors.dim(`${fileCount} file${fileCount > 1 ? "s" : ""}`),
     );
     log.debug(`📄 Files: ${validatedFiles.join(", ")}`);
   } else {
     log.info(
       colors.bold(
-        colors.dim(`🔍 Validation verb: `) +
-          colors.info(verb as string) +
-          colors.dim(` Scope: `) +
-          colors.info(mode),
+        colors.dim(`🔍 Validation verb: `)
+          + colors.info(verb as string)
+          + colors.dim(` Scope: `)
+          + colors.info(mode),
       ),
     );
   }
