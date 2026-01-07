@@ -115,7 +115,9 @@ describe("Feature: spx status", () => {
     expect(status.summary).toHaveProperty("open");
 
     // Verify known fixture states
-    expect(findWorkItem(status, "story-32_migrate-lhci-script").status).toBe("DONE");
+    expect(findWorkItem(status, "story-32_migrate-lhci-script").status).toBe(
+      "DONE",
+    );
     expect(findWorkItem(status, "story-76_config-command").status).toBe("OPEN");
   });
 });

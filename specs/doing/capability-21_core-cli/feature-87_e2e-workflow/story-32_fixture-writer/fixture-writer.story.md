@@ -57,7 +57,9 @@ interface MaterializedFixture {
 }
 
 // Convenience wrapper
-async function createFixture(config: FixtureConfig): Promise<MaterializedFixture>;
+async function createFixture(
+  config: FixtureConfig,
+): Promise<MaterializedFixture>;
 ```
 
 ### Generated Structure
@@ -105,7 +107,10 @@ This story uses Level 2 because:
 
 ```typescript
 // tests/integration/helpers/fixture-writer.test.ts
-import { generateFixtureTree, PRESETS } from "@/tests/helpers/fixture-generator";
+import {
+  generateFixtureTree,
+  PRESETS,
+} from "@/tests/helpers/fixture-generator";
 import { materializeFixture } from "@/tests/helpers/fixture-writer";
 import { existsSync, readdirSync } from "node:fs";
 import { afterEach, describe, expect, it } from "vitest";

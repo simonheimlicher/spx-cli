@@ -73,7 +73,11 @@ describe("Capability: Core CLI - E2E", () => {
 
     try {
       const startTime = Date.now();
-      const { stdout, exitCode } = await execa("node", ["bin/spx.js", "status", "--json"], {
+      const { stdout, exitCode } = await execa("node", [
+        "bin/spx.js",
+        "status",
+        "--json",
+      ], {
         cwd: fixture.path,
       });
       const elapsed = Date.now() - startTime;
@@ -96,7 +100,9 @@ describe("Capability: Core CLI - E2E", () => {
     try {
       const formats = ["text", "json", "markdown", "table"];
       for (const format of formats) {
-        const args = format === "text" ? ["status"] : ["status", "--format", format];
+        const args = format === "text"
+          ? ["status"]
+          : ["status", "--format", format];
 
         const { exitCode } = await execa("node", ["bin/spx.js", ...args], {
           cwd: fixture.path,
