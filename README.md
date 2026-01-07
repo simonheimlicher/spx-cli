@@ -21,8 +21,8 @@ Fast, deterministic CLI tool for spec workflow management.
 
 ```bash
 # Clone and install
-git clone https://github.com/simonheimlicher/spx.git
-cd spx
+git clone https://github.com/simonheimlicher/spx-cli.git
+cd spx-cli
 npm install
 npm run build
 npm link  # Makes 'spx' available globally
