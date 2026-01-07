@@ -58,7 +58,6 @@ roots:
 # These exist at specs/ level, not inside work items
 
 project:
-  decisions: true # specs/decisions/ exists
   templates: "templates/" # specs/templates/ (this directory)
 
 # ------------------------------------------------------------------------------

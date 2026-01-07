@@ -8,14 +8,17 @@ This guide covers navigating, reading status, and editing work items in the `spe
 
 ### Directory Layout
 
+The `specs/` directory has exactly four valid subdirectories. Anything else is invalid:
+
 ```
 specs/
 ├── doing/                                   # Active work
 ├── backlog/                                 # Future work
 ├── archive/                                 # Completed work
-├── decisions/                               # Project-level ADRs only
 └── templates/                               # Templates for new items
 ```
+
+**Important**: There is no `specs/decisions/` directory. All architectural decisions (ADRs) live within capability or feature `decisions/` subdirectories.
 
 ### Three-Level Hierarchy (All Levels Work The Same)
 
