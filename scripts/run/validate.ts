@@ -1088,9 +1088,20 @@ async function validateCircularDependencies(
     // Use the appropriate TypeScript config based on scope
     const tsConfigFile = TSCONFIG_FILES[mode];
 
+    // Convert tsconfig exclude patterns to madge excludeRegExp
+    // Glob patterns like "tests/fixtures/**/*" → regex that matches paths containing "tests/fixtures/"
+    const excludeRegExps = typescriptScope.excludePatterns.map((pattern) => {
+      // Remove trailing /**/* or /* for cleaner matching
+      const cleanPattern = pattern.replace(/\/\*\*?\/\*$/, "");
+      // Escape regex special chars and create regex
+      const escaped = cleanPattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return new RegExp(escaped);
+    });
+
     const result = await madge(analyzeDirectories, {
       fileExtensions: ["ts", "tsx"],
       tsConfig: tsConfigFile,
+      excludeRegExp: excludeRegExps,
     });
 
     const circular = result.circular();
