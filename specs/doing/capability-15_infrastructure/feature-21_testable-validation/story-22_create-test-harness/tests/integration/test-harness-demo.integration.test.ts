@@ -8,8 +8,8 @@
  * Story-43 will need to export these functions and write tests like this.
  */
 
+import { FIXTURES, withTestEnv } from "@test/harness/test-env";
 import { describe, expect, it } from "vitest";
-import { FIXTURES, withTestEnv } from "../../../../../tests/harness/test-env";
 
 // TODO: Uncomment once validation functions are exported from validate.ts
 // import { validateESLint, validateTypeScript, validateCircularDependencies } from "@scripts/run/validate";
