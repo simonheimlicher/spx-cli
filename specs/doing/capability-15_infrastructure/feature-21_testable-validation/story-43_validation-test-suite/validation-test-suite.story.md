@@ -1,4 +1,4 @@
-# Story: Write Comprehensive Test Suite
+# Story: Validation Test Suite
 
 ## Acceptance Criteria
 

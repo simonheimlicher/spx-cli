@@ -1,3 +1,4 @@
+import { spawn } from "node:child_process";
 import { cp, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -51,6 +52,35 @@ export interface TestEnvOptions {
  * });
  * ```
  */
+/**
+ * Helper function to install npm dependencies in a directory.
+ */
+async function installDependencies(cwd: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const npmProcess = spawn("npm", ["install", "--silent"], {
+      cwd,
+      stdio: "pipe", // Suppress output unless there's an error
+    });
+
+    let errorOutput = "";
+    npmProcess.stderr?.on("data", (data) => {
+      errorOutput += data.toString();
+    });
+
+    npmProcess.on("close", (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`npm install failed with code ${code}: ${errorOutput}`));
+      }
+    });
+
+    npmProcess.on("error", (error) => {
+      reject(new Error(`Failed to spawn npm install: ${error.message}`));
+    });
+  });
+}
+
 export async function withTestEnv(
   opts: TestEnvOptions,
   testFn: (context: TestEnvContext) => Promise<void>,
@@ -65,6 +95,9 @@ export async function withTestEnv(
 
     await cp(fixtureSource, fixtureDest, { recursive: true });
 
+    // Install dependencies (TypeScript, etc.) in the fixture
+    await installDependencies(fixtureDest);
+
     // Run test callback with context
     await testFn({ path: fixtureDest });
   } finally {
@@ -73,7 +106,8 @@ export async function withTestEnv(
       await rm(tempDir, { recursive: true, force: true });
     } catch (cleanupError) {
       // Log cleanup errors but don't fail the test
-      console.warn(`Warning: Failed to clean up temp directory ${tempDir}:`, cleanupError);
+      // tempDir is system-generated via mkdtemp(), not user input - safe for format strings
+      console.warn(`Warning: Failed to clean up temp directory ${tempDir}:`, cleanupError); // nosemgrep
     }
   }
 }

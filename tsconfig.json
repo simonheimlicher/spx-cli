@@ -11,6 +11,7 @@
     "outDir": "dist",
     "paths": {
       "@/*": ["./src/*"],
+      "@scripts/*": ["./scripts/*"],
       "@test/*": ["./tests/*"]
     },
     "resolveJsonModule": true,
