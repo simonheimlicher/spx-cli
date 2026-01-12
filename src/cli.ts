@@ -3,6 +3,7 @@
  */
 import { Command } from "commander";
 import type { OutputFormat } from "./commands/spec/status.js";
+import { claudeDomain } from "./domains/claude/index.js";
 import { specDomain } from "./domains/spec/index.js";
 
 const program = new Command();
@@ -12,7 +13,8 @@ program
   .description("Fast, deterministic CLI tool for spec workflow management")
   .version("0.2.0"); // Bump version for domain-scoped architecture
 
-// Register spec domain
+// Register domains
+claudeDomain.register(program);
 specDomain.register(program);
 
 // Backward compatibility: Root command aliases (deprecated)
