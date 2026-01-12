@@ -16,35 +16,27 @@ import { describe, expect, it } from "vitest";
 
 describe("Test Harness Demo - How to Write Proper Integration Tests", () => {
   describe("withTestEnv() harness", () => {
-    it(
-      "creates isolated temp directory with fixture",
-      async () => {
-        await withTestEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
-          // Verify temp directory is created and contains fixture
-          expect(path).toContain("spx-test-");
-          expect(path).toContain("clean-project");
-        });
-      },
-      15000,
-    ); // Timeout for npm install in fixtures
+    it("creates isolated temp directory with fixture", async () => {
+      await withTestEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
+        // Verify temp directory is created and contains fixture
+        expect(path).toContain("spx-test-");
+        expect(path).toContain("clean-project");
+      });
+    }, 15000); // Timeout for npm install in fixtures
 
-    it(
-      "cleans up temp directory after test",
-      async () => {
-        let tempPath: string = "";
+    it("cleans up temp directory after test", async () => {
+      let tempPath: string = "";
 
-        await withTestEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
-          tempPath = path;
-          // Temp directory exists during test
-          expect(path).toBeTruthy();
-        });
+      await withTestEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
+        tempPath = path;
+        // Temp directory exists during test
+        expect(path).toBeTruthy();
+      });
 
-        // Cleanup happens automatically - can't verify since it's deleted
-        // but withTestEnv() ensures cleanup even if test fails
-        expect(tempPath).toBeTruthy();
-      },
-      15000,
-    ); // Timeout for npm install in fixtures
+      // Cleanup happens automatically - can't verify since it's deleted
+      // but withTestEnv() ensures cleanup even if test fails
+      expect(tempPath).toBeTruthy();
+    }, 15000); // Timeout for npm install in fixtures
   });
 
   /*

@@ -10,18 +10,17 @@
 
 ## Required Sections
 
-| Section           | Purpose                                                                    |
-| ----------------- | -------------------------------------------------------------------------- |
-| Product Vision    | User problem, value proposition, customer journey, and user assumptions    |
-| Expected Outcome  | Quantified measurable outcome with evidence metrics                        |
-| Acceptance Tests  | Complete E2E journey test and Gherkin scenarios proving measurable outcome |
-| Scope Definition  | Explicit boundaries: what's included, what's excluded, and why             |
-| Product Approach  | Interaction model, UX principles, technical approach (triggers ADRs)       |
-| Success Criteria  | User outcomes, quality attributes, definition of "done"                    |
-| Open Decisions    | Questions for user, ADR triggers, product trade-offs                       |
-| Dependencies      | Work items, customer-facing, technical, and performance requirements       |
-| Pre-Mortem        | Assumptions to validate (adoption, performance, platform, scope)           |
-| Delivery Strategy | Phased approach (if dependencies require), success criteria, rollout plan  |
+| Section          | Purpose                                                                    |
+| ---------------- | -------------------------------------------------------------------------- |
+| Product Vision   | User problem, value proposition, customer journey, and user assumptions    |
+| Expected Outcome | Quantified measurable outcome with evidence metrics                        |
+| Acceptance Tests | Complete E2E journey test and Gherkin scenarios proving measurable outcome |
+| Scope Definition | Explicit boundaries: what's included, what's excluded, and why             |
+| Product Approach | Interaction model, UX principles, technical approach (triggers ADRs)       |
+| Success Criteria | User outcomes, quality attributes, definition of "done"                    |
+| Open Decisions   | Questions for user, ADR triggers, product trade-offs                       |
+| Dependencies     | Work items, customer-facing, technical, and performance requirements       |
+| Pre-Mortem       | Assumptions to validate (adoption, performance, platform, scope)           |
 
 ## Testing Methodology
 
@@ -394,10 +393,10 @@ This deliverable unit is complete when:
 
 ### Questions Requiring User Input
 
-| Question                                                  | Option A        | Option B              | Trade-offs                                 | Recommendation       |
-| --------------------------------------------------------- | --------------- | --------------------- | ------------------------------------------ | -------------------- |
-| Should config support path expansion (e.g., ~, env vars)? | Yes (flexible)  | No (explicit only)    | A = convenient but complexity, B = simple  | Option B for MVP     |
-| How to handle config.json parse errors?                   | Fail with error | Ignore + use defaults | A = fail-fast, B = forgiving but confusing | Option A (fail-fast) |
+| Question                                                  | Option A        | Option B              | Trade-offs                                 | Recommendation         |
+| --------------------------------------------------------- | --------------- | --------------------- | ------------------------------------------ | ---------------------- |
+| Should config support path expansion (e.g., ~, env vars)? | Yes (flexible)  | No (explicit only)    | A = convenient but complexity, B = simple  | Option B (recommended) |
+| How to handle config.json parse errors?                   | Fail with error | Ignore + use defaults | A = fail-fast, B = forgiving but confusing | Option A (fail-fast)   |
 
 ### Decisions Triggering ADRs
 
@@ -410,11 +409,11 @@ This deliverable unit is complete when:
 
 ### Product Trade-offs
 
-| Trade-off                 | Option A                   | Option B                  | Impact                                                     |
-| ------------------------- | -------------------------- | ------------------------- | ---------------------------------------------------------- |
-| Configuration file format | JSON (structure.json)      | YAML (structure.yaml)     | A = familiar (package.json), B = allows comments           |
-| Validation strictness     | Fail on unknown properties | Ignore unknown properties | A = catches typos, B = forward-compatible                  |
-| Config scope (MVP)        | Project-only               | User + Project            | A = simpler MVP, B = more flexible but complex merge logic |
+| Trade-off                 | Option A                   | Option B                  | Impact                                                 |
+| ------------------------- | -------------------------- | ------------------------- | ------------------------------------------------------ |
+| Configuration file format | JSON (structure.json)      | YAML (structure.yaml)     | A = familiar (package.json), B = allows comments       |
+| Validation strictness     | Fail on unknown properties | Ignore unknown properties | A = catches typos, B = forward-compatible              |
+| Config scope              | Product-only               | User + Product            | A = simpler, B = more flexible but complex merge logic |
 
 ## Dependencies
 
@@ -458,50 +457,17 @@ No prerequisite capabilities. This is foundational configuration infrastructure.
 - **Impact**: High - if overhead is significant, violates <100ms spx status requirement
 - **Mitigation**: Benchmark early, cache resolved config, avoid complex merge logic
 
-### Assumption: Product-level config is sufficient for MVP
+### Assumption: Product-level config is sufficient
 
 - **Likelihood**: High - immediate pain is product reorganization, not user-level defaults
-- **Impact**: Medium - if users need user-level config immediately, MVP is insufficient
-- **Mitigation**: Design config system extensible to scopes, add user/local in future
+- **Impact**: Medium - if users need user-level config immediately, product-level scope is insufficient
+- **Mitigation**: Design config system extensible to scopes, add user/local capabilities
 
 ### Assumption: Backward compatibility with no config file is maintainable
 
 - **Likelihood**: Medium - as features grow, maintaining two code paths (config vs defaults) adds complexity
 - **Impact**: High - breaking existing products would force migration, harm adoption
 - **Mitigation**: Comprehensive tests for default behavior, config as optional layer over defaults
-
-## Delivery Strategy
-
-### Phased Delivery Approach
-
-**Phase 1: Default Config + Product Overrides (MVP)**
-
-- **Value Delivered**: Users can override specs and sessions paths via `.spx/config.json`
-- **Dependencies Required**: Config schema, merge logic, path validation
-- **Risk Mitigation**: Proves value with minimal scope, validates config approach
-
-**Phase 2: User-Level Config (Future)**
-
-- **Value Delivered**: User-wide defaults across all products (e.g., always use "archive" instead of "done")
-- **Dependencies Required**: User config file location (~/.spx/config.json), scope precedence system
-- **Risk Mitigation**: Builds on proven MVP, adds user convenience
-
-**Phase 3: Full Scope System (Future)**
-
-- **Value Delivered**: Complete Claude Code-style scopes (managed/user/product/local)
-- **Dependencies Required**: Local config, managed config, full precedence system
-- **Risk Mitigation**: Enterprise-ready configuration for team standardization
-
-### Success Criteria for Delivery
-
-- **User Feedback**: Users report successful specs reorganization with zero spx breakage
-- **Performance Metrics**: Config overhead <10ms, no user complaints about slowness
-- **Adoption Metrics**: Products with custom config.json grow to 20%+ of spx users
-- **Quality Metrics**: Configuration error reports <5% of user issues (most errors are path mistakes)
-
-### Feature Flags and Rollout
-
-Direct release without feature flags. Config are opt-in (no `.spx/config.json` = defaults).
 
 ## Readiness Criteria
 

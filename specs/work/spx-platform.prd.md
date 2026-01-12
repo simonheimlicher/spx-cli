@@ -12,18 +12,17 @@
 
 ## Required Sections
 
-| Section           | Purpose                                                                    |
-| ----------------- | -------------------------------------------------------------------------- |
-| Product Vision    | User problem, value proposition, customer journey, and user assumptions    |
-| Expected Outcome  | Quantified measurable outcome with evidence metrics                        |
-| Acceptance Tests  | Complete E2E journey test and Gherkin scenarios proving measurable outcome |
-| Scope Definition  | Explicit boundaries: what's included, what's excluded, and why             |
-| Product Approach  | Interaction model, UX principles, technical approach (triggers ADRs)       |
-| Success Criteria  | User outcomes, quality attributes, definition of "done"                    |
-| Open Decisions    | Questions for user, ADR triggers, product trade-offs                       |
-| Dependencies      | Work items, customer-facing, technical, and performance requirements       |
-| Pre-Mortem        | Assumptions to validate (adoption, performance, platform, scope)           |
-| Delivery Strategy | Phased approach (if dependencies require), success criteria, rollout plan  |
+| Section          | Purpose                                                                    |
+| ---------------- | -------------------------------------------------------------------------- |
+| Product Vision   | User problem, value proposition, customer journey, and user assumptions    |
+| Expected Outcome | Quantified measurable outcome with evidence metrics                        |
+| Acceptance Tests | Complete E2E journey test and Gherkin scenarios proving measurable outcome |
+| Scope Definition | Explicit boundaries: what's included, what's excluded, and why             |
+| Product Approach | Interaction model, UX principles, technical approach (triggers ADRs)       |
+| Success Criteria | User outcomes, quality attributes, definition of "done"                    |
+| Open Decisions   | Questions for user, ADR triggers, product trade-offs                       |
+| Dependencies     | Work items, customer-facing, technical, and performance requirements       |
+| Pre-Mortem       | Assumptions to validate (adoption, performance, platform, scope)           |
 
 ## Testing Methodology
 
@@ -115,7 +114,7 @@ specs, sessions, settings, and marketplace operations within the first month of 
 | ----------------------- | --------------------------------- | --------------------- | ------------------------------------------ |
 | Tool Context Switching  | 4-6 tools per workflow            | 1 tool (spx)          | 80%+ reduction in tool switching           |
 | Command Discoverability | 0% (users don't know what exists) | 100% (via `--help`)   | Full visibility of capabilities            |
-| Domain Coverage         | 1 domain (specs)                  | 4 domains (MVP)       | Unified interface for all product concerns |
+| Domain Coverage         | 1 domain (specs)                  | 4+ core domains       | Unified interface for all product concerns |
 | Workflow Efficiency     | Manual file editing + CLI mix     | Pure CLI workflow     | Consistent UX across all domains           |
 | Adoption Rate           | Specs users only                  | 60%+ using 2+ domains | Platform value beyond single-domain        |
 
@@ -255,7 +254,7 @@ Feature: SPX Multi-Domain CLI Platform
 
 ## Scope Definition
 
-### What's Included (Platform MVP)
+### What's Included
 
 This platform deliverable includes:
 
@@ -524,8 +523,8 @@ This platform deliverable is complete when:
 
 | Question                                                 | Option A          | Option B                | Trade-offs                                       | Recommendation                 |
 | -------------------------------------------------------- | ----------------- | ----------------------- | ------------------------------------------------ | ------------------------------ |
-| How to handle Claude settings scope precedence?          | Read-only (safe)  | Read-write (powerful)   | A = no accidental changes, B = full management   | Option A for MVP               |
-| Should config commands operate on .spx/config.json only? | Yes (isolated)    | No (all config files)   | A = clear scope, B = more powerful but complex   | Option A for MVP               |
+| How to handle Claude settings scope precedence?          | Read-only (safe)  | Read-write (powerful)   | A = no accidental changes, B = full management   | Option A (recommended)         |
+| Should config commands operate on .spx/config.json only? | Yes (isolated)    | No (all config files)   | A = clear scope, B = more powerful but complex   | Option A (recommended)         |
 | Product root discovery: Git-only or multi-strategy?      | Git-only (simple) | Multi-strategy (robust) | A = fast and common case, B = handles edge cases | Option A with env var fallback |
 
 ### Decisions Triggering ADRs
@@ -546,7 +545,7 @@ This platform deliverable is complete when:
 | Command structure    | `spx <domain> <command>`   | `spx-<domain> <command>` | A = unified tool, B = separate binaries |
 | Help system depth    | Two levels (root + domain) | Three levels (+ command) | A = simpler, B = more granular help     |
 | Config file count    | Single .spx/config.json    | Per-domain config files  | A = simple merge, B = domain isolation  |
-| Domain extensibility | Internal only (hardcoded)  | Public plugin API        | A = MVP speed, B = ecosystem potential  |
+| Domain extensibility | Internal only (hardcoded)  | Public plugin API        | A = simpler, B = ecosystem potential    |
 
 ## Dependencies
 
@@ -625,42 +624,7 @@ No prerequisite capabilities. This is the foundational platform PRD that spawns 
 
 - **Likelihood**: Low - concurrent writes from spx and Claude Code could corrupt settings
 - **Impact**: High - corrupted settings break Claude Code
-- **Mitigation**: Phase 1: Read-only operations only; Phase 2: File locking or validation
-
-## Delivery Strategy
-
-### Phased Delivery Approach
-
-**Phase 1: Platform Foundation + Core Domains (MVP)**
-
-- **Value Delivered**: Multi-domain CLI with spec, session, config domains functional
-- **Dependencies Required**: Domain architecture, config system, root discovery
-- **Risk Mitigation**: Proves platform pattern with 3 domains before expanding
-
-**Phase 2: Claude + Marketplace Integration**
-
-- **Value Delivered**: Claude settings and marketplace management through CLI
-- **Dependencies Required**: Phase 1 platform, Claude settings read-only operations
-- **Risk Mitigation**: Validates complex domain (Claude settings) before write operations
-
-**Phase 3: Advanced Domains (docs, test, deploy)**
-
-- **Value Delivered**: Additional workflow domains based on user demand
-- **Dependencies Required**: Proven platform extensibility from Phases 1-2
-- **Risk Mitigation**: User-driven priorities determine domain roadmap
-
-**Phase 4: Extensibility (Public Plugin API)**
-
-- **Value Delivered**: Third-party domains, community plugins
-- **Dependencies Required**: Stable domain interface from Phases 1-3
-- **Risk Mitigation**: Internal extensibility proven before exposing public API
-
-### Success Criteria for Delivery
-
-- **User Feedback**: Users report using 2+ domains regularly, request new domains
-- **Performance Metrics**: All commands <100ms, no performance complaints
-- **Adoption Metrics**: 60%+ of users invoke multi-domain commands per week
-- **Quality Metrics**: <10% of issues related to cross-domain interactions or config confusion
+- **Mitigation**: Read-only operations initially; file locking or validation for write operations
 
 ## Readiness Criteria
 
