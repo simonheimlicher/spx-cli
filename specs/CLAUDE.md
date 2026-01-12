@@ -6,100 +6,93 @@ This guide covers navigating, reading status, and editing work items in the `spe
 
 ## Navigating the `specs/` Directory
 
-### Directory Layout
+### **IMPORTANT:** Always invoke the `/understanding-specs` skill on the file within the `specs/` directory you will work on
 
-The `specs/` directory has exactly four valid subdirectories. Anything else is invalid:
+> Summary of the structure of the `specs/` directory.
+
+<structure_definition>
+
+## SPX Framework Structure
+
+The specs/ directory follows the SPX framework structure defined in `structure.yaml`.
+
+### Three-Phase Transformation
+
+1. **Requirements (PRD/TRD)** - Capture vision without implementation constraints
+2. **Decisions (ADR)** - Constrain architecture with explicit trade-offs
+3. **Work Items (Capability/Feature/Story)** - Sized, testable implementation containers
+
+### Directory Structure
 
 ```
 specs/
-├── doing/                                   # Active work
-├── backlog/                                 # Future work
-├── archive/                                 # Completed work
-└── templates/                               # Templates for new items
+├── [product-name].prd.md          # Product-wide PRD 
+├── decisions/                      # Product-wide ADRs (optional)
+│   └── adr-NNN_{slug}.md
+└── work/
+    ├── backlog/
+    ├── doing/
+    │   └── capability-NN_{slug}/
+    │       ├── {slug}.capability.md
+    │       ├── {slug}.prd.md        # Optional: Capability-scoped PRD from which the capability spec in (`{slug}.capability.md`) is derived
+    │       ├── {slug}.prd.md        # Optional: Capability-scoped TRD from which capability-scoped ADRs are derived
+    │       ├── decisions/           # Optional: Capability-scoped ADRs
+    │       ├── tests/
+    │       └── feature-NN_{slug}/
+    │           ├── {slug}.prd.md    # Optional: Feature-scoped PRD from which the feature spec in `{slug}.feature.md` is derived
+    │           ├── {slug}.trd.md    # Optional: Feature-scoped TRD from which the feature-scoped ADRs are derived
+    │           ├── {slug}.feature.md
+    │           ├── decisions/       # Optional: Feature-scoped ADRs
+    │           ├── tests/
+    │           └── story-NN_{slug}/
+    │               ├── {slug}.story.md
+    │               └── tests/
+    └── done/
 ```
 
-**Important**: There is no `specs/decisions/` directory. All architectural decisions (ADRs) live within capability or feature `decisions/` subdirectories.
+### Work Item Hierarchy
 
-### Three-Level Hierarchy (All Levels Work The Same)
+- **Capability**: E2E scenario with product-wide impact
+  - Tests graduate to `tests/e2e/`
+  - Triggered by PRD
+  - Contains features
 
-```
-specs/{doing,backlog,archive}/
-└── NN_{capability-slug}/                    # Level 1 (TOP)
-    ├── {slug}.capability.md                 # Work item definition
-    ├── {topic}.prd.md                       # Optional: requirements catalyst
-    ├── decisions/adr-NNN_{slug}.md          # Architectural decisions
-    ├── tests/                               # E2E tests
-    │   └── DONE.md                          # Completion marker
-    │
-    └── NN_{feature-slug}/                   # Level 2
-        ├── {slug}.feature.md                # Work item definition
-        ├── {topic}.trd.md                   # Optional: requirements catalyst
-        ├── decisions/adr-NNN_{slug}.md      # Architectural decisions
-        ├── tests/                           # Integration tests
-        │   └── DONE.md                      # Completion marker
-        │
-        └── NN_{story-slug}/                 # Level 3 (BOTTOM)
-            ├── {slug}.story.md              # Work item definition
-            └── tests/                       # Unit tests
-                └── DONE.md                  # Completion marker
-```
+- **Feature**: Integration scenario with specific functionality
+  - Tests graduate to `tests/integration/`
+  - Triggered by TRD
+  - Contains stories
 
-### What Lives Where
+- **Story**: Unit-tested atomic implementation
+  - Tests graduate to `tests/unit/`
+  - No children
+  - Atomic implementation unit
 
-| Level          | Work Item         | Optional Catalyst | Has Decisions? | Test Type   |
-| -------------- | ----------------- | ----------------- | -------------- | ----------- |
-| 1 (Capability) | `*.capability.md` | `*.prd.md`        | ✅ Yes         | E2E         |
-| 2 (Feature)    | `*.feature.md`    | `*.trd.md`        | ✅ Yes         | Integration |
-| 3 (Story)      | `*.story.md`      | ❌ None           | ❌ Inherits    | Unit        |
+### Key Principles
 
-**Key insight**: There is nothing above capabilities. No `specs/project.prd.md`. Capabilities ARE the top level.
+- **PRD OR TRD** at same scope, never both
+- **Requirements immutable** - code adapts to requirements, not vice versa
+- **BSP numbering**: Two-digit (10-99), lower number = must complete first
+- **Test graduation**: `specs/.../tests/` → `tests/{unit,integration,e2e}/`
+- **Status rules**:
+  - OPEN: No tests exist
+  - IN_PROGRESS: Tests exist, no DONE.md
+  - DONE: DONE.md exists
 
-**Fractal nature**: PRD at capability level spawns features. TRD at feature level spawns stories. Stories are atomic—no children.
-
-### specs/ vs docs/ (Critical Distinction)
-
-| Directory  | Purpose                                                                     | Lifespan  | Contents                                                                                                                                             |
-| ---------- | --------------------------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **specs/** | Ephemeral requirements, decisions and work items for *changing* the product | Temporary | Hierarchical work items (capabilities, features, stories) with progress tests in `tests` and decisions (ADR) in `decisions` at the appropriate level |
-| **docs/**  | Enduring documentation of the product *as it is*                            | Permanent | Architecture, coding standards, testing standards                                                                                                    |
-
-**Rules**:
-
-- **specs/** is your todo list for making changes. Once work is DONE, it moves to archive.
-- **docs/** documents how the product actually works, for humans to read and understand.
-- **ADRs live in specs/**, not docs/. They guide the work, then archive with the work item.
-- Enduring standards (TypeScript style, testing principles) live in **docs/**, not specs/.
-
-### Infrastructure Work as Capabilities
-
-Non-product infrastructure work (CI/CD, validation scripts, build tooling) should be modeled as capabilities:
-
-**Example**: Validation script refactoring
-
-- Create `capability-15_infrastructure/` (low BSP = high priority)
-- Features underneath: `feature-21_testable-validation/`
-- ADR in feature: `feature-21_testable-validation/decisions/adr-001_single-file-di.md`
-- This capability is **pseudo-enduring**: the capability directory stays in `doing/` permanently, but individual features within it complete normally and graduate their tests
-
-**Why low BSP numbers for infrastructure?**
-
-- Infrastructure capabilities block product work
-- Use BSP 10-19 range for infrastructure
-- Use BSP 20+ for product capabilities
-
----
+</structure_definition>
 
 ## READ: Status and What to Work On Next
+
+<understanding_work_items>
 
 ### Three States
 
 Status is determined by the `tests/` directory at each level:
 
-| State           | `tests/` Directory            | Meaning          |
-| --------------- | ----------------------------- | ---------------- |
-| **OPEN**        | Missing OR empty              | Work not started |
-| **IN_PROGRESS** | Has `*.test.ts`, no `DONE.md` | Work underway    |
-| **DONE**        | Has `DONE.md`                 | Complete         |
+| State           | `tests/` Directory           | Meaning          |
+| --------------- | ---------------------------- | ---------------- |
+| **OPEN**        | Missing OR empty             | Work not started |
+| **IN_PROGRESS** | Has `*.test.*`, no `DONE.md` | Work underway    |
+| **DONE**        | Has `DONE.md`                | Complete         |
 
 ### 🚨 BSP Numbers = Dependency Order
 
@@ -123,31 +116,24 @@ This applies at every level:
 3. That item blocks everything after it
 ```
 
-**Example** from `spx status`:
+**Example**:
 
 ```text
-feature-48_test-harness [OPEN]        ← Was added chronologically after feature-87 but that depends on it
-feature-87_e2e-workflow [IN_PROGRESS] ← Was already in progress and the need for test harness was discovered
+feature-48_test-harness [OPEN]        ← Was added after feature-87 but blocks it
+feature-87_e2e-workflow [IN_PROGRESS] ← Was already started, then dependency discovered
 ```
 
 **Next work item**: `feature-48_test-harness` → its first OPEN story.
 
-### Quick Commands
-
-```bash
-# Get current status
-spx status
-
-# Find next work item (respects BSP dependencies)
-spx next
-
-# Get status as JSON
-spx status --json
-```
+</understanding_work_items>
 
 ---
 
 ## EDIT: Adding or Reordering Work Items
+
+<managing_work_items>
+
+<numbering_work_items>
 
 ### BSP Numbering
 
@@ -157,7 +143,7 @@ Two-digit prefixes in range **[10, 99]** encode dependency order.
 
 #### Case 1: First Item (No Siblings)
 
-Use position **21** (leaves room for ~10 items):
+Use position **21** (leaves room for ~10 items before/after):
 
 ```
 # First feature in a new capability
@@ -191,8 +177,9 @@ feature-54_second/
 feature-76_appended/    ← NEW
 ```
 
-### Creating a Work Item
+</numbering_work_items>
 
+<creating_work_items>
 Every work item needs:
 
 1. **Directory**: `NN_{slug}/`
@@ -201,27 +188,79 @@ Every work item needs:
 
 Optional:
 
-- **Requirements catalyst**: `{topic}.prd.md` (capability) or `{topic}.trd.md` (feature)
-- **Decisions**: `decisions/adr-NNN_{slug}.md`
+- **Requirements document**: `{topic}.prd.md` or `{topic}.trd.md`
+- **Decision Records**: `decisions/adr-NNN_{slug}.md`
 
-**Templates**: See [templates/](templates/) for starter files.
+</creating_work_items>
+
+</managing_work_items>
+
+**Templates**: Use `/managing-specs` skill to access templates.
 
 ### Marking Complete
 
 1. Ensure all tests pass
 2. Create `tests/DONE.md` with:
    - Summary of what was implemented
-   - List of graduated tests (moved to `tests/`)
+   - List of graduated tests (moved to production `tests/`)
    - Any notes for future reference
 
 ### Test Graduation
 
 When a work item is DONE, its tests graduate from `specs/.../tests/` to the production test suite:
 
-| From                                      | To                   |
-| ----------------------------------------- | -------------------- |
-| `specs/.../story-NN/tests/*.test.ts`      | `tests/unit/`        |
-| `specs/.../feature-NN/tests/*.test.ts`    | `tests/integration/` |
-| `specs/.../capability-NN/tests/*.test.ts` | `tests/e2e/`         |
+| From                                     | To                   |
+| ---------------------------------------- | -------------------- |
+| `specs/.../story-NN/tests/*.test.*`      | `tests/unit/`        |
+| `specs/.../feature-NN/tests/*.test.*`    | `tests/integration/` |
+| `specs/.../capability-NN/tests/*.test.*` | `tests/e2e/`         |
 
 > ⚠️ **Never write tests directly in `tests/`** — this breaks CI until implementation is complete. Always write in `specs/.../tests/` first, then graduate.
+
+---
+
+## Creating Requirements
+
+**For product requirements:**
+
+- Invoke `/writing-prd` skill
+- Creates PRDs with user value and measurable outcomes
+- Catalyzes capability decomposition
+
+**For technical requirements:**
+
+- Invoke `/writing-trd` skill
+- Creates TRDs with architecture and validation strategy
+- Catalyzes feature decomposition
+
+**For structure and templates:**
+
+- Invoke `/managing-specs` skill
+- Provides templates for PRD/TRD/ADR/work items
+- Defines directory structure and conventions
+
+**Before implementing any work item:**
+
+- Invoke `/understanding-specs` skill
+- Reads complete context hierarchy (capability → feature → story)
+- Verifies all specification documents exist
+- Fails fast if context is incomplete
+
+---
+
+## Session Management
+
+Claude Code session handoffs are stored in:
+
+```
+.spx/sessions/
+├── TODO_*.md      # Available for /pickup
+└── DOING_*.md     # Currently claimed
+```
+
+Use `/handoff` to create session context for continuation.
+Use `/pickup` to load and claim a handoff.
+
+---
+
+**For complete workflow methodology**, reference the SPX framework documentation (when available) or consult the `/managing-specs` skill for structure details.
