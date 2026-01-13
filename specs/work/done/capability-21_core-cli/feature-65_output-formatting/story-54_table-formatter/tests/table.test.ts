@@ -1,9 +1,6 @@
-import { describe, it, expect } from "vitest";
 import { formatTable } from "@/reporter/table";
-import {
-  buildSimpleTree,
-  buildTreeWithStories,
-} from "../../../../../../tests/helpers/tree-builder";
+import { buildSimpleTree, buildTreeWithStories } from "@test/helpers/tree-builder";
+import { describe, expect, it } from "vitest";
 
 describe("formatTable", () => {
   describe("GIVEN tree", () => {
@@ -70,9 +67,7 @@ describe("formatTable", () => {
 
       // All rows should have the same pipe positions (aligned columns)
       const lines = output.split("\n").filter((line) => line.includes("|"));
-      const pipePositions = lines.map((line) =>
-        Array.from(line.matchAll(/\|/g)).map((m) => m.index)
-      );
+      const pipePositions = lines.map((line) => Array.from(line.matchAll(/\|/g)).map((m) => m.index));
 
       // All rows should have pipes at the same positions
       const firstRowPipes = pipePositions[0];

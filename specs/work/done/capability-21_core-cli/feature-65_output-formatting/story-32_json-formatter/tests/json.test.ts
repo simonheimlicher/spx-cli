@@ -1,10 +1,6 @@
-import { describe, it, expect } from "vitest";
 import { formatJSON } from "@/reporter/json";
-import {
-  buildSimpleTree,
-  buildTreeWithStories,
-  buildTreeWithMixedStatus,
-} from "../../../../../../tests/helpers/tree-builder";
+import { buildSimpleTree, buildTreeWithMixedStatus, buildTreeWithStories } from "@test/helpers/tree-builder";
+import { describe, expect, it } from "vitest";
 
 describe("formatJSON", () => {
   describe("GIVEN tree", () => {
@@ -80,8 +76,8 @@ describe("formatJSON", () => {
       const output = formatJSON(tree);
 
       // Check for 2-space indentation patterns
-      expect(output).toContain('  "summary"');
-      expect(output).toContain('  "capabilities"');
+      expect(output).toContain("  \"summary\"");
+      expect(output).toContain("  \"capabilities\"");
     });
   });
 });

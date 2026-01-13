@@ -2,15 +2,10 @@
  * Level 1: Unit tests for tree validation
  * Story: story-54_tree-validation
  */
-import { describe, it, expect } from "vitest";
-import { validateTree, TreeValidationError } from "@/tree/validate";
-import {
-  buildSimpleTree,
-  buildTreeWithFeatures,
-  buildTreeWithStories,
-  createNode,
-} from "../../../../../../tests/helpers/tree-builder";
 import type { WorkItemTree } from "@/tree/types";
+import { TreeValidationError, validateTree } from "@/tree/validate";
+import { buildSimpleTree, buildTreeWithFeatures, buildTreeWithStories, createNode } from "@test/helpers/tree-builder";
+import { describe, expect, it } from "vitest";
 
 describe("validateTree", () => {
   /**
