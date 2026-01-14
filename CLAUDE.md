@@ -10,8 +10,8 @@
 
 ```bash
 # Get status and next item
-node bin/spx.js status
-node bin/spx.js next
+node spx spec status
+node spx spec next
 ```
 
 Full rules: [`specs/CLAUDE.md`](specs/CLAUDE.md) · Templates: [`specs/templates/`](specs/templates/)
@@ -82,10 +82,10 @@ git add . && git commit -m "..."
 
 ```bash
 # Get current project status (fast, deterministic)
-node bin/spx.js status
+node spx spec status
 
 # Find next work item
-node bin/spx.js next
+node spx spec next
 ```
 
 **Why use spx:**
