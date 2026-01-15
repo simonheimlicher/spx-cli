@@ -6,8 +6,8 @@
  * - Status (IN_PROGRESS vs OPEN) is irrelevant to priority
  * - Returns first non-DONE item in BSP order
  */
-import path from "path";
-import { buildWorkItemList, filterWorkItemDirectories, walkDirectory } from "../../scanner/walk.js";
+import { DEFAULT_CONFIG } from "../../config/defaults.js";
+import { Scanner } from "../../scanner/scanner.js";
 import { buildTree } from "../../tree/build.js";
 import type { TreeNode, WorkItemTree } from "../../tree/types.js";
 
@@ -105,20 +105,14 @@ function formatWorkItemName(node: TreeNode): string {
  */
 export async function nextCommand(options: NextOptions = {}): Promise<string> {
   const cwd = options.cwd || process.cwd();
-  const specsPath = path.join(cwd, "specs", "doing");
 
-  // Step 1: Walk specs directory to get all directories
-  const allEntries = await walkDirectory(specsPath);
-
-  // Step 2: Filter to only work item directories
-  const workItemEntries = filterWorkItemDirectories(allEntries);
-
-  // Step 3: Build flat list of work items
-  const workItems = buildWorkItemList(workItemEntries);
+  // Step 1-3: Use Scanner with config-driven paths
+  const scanner = new Scanner(cwd, DEFAULT_CONFIG);
+  const workItems = await scanner.scan();
 
   // Handle empty project
   if (workItems.length === 0) {
-    return "No work items found in specs/doing";
+    return `No work items found in ${DEFAULT_CONFIG.specs.root}/${DEFAULT_CONFIG.specs.work.dir}/${DEFAULT_CONFIG.specs.work.statusDirs.doing}`;
   }
 
   // Step 4: Build hierarchical tree with status

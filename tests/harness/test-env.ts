@@ -53,7 +53,14 @@ export interface TestEnvOptions {
  * ```
  */
 /**
- * Helper function to install npm dependencies in a directory.
+ * Installs npm dependencies in a fixture directory.
+ *
+ * Runs `npm install --silent` in the specified directory and waits for completion.
+ * Captures stderr output for error reporting.
+ *
+ * @param cwd - Directory containing package.json where dependencies should be installed
+ * @throws Error if npm install exits with non-zero code or fails to spawn
+ * @private
  */
 async function installDependencies(cwd: string): Promise<void> {
   return new Promise((resolve, reject) => {

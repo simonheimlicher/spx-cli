@@ -31,7 +31,7 @@ describe("CLI Error Handling", () => {
   });
 
   it("GIVEN no specs dir WHEN running status THEN shows clear error", async () => {
-    // Given: Directory with no specs/doing folder
+    // Given: Directory with no specs/work/doing folder
     const cwd = path.join(__dirname, "../../fixtures/repos/no-specs");
 
     // When
@@ -43,7 +43,7 @@ describe("CLI Error Handling", () => {
     // Then
     expect(result.exitCode).toBe(1);
     expect(result.stderr).toContain("Error:");
-    expect(result.stderr).toContain("specs/doing");
+    expect(result.stderr).toContain("specs/work/doing");
   });
 
   it("GIVEN no command specified WHEN running THEN shows help", async () => {

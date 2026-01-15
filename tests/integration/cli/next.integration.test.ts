@@ -2,17 +2,17 @@
  * Level 2: Integration tests for CLI next command
  * Story: story-32_next-command
  */
-import { describe, it, expect } from "vitest";
 import { execa } from "execa";
 import path from "path";
 import { fileURLToPath } from "url";
+import { describe, expect, it } from "vitest";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const CLI_PATH = path.join(__dirname, "../../../bin/spx.js");
 
-describe("spx next command", () => {
+describe("spx spec next command", () => {
   /**
    * Level 2: Integration tests with real CLI and Commander.js
    */

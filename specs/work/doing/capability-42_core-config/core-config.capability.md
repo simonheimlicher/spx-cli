@@ -11,7 +11,7 @@
 ## Testing Strategy
 
 > Capabilities require **all three levels** to prove end-to-end value delivery.
-> See [testing standards](/docs/testing/standards.md) for level definitions.
+> See [testing standards](/docs/development/testing/standards.md) for level definitions.
 
 ### Level Assignment
 
@@ -160,7 +160,7 @@ This capability provides **foundational configuration infrastructure** for the e
 
 4. **Command Integration**
    - `spx status`: Uses resolved paths to find and classify work items
-   - `spx next`: Uses resolved paths to find next work item by BSP ordering
+   - `spx spec next`: Uses resolved paths to find next work item by BSP ordering
    - `spx validate`: Uses resolved paths to validate product structure
    - `spx session` commands: Use resolved sessions.dir for handoff files
    - All future commands: Automatically benefit from configurable paths

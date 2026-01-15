@@ -100,3 +100,63 @@ Story-43 must:
 ## Notes
 
 This infrastructure provides the foundation for proper integration testing. The demo test file contains extensive comments showing the CORRECT vs WRONG patterns, documenting the mistake made in the previous (reverted) implementation.
+
+---
+
+## Post-Completion Improvements
+
+**Date:** 2026-01-13
+
+**Changes Made:**
+
+1. **Fixed demo integration test** - Removed outdated TODO comments claiming validation functions weren't exported. Simplified test to focus on harness verification (functions ARE exported since Story-32).
+
+2. **Added 3 missing unit tests** per story testing strategy:
+   - Test cleanup on callback error (verifies finally block works)
+   - Test npm install failure handling (verifies error propagation)
+   - Test file copying verification (verifies all fixture files copied)
+
+3. **Added JSDoc to `installDependencies()`** - Documented parameters, behavior, and error conditions with `@private` annotation.
+
+4. **Fixed vitest coverage configuration** - Added explicit `include` for `tests/harness/**/*.ts` to enable coverage measurement for test infrastructure code.
+
+**Test Results (Updated):**
+
+```bash
+✓ tests/harness/test-env.test.ts  (8 tests) 11.2s
+  ✓ creates temp directory with clean project fixture
+  ✓ creates temp directory with type errors fixture
+  ✓ creates temp directory with lint errors fixture
+  ✓ creates temp directory with circular deps fixture
+  ✓ exports all expected fixture constants
+  ✓ cleans up temp directory even when callback throws error
+  ✓ propagates error when fixture directory doesn't exist
+  ✓ copies all fixture files to temp directory
+
+✓ tests/integration/test-harness-demo.integration.test.ts  (2 tests) 3.6s
+
+Test Files  2 passed (2)
+     Tests  10 passed (10)
+```
+
+**Coverage (Now Measurable):**
+
+```
+tests/harness/test-env.ts  |   93.33% |    75% |    100% |   93.33%
+```
+
+**Verification:**
+
+- [x] Story-43 integration tests still passing (15/15 tests)
+- [x] All story acceptance criteria fully met
+- [x] Test coverage matches story's testing strategy completely
+- [x] Coverage >80% requirement met (93.33%)
+- [x] ESLint passing on all changed files
+- [x] Demo test no longer has misleading comments
+
+**Files Modified:**
+
+- `tests/harness/test-env.ts` (+5 lines JSDoc)
+- `tests/harness/test-env.test.ts` (+3 tests, 30 lines)
+- `specs/.../tests/integration/test-harness-demo.integration.test.ts` (simplified, -120 lines)
+- `vitest.config.ts` (coverage config fix)

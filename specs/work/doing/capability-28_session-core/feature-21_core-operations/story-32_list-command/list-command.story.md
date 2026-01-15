@@ -42,7 +42,7 @@ THEN metadata is extracted and included in session info
 ## Testing Strategy
 
 > Stories require **Level 1** to prove core logic works.
-> See [testing standards](/docs/testing/standards.md) for level definitions.
+> See [testing standards](/docs/development/testing/standards.md) for level definitions.
 
 ### Level Assignment
 

@@ -11,12 +11,7 @@ import { randomUUID } from "node:crypto";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import {
-  generateFixtureTree,
-  type FixtureConfig,
-  type FixtureNode,
-  type FixtureTree,
-} from "./fixture-generator";
+import { type FixtureConfig, type FixtureNode, type FixtureTree, generateFixtureTree } from "./fixture-generator";
 
 /**
  * Materialized fixture on disk
@@ -44,8 +39,8 @@ export async function materializeFixture(tree: FixtureTree): Promise<Materialize
   const fixtureId = randomUUID();
   const fixturePath = join(tmpdir(), `spx-fixture-${fixtureId}`);
 
-  // Create base structure: {tmpdir}/spx-fixture-{uuid}/specs/doing/
-  const doingPath = join(fixturePath, "specs", "doing");
+  // Create base structure: {tmpdir}/spx-fixture-{uuid}/specs/work/doing/
+  const doingPath = join(fixturePath, "specs", "work", "doing");
   await mkdir(doingPath, { recursive: true });
 
   // Materialize each capability

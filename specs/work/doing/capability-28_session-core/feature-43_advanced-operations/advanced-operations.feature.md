@@ -7,7 +7,7 @@ Users can clean up old sessions with `spx session prune` and archive sessions wi
 ## Testing Strategy
 
 > Features require **Level 1 + Level 2** to prove the feature works with real tools.
-> See [testing standards](/docs/testing/standards.md) for level definitions.
+> See [testing standards](/docs/development/testing/standards.md) for level definitions.
 
 ### Level Assignment
 

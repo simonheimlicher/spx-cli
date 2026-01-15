@@ -11,7 +11,7 @@
 ## Testing Strategy
 
 > Capabilities require **all three levels** to prove end-to-end value delivery.
-> See [testing standards](/docs/testing/standards.md) for level definitions.
+> See [testing standards](/docs/development/testing/standards.md) for level definitions.
 
 ### Level Assignment
 

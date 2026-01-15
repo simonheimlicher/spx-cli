@@ -6,13 +6,13 @@
  * @see specs/doing/capability-21_core-cli/feature-48_test-harness/story-21_context-manager/
  * @see specs/doing/capability-21_core-cli/feature-48_test-harness/story-32_fixture-integration/
  */
-import { describe, it, expect } from "vitest";
 import { existsSync, readdirSync } from "node:fs";
 import { rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { withTestEnv } from "./with-test-env";
+import { describe, expect, it } from "vitest";
 import { PRESETS } from "./fixture-generator";
+import { withTestEnv } from "./with-test-env";
 
 describe("withTestEnv", () => {
   describe("bare temp directory (default)", () => {
@@ -46,16 +46,16 @@ describe("withTestEnv", () => {
   });
 
   describe("emptySpecs mode", () => {
-    it("GIVEN emptySpecs: true WHEN called THEN creates specs/doing structure", async () => {
+    it("GIVEN emptySpecs: true WHEN called THEN creates specs/work/doing structure", async () => {
       await withTestEnv({ emptySpecs: true }, async ({ path }) => {
         expect(existsSync(join(path, "specs"))).toBe(true);
-        expect(existsSync(join(path, "specs", "doing"))).toBe(true);
+        expect(existsSync(join(path, "specs", "work", "doing"))).toBe(true);
       });
     });
 
-    it("GIVEN emptySpecs: true WHEN called THEN specs/doing is empty", async () => {
+    it("GIVEN emptySpecs: true WHEN called THEN specs/work/doing is empty", async () => {
       await withTestEnv({ emptySpecs: true }, async ({ path }) => {
-        const contents = readdirSync(join(path, "specs", "doing"));
+        const contents = readdirSync(join(path, "specs", "work", "doing"));
         expect(contents).toHaveLength(0);
       });
     });
@@ -74,7 +74,7 @@ describe("withTestEnv", () => {
   describe("fixture mode", () => {
     it("GIVEN fixture: PRESETS.MINIMAL WHEN called THEN creates fixture structure", async () => {
       await withTestEnv({ fixture: PRESETS.MINIMAL }, async ({ path }) => {
-        const doingPath = join(path, "specs", "doing");
+        const doingPath = join(path, "specs", "work", "doing");
         expect(existsSync(doingPath)).toBe(true);
 
         const contents = readdirSync(doingPath);
@@ -102,7 +102,7 @@ describe("withTestEnv", () => {
       };
 
       await withTestEnv({ fixture: customConfig }, async ({ path }) => {
-        const doingPath = join(path, "specs", "doing");
+        const doingPath = join(path, "specs", "work", "doing");
         const contents = readdirSync(doingPath);
         const caps = contents.filter((d) => d.startsWith("capability-"));
         expect(caps.length).toBe(2);
@@ -114,10 +114,10 @@ describe("withTestEnv", () => {
         { fixture: PRESETS.MINIMAL, emptySpecs: true },
         async ({ path }) => {
           // Should have full fixture structure, not just empty specs
-          const doingPath = join(path, "specs", "doing");
+          const doingPath = join(path, "specs", "work", "doing");
           const contents = readdirSync(doingPath);
           expect(contents.some((d) => d.startsWith("capability-"))).toBe(true);
-        }
+        },
       );
     });
   });
@@ -130,7 +130,7 @@ describe("withTestEnv", () => {
         withTestEnv(async ({ path }) => {
           capturedPath = path;
           throw new Error("test error");
-        })
+        }),
       ).rejects.toThrow("test error");
 
       expect(existsSync(capturedPath!)).toBe(false);
@@ -143,7 +143,7 @@ describe("withTestEnv", () => {
         withTestEnv({ fixture: PRESETS.MINIMAL }, async ({ path }) => {
           capturedPath = path;
           throw new Error("fixture test error");
-        })
+        }),
       ).rejects.toThrow("fixture test error");
 
       expect(existsSync(capturedPath!)).toBe(false);

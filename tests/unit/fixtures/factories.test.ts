@@ -2,12 +2,8 @@
  * Level 1: Pure function tests for test factories
  * Story: story-65_test-factories
  */
-import { describe, it, expect } from "vitest";
-import {
-  createWorkItemName,
-  createWorkItem,
-  createRandomWorkItem,
-} from "@test/fixtures/factories";
+import { createRandomWorkItem, createWorkItem, createWorkItemName } from "@test/fixtures/factories";
+import { describe, expect, it } from "vitest";
 
 describe("createWorkItemName", () => {
   it("GIVEN capability parameters WHEN creating name THEN returns valid pattern", () => {
@@ -78,7 +74,7 @@ describe("createWorkItem", () => {
       kind: "capability",
       number: 20,
       slug: "core-cli",
-      path: "/test/specs/doing/capability-21_core-cli",
+      path: "/test/specs/work/doing/capability-21_core-cli",
     });
   });
 

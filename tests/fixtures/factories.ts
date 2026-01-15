@@ -2,19 +2,15 @@
  * Factory functions for generating test work items
  */
 import type { WorkItem, WorkItemKind } from "@/types";
-import {
-  DEFAULT_BSP_NUMBER,
-  MIN_BSP_NUMBER,
-  MAX_BSP_NUMBER,
-} from "./constants";
+import { DEFAULT_BSP_NUMBER, MAX_BSP_NUMBER, MIN_BSP_NUMBER } from "./constants";
 
 /**
  * Generate a random BSP number in the valid range [10, 99]
  */
 function randomBSPNumber(): number {
   return (
-    Math.floor(Math.random() * (MAX_BSP_NUMBER - MIN_BSP_NUMBER + 1)) +
-    MIN_BSP_NUMBER
+    Math.floor(Math.random() * (MAX_BSP_NUMBER - MIN_BSP_NUMBER + 1))
+    + MIN_BSP_NUMBER
   );
 }
 
@@ -43,12 +39,10 @@ export function createWorkItemName(params: {
   slug?: string;
 }): string {
   const number = params.number ?? DEFAULT_BSP_NUMBER;
-  const slug =
-    params.slug ?? `test-${Math.random().toString(36).slice(2, 8)}`;
+  const slug = params.slug ?? `test-${Math.random().toString(36).slice(2, 8)}`;
 
   // Reverse mapping: capabilities add 1 to get directory number
-  const directoryNumber =
-    params.kind === "capability" ? number + 1 : number;
+  const directoryNumber = params.kind === "capability" ? number + 1 : number;
 
   return `${params.kind}-${directoryNumber}_${slug}`;
 }
@@ -69,7 +63,7 @@ export function createWorkItemName(params: {
  * ```
  */
 export function createWorkItem(
-  params: Partial<WorkItem> & { kind: WorkItemKind }
+  params: Partial<WorkItem> & { kind: WorkItemKind },
 ): WorkItem {
   const number = params.number ?? randomBSPNumber();
   const slug = params.slug ?? `test-${Math.random().toString(36).slice(2, 8)}`;
@@ -78,7 +72,7 @@ export function createWorkItem(
     kind: params.kind,
     number,
     slug,
-    path: params.path ?? `/test/specs/doing/${name}`,
+    path: params.path ?? `/test/specs/work/doing/${name}`,
   };
 }
 
@@ -99,8 +93,7 @@ export function createWorkItem(
  */
 export function createRandomWorkItem(params?: Partial<WorkItem>): WorkItem {
   const kinds: WorkItemKind[] = ["capability", "feature", "story"];
-  const kind =
-    params?.kind ?? kinds[Math.floor(Math.random() * kinds.length)];
+  const kind = params?.kind ?? kinds[Math.floor(Math.random() * kinds.length)];
 
   return createWorkItem({
     kind,

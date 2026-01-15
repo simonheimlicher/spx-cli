@@ -7,7 +7,7 @@ Users can atomically claim sessions with `spx session pickup` and release them w
 ## Testing Strategy
 
 > Features require **Level 1 + Level 2** to prove the feature works with real tools.
-> See [testing standards](/docs/testing/standards.md) for level definitions.
+> See [testing standards](/docs/development/testing/standards.md) for level definitions.
 
 ### Level Assignment
 

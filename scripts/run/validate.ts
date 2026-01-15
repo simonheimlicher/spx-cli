@@ -41,8 +41,10 @@
  */
 
 import chalk from "chalk";
-import { type ChildProcess, spawn, type SpawnOptions } from "child_process";
 import { Command } from "commander";
+import * as JSONC from "jsonc-parser";
+import madge from "madge";
+import { type ChildProcess, spawn, type SpawnOptions } from "node:child_process";
 import {
   existsSync,
   mkdirSync,
@@ -51,14 +53,12 @@ import {
   rmSync,
   statSync,
   writeFileSync,
-} from "fs";
-import { mkdtemp } from "fs/promises";
-import * as JSONC from "jsonc-parser";
-import madge from "madge";
-import { tmpdir } from "os";
-import path, { extname, isAbsolute, join, resolve } from "path";
-import { performance } from "perf_hooks";
-import { fileURLToPath } from "url";
+} from "node:fs";
+import { mkdtemp } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path, { extname, isAbsolute, join, resolve } from "node:path";
+import { performance } from "node:perf_hooks";
+import { fileURLToPath } from "node:url";
 
 // =============================================================================
 // DEPENDENCY INJECTION INTERFACES

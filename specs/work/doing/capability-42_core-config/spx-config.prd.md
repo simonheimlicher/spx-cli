@@ -190,7 +190,7 @@ Feature: Configurable Specs Directory Structure
     Given a project using "in-progress", "backlog", "completed" instead of defaults
     When user configures custom status directory names in config
     Then spx status correctly classifies work items by custom directories
-    And spx next recommends work from correct status directories
+    And spx spec next recommends work from correct status directories
     And BSP ordering is preserved across custom directory names
 
   Scenario: User migrates from flat to nested structure
