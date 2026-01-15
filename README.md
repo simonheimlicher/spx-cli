@@ -78,6 +78,34 @@ Status is computed deterministically from the `tests/` directory:
 | `tests/` has files but no `DONE.md` | **IN PROGRESS** |
 | `tests/DONE.md` exists              | **DONE**        |
 
+## Session Management
+
+Manage work sessions for agent handoffs and task queuing:
+
+```bash
+# Create a session (reads content from stdin)
+echo "# Implement feature X" | spx session create --priority high
+
+# List all sessions
+spx session list
+
+# Claim the highest priority session
+spx session pickup --auto
+
+# Release session back to queue
+spx session release
+
+# Show session content
+spx session show <session-id>
+
+# Delete a session
+spx session delete <session-id>
+```
+
+Sessions are stored in `.spx/sessions/` with priority-based ordering (high → medium → low) and FIFO within the same priority.
+
+See [Session Recipes](docs/how-to/session/common-tasks.md) for detailed usage patterns.
+
 ## Work Item Structure
 
 spx expects work items in `specs/doing/` following this pattern:

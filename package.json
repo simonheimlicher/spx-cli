@@ -62,6 +62,7 @@
   "dependencies": {
     "chalk": "^5.6.2",
     "commander": "^11.1.0",
+    "fast-check": "^4.5.3",
     "yaml": "^2.8.2"
   }
 }

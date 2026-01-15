@@ -98,6 +98,61 @@ node spx spec next
 
 ---
 
+## Session Management
+
+Use `spx session` to manage work handoffs between agent contexts.
+
+### Core Workflow
+
+```bash
+# Create a session (pipe content from stdin)
+echo "# Task: Implement feature X" | spx session create --priority high
+
+# List all sessions
+spx session list
+
+# Claim highest priority session
+spx session pickup --auto
+
+# Release session back to queue (if interrupted)
+spx session release
+```
+
+### Creating Sessions with Content
+
+```bash
+# From stdin (recommended for agents)
+cat << 'EOF' | spx session create --priority high --tags "feature,api"
+# Implement User Authentication
+
+## Context
+- Using JWT tokens
+- Need login/logout endpoints
+
+## Files to modify
+- src/auth/login.ts
+- src/auth/middleware.ts
+EOF
+
+# Quick session with default content
+spx session create --priority medium
+```
+
+### Session Commands Reference
+
+| Command                    | Description                                       |
+| -------------------------- | ------------------------------------------------- |
+| `spx session list`         | List sessions by status (doing → todo → archive)  |
+| `spx session show <id>`    | Display session content                           |
+| `spx session pickup [id]`  | Claim session (use `--auto` for highest priority) |
+| `spx session release [id]` | Return session to todo queue                      |
+| `spx session create`       | Create session (reads content from stdin)         |
+| `spx session delete <id>`  | Remove session                                    |
+
+**Detailed recipes**: [`docs/how-to/session/common-tasks.md`](docs/how-to/session/common-tasks.md)
+
+---
+
 ## Project Overview
 
 **spx** is a fast, deterministic CLI tool for spec workflow management:

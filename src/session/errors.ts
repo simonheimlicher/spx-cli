@@ -51,3 +51,27 @@ export class SessionInvalidContentError extends SessionError {
     this.name = "SessionInvalidContentError";
   }
 }
+
+/**
+ * Error thrown when trying to release a session that is not currently claimed.
+ */
+export class SessionNotClaimedError extends SessionError {
+  /** The session ID that is not claimed */
+  readonly sessionId: string;
+
+  constructor(sessionId: string) {
+    super(`Session not claimed: ${sessionId}. The session is not in the doing directory.`);
+    this.name = "SessionNotClaimedError";
+    this.sessionId = sessionId;
+  }
+}
+
+/**
+ * Error thrown when no sessions are available for auto-pickup.
+ */
+export class NoSessionsAvailableError extends SessionError {
+  constructor() {
+    super("No sessions available. The todo directory is empty.");
+    this.name = "NoSessionsAvailableError";
+  }
+}

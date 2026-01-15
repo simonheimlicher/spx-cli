@@ -4,6 +4,7 @@
 import { Command } from "commander";
 import type { OutputFormat } from "./commands/spec/status.js";
 import { claudeDomain } from "./domains/claude/index.js";
+import { sessionDomain } from "./domains/session/index.js";
 import { specDomain } from "./domains/spec/index.js";
 
 const program = new Command();
@@ -15,6 +16,7 @@ program
 
 // Register domains
 claudeDomain.register(program);
+sessionDomain.register(program);
 specDomain.register(program);
 
 // Backward compatibility: Root command aliases (deprecated)
