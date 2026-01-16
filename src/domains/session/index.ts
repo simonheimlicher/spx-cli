@@ -4,8 +4,8 @@
 import type { Command } from "commander";
 
 import {
-  createCommand,
   deleteCommand,
+  handoffCommand,
   listCommand,
   pickupCommand,
   releaseCommand,
@@ -130,10 +130,10 @@ function registerSessionCommands(sessionCmd: Command): void {
       }
     });
 
-  // create command
+  // handoff command
   sessionCmd
-    .command("create")
-    .description("Create a new session (reads content from stdin if piped)")
+    .command("handoff")
+    .description("Create a handoff session (reads content from stdin if piped)")
     .option("--priority <priority>", "Priority level (high|medium|low)", "medium")
     .option("--tags <tags>", "Comma-separated tags")
     .option("--sessions-dir <path>", "Custom sessions directory")
@@ -142,7 +142,7 @@ function registerSessionCommands(sessionCmd: Command): void {
         // Read content from stdin if available
         const content = await readStdin();
 
-        const output = await createCommand({
+        const output = await handoffCommand({
           content,
           priority: options.priority as "high" | "medium" | "low" | undefined,
           tags: options.tags?.split(",").map((t) => t.trim()),

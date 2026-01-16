@@ -1,10 +1,10 @@
 /**
  * Session domain command exports
  */
-export { createCommand } from "./create.js";
-export type { CreateOptions } from "./create.js";
 export { deleteCommand } from "./delete.js";
 export type { DeleteOptions } from "./delete.js";
+export { handoffCommand } from "./handoff.js";
+export type { HandoffOptions } from "./handoff.js";
 export { listCommand } from "./list.js";
 export type { ListOptions } from "./list.js";
 export { pickupCommand } from "./pickup.js";

@@ -61,8 +61,11 @@ async function loadTodoSessions(config: SessionDirectoryConfig): Promise<Session
 /**
  * Executes the pickup command.
  *
+ * Claims a session from the todo queue and moves it to doing.
+ * Output includes `<PICKUP_ID>` tag for easy parsing by automation tools.
+ *
  * @param options - Command options
- * @returns Formatted output for display
+ * @returns Formatted output for display with parseable session ID
  * @throws {NoSessionsAvailableError} When no sessions in todo for auto mode
  * @throws {SessionNotAvailableError} When session already claimed
  */
@@ -109,5 +112,6 @@ export async function pickupCommand(options: PickupOptions): Promise<string> {
   const content = await readFile(paths.target, "utf-8");
   const output = formatShowOutput(content, { status: "doing" });
 
-  return `Claimed session: ${sessionId}\n\n${output}`;
+  // Output with parseable PICKUP_ID tag
+  return `Claimed session <PICKUP_ID>${sessionId}</PICKUP_ID>\n\n${output}`;
 }

@@ -1,7 +1,9 @@
 /**
- * Session create CLI command handler.
+ * Session handoff CLI command handler.
  *
- * @module commands/session/create
+ * Creates a new session for handoff to another agent context.
+ *
+ * @module commands/session/handoff
  */
 
 import { mkdir, writeFile } from "node:fs/promises";
@@ -13,9 +15,9 @@ import { DEFAULT_SESSION_CONFIG, type SessionDirectoryConfig } from "../../sessi
 import { generateSessionId } from "../../session/timestamp.js";
 
 /**
- * Options for the create command.
+ * Options for the handoff command.
  */
-export interface CreateOptions {
+export interface HandoffOptions {
   /** Session content (from stdin or argument) */
   content?: string;
   /** Priority level */
@@ -29,7 +31,7 @@ export interface CreateOptions {
 /**
  * Builds session content with YAML front matter.
  */
-function buildSessionContent(options: CreateOptions): string {
+function buildSessionContent(options: HandoffOptions): string {
   const content = options.content ?? "# New Session\n\nDescribe your task here.";
   const priority = options.priority ?? "medium";
   const tags = options.tags ?? [];
@@ -51,13 +53,16 @@ function buildSessionContent(options: CreateOptions): string {
 }
 
 /**
- * Executes the create command.
+ * Executes the handoff command.
+ *
+ * Creates a new session in the todo directory for pickup by another context.
+ * Output includes `<HANDOFF_ID>` tag for easy parsing by automation tools.
  *
  * @param options - Command options
- * @returns Formatted output for display
+ * @returns Formatted output for display with parseable session ID
  * @throws {SessionInvalidContentError} When content validation fails
  */
-export async function createCommand(options: CreateOptions): Promise<string> {
+export async function handoffCommand(options: HandoffOptions): Promise<string> {
   // Build config from options
   const config: SessionDirectoryConfig = options.sessionsDir
     ? {
@@ -86,5 +91,6 @@ export async function createCommand(options: CreateOptions): Promise<string> {
   // Write file
   await writeFile(sessionPath, fullContent, "utf-8");
 
-  return `Created session: ${sessionId}\nPath: ${sessionPath}`;
+  // Output with parseable HANDOFF_ID tag
+  return `Created handoff session <HANDOFF_ID>${sessionId}</HANDOFF_ID>\nPath: ${sessionPath}`;
 }
