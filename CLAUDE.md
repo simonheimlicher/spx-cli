@@ -105,9 +105,16 @@ Use `spx session` to manage work handoffs between agent contexts.
 ### Core Workflow
 
 ```bash
-# Create a handoff session (pipe content from stdin)
-echo "# Task: Implement feature X" | spx session handoff --priority high
-# Output: Created handoff session <HANDOFF_ID>2026-01-15_08-30-00</HANDOFF_ID>
+# Create a handoff session (pipe content with frontmatter from stdin)
+cat << 'EOF' | spx session handoff
+---
+priority: high
+---
+# Task: Implement feature X
+EOF
+# Output:
+# Created handoff session <HANDOFF_ID>2026-01-15_08-30-00</HANDOFF_ID>
+# <SESSION_FILE>/path/to/.spx/sessions/todo/2026-01-15_08-30-00.md</SESSION_FILE>
 
 # List all sessions
 spx session list
@@ -122,9 +129,16 @@ spx session release
 
 ### Creating Sessions with Content
 
+Metadata (priority, tags) is specified via YAML frontmatter in the content.
+This makes `spx session handoff` deterministic for permission pre-approval.
+
 ```bash
-# From stdin (recommended for agents)
-cat << 'EOF' | spx session handoff --priority high --tags "feature,api"
+# From stdin with frontmatter (recommended for agents)
+cat << 'EOF' | spx session handoff
+---
+priority: high
+tags: [feature, api]
+---
 # Implement User Authentication
 
 ## Context
@@ -136,8 +150,8 @@ cat << 'EOF' | spx session handoff --priority high --tags "feature,api"
 - src/auth/middleware.ts
 EOF
 
-# Quick session with default content
-spx session handoff --priority medium
+# Quick session (adds default frontmatter: priority: medium)
+echo "# My task" | spx session handoff
 ```
 
 ### Session Commands Reference
@@ -157,6 +171,7 @@ Commands output XML-style tags for easy parsing by automation tools:
 
 - **`<PICKUP_ID>session-id</PICKUP_ID>`** - Output by `spx session pickup`
 - **`<HANDOFF_ID>session-id</HANDOFF_ID>`** - Output by `spx session handoff`
+- **`<SESSION_FILE>/absolute/path</SESSION_FILE>`** - Output by `spx session handoff` (for direct file editing)
 
 **Detailed recipes**: [`docs/how-to/session/common-tasks.md`](docs/how-to/session/common-tasks.md)
 

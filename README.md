@@ -83,9 +83,20 @@ Status is computed deterministically from the `tests/` directory:
 Manage work sessions for agent handoffs and task queuing:
 
 ```bash
-# Create a handoff session (reads content from stdin)
-echo "# Implement feature X" | spx session handoff --priority high
-# Output: Created handoff session <HANDOFF_ID>2026-01-15_08-30-00</HANDOFF_ID>
+# Create a handoff session (reads content with frontmatter from stdin)
+cat << 'EOF' | spx session handoff
+---
+priority: high
+---
+# Implement feature X
+EOF
+# Output:
+# Created handoff session <HANDOFF_ID>2026-01-15_08-30-00</HANDOFF_ID>
+# <SESSION_FILE>/path/to/.spx/sessions/todo/2026-01-15_08-30-00.md</SESSION_FILE>
+
+# Or create empty session and edit the file directly
+spx session handoff
+# Then edit the <SESSION_FILE> path returned
 
 # List all sessions
 spx session list
@@ -104,7 +115,7 @@ spx session show <session-id>
 spx session delete <session-id>
 ```
 
-Sessions are stored in `.spx/sessions/` with priority-based ordering (high → medium → low) and FIFO within the same priority. Commands output parseable `<PICKUP_ID>` and `<HANDOFF_ID>` tags for automation.
+Sessions are stored in `.spx/sessions/` with priority-based ordering (high → medium → low) and FIFO within the same priority. Commands output parseable `<PICKUP_ID>`, `<HANDOFF_ID>`, and `<SESSION_FILE>` tags for automation.
 
 See [Session Recipes](docs/how-to/session/common-tasks.md) for detailed usage patterns.
 
