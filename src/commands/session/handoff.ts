@@ -2,12 +2,13 @@
  * Session handoff CLI command handler.
  *
  * Creates a new session for handoff to another agent context.
+ * Metadata (priority, tags) should be included in the content as YAML frontmatter.
  *
  * @module commands/session/handoff
  */
 
 import { mkdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 
 import { buildSessionPath, validateSessionContent } from "../../session/create.js";
 import { SessionInvalidContentError } from "../../session/errors.js";
@@ -15,41 +16,63 @@ import { DEFAULT_SESSION_CONFIG, type SessionDirectoryConfig } from "../../sessi
 import { generateSessionId } from "../../session/timestamp.js";
 
 /**
+ * Regex to detect YAML frontmatter presence.
+ * Matches opening `---` at start of content.
+ */
+const FRONT_MATTER_START = /^---\r?\n/;
+
+/**
  * Options for the handoff command.
  */
 export interface HandoffOptions {
-  /** Session content (from stdin or argument) */
+  /** Session content (from stdin). Should include YAML frontmatter with priority/tags. */
   content?: string;
-  /** Priority level */
-  priority?: "high" | "medium" | "low";
-  /** Tags for the session */
-  tags?: string[];
   /** Custom sessions directory */
   sessionsDir?: string;
 }
 
 /**
- * Builds session content with YAML front matter.
+ * Checks if content has YAML frontmatter.
+ *
+ * @param content - Raw session content
+ * @returns True if content starts with frontmatter delimiter
  */
-function buildSessionContent(options: HandoffOptions): string {
-  const content = options.content ?? "# New Session\n\nDescribe your task here.";
-  const priority = options.priority ?? "medium";
-  const tags = options.tags ?? [];
+export function hasFrontmatter(content: string): boolean {
+  return FRONT_MATTER_START.test(content);
+}
 
-  // Build YAML front matter
-  const frontMatter = [
-    "---",
-    `priority: ${priority}`,
-  ];
+/**
+ * Builds session content, adding default frontmatter only if not present.
+ *
+ * If content already has frontmatter, returns as-is (preserves agent-provided metadata).
+ * If content lacks frontmatter, adds default frontmatter with medium priority.
+ *
+ * @param content - Raw content from stdin
+ * @returns Content ready to be written to session file
+ */
+export function buildSessionContent(content: string | undefined): string {
+  // Default content if none provided
+  if (!content || content.trim().length === 0) {
+    return `---
+priority: medium
+---
 
-  if (tags.length > 0) {
-    frontMatter.push(`tags: [${tags.join(", ")}]`);
+# New Session
+
+Describe your task here.`;
   }
 
-  frontMatter.push("---");
-  frontMatter.push("");
+  // If content already has frontmatter, preserve it as-is
+  if (hasFrontmatter(content)) {
+    return content;
+  }
 
-  return frontMatter.join("\n") + content;
+  // Add default frontmatter to content without it
+  return `---
+priority: medium
+---
+
+${content}`;
 }
 
 /**
@@ -57,6 +80,15 @@ function buildSessionContent(options: HandoffOptions): string {
  *
  * Creates a new session in the todo directory for pickup by another context.
  * Output includes `<HANDOFF_ID>` tag for easy parsing by automation tools.
+ *
+ * Metadata (priority, tags) should be included in the content as YAML frontmatter:
+ * ```
+ * ---
+ * priority: high
+ * tags: [feature, api]
+ * ---
+ * # Session content...
+ * ```
  *
  * @param options - Command options
  * @returns Formatted output for display with parseable session ID
@@ -75,8 +107,8 @@ export async function handoffCommand(options: HandoffOptions): Promise<string> {
   // Generate session ID
   const sessionId = generateSessionId();
 
-  // Build content with front matter
-  const fullContent = buildSessionContent(options);
+  // Build content - preserves existing frontmatter or adds defaults
+  const fullContent = buildSessionContent(options.content);
 
   // Validate content
   const validation = validateSessionContent(fullContent);
@@ -86,11 +118,14 @@ export async function handoffCommand(options: HandoffOptions): Promise<string> {
 
   // Build path and ensure directory exists
   const sessionPath = buildSessionPath(sessionId, config);
+  const absolutePath = resolve(sessionPath);
   await mkdir(config.todoDir, { recursive: true });
 
   // Write file
   await writeFile(sessionPath, fullContent, "utf-8");
 
-  // Output with parseable HANDOFF_ID tag
-  return `Created handoff session <HANDOFF_ID>${sessionId}</HANDOFF_ID>\nPath: ${sessionPath}`;
+  // Output with parseable tags for automation
+  // - HANDOFF_ID: Session identifier
+  // - SESSION_FILE: Absolute path to session file (for direct editing)
+  return `Created handoff session <HANDOFF_ID>${sessionId}</HANDOFF_ID>\n<SESSION_FILE>${absolutePath}</SESSION_FILE>`;
 }

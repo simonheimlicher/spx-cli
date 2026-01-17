@@ -12,6 +12,7 @@ import {
   showCommand,
 } from "../../commands/session/index.js";
 import type { Domain } from "../types.js";
+import { HANDOFF_FRONTMATTER_HELP, PICKUP_SELECTION_HELP, SESSION_FORMAT_HELP } from "./help.js";
 
 /**
  * Reads content from stdin if available (piped input).
@@ -96,6 +97,7 @@ function registerSessionCommands(sessionCmd: Command): void {
     .description("Claim a session (move from todo to doing)")
     .option("--auto", "Auto-select highest priority session")
     .option("--sessions-dir <path>", "Custom sessions directory")
+    .addHelpText("after", PICKUP_SELECTION_HELP)
     .action(async (id: string | undefined, options: { auto?: boolean; sessionsDir?: string }) => {
       try {
         if (!id && !options.auto) {
@@ -131,21 +133,20 @@ function registerSessionCommands(sessionCmd: Command): void {
     });
 
   // handoff command
+  // Note: --priority and --tags removed. Metadata should be in content frontmatter.
+  // This makes the command deterministic for Claude Code permission pre-approval.
   sessionCmd
     .command("handoff")
-    .description("Create a handoff session (reads content from stdin if piped)")
-    .option("--priority <priority>", "Priority level (high|medium|low)", "medium")
-    .option("--tags <tags>", "Comma-separated tags")
+    .description("Create a handoff session (reads content with frontmatter from stdin)")
     .option("--sessions-dir <path>", "Custom sessions directory")
-    .action(async (options: { priority?: string; tags?: string; sessionsDir?: string }) => {
+    .addHelpText("after", HANDOFF_FRONTMATTER_HELP)
+    .action(async (options: { sessionsDir?: string }) => {
       try {
         // Read content from stdin if available
         const content = await readStdin();
 
         const output = await handoffCommand({
           content,
-          priority: options.priority as "high" | "medium" | "low" | undefined,
-          tags: options.tags?.split(",").map((t) => t.trim()),
           sessionsDir: options.sessionsDir,
         });
         console.log(output);
@@ -181,7 +182,8 @@ export const sessionDomain: Domain = {
   register: (program: Command) => {
     const sessionCmd = program
       .command("session")
-      .description("Manage session workflow");
+      .description("Manage session workflow")
+      .addHelpText("after", SESSION_FORMAT_HELP);
 
     registerSessionCommands(sessionCmd);
   },
