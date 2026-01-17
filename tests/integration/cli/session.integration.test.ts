@@ -5,7 +5,7 @@
  * - Tests full CLI command execution through Commander.js
  * - Verifies command routing, option parsing, and output
  *
- * @see cli-integration.story.md for requirements
+ * Graduated from: specs/.../story-54_cli-integration/tests/cli.integration.test.ts
  */
 
 import { execa } from "execa";

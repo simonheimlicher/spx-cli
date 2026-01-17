@@ -5,7 +5,7 @@
  * - Tests atomic claiming with real filesystem
  * - Tests concurrent access behavior
  *
- * @see session-lifecycle.feature.md for requirements
+ * Graduated from: specs/.../feature-32_session-lifecycle/tests/session-lifecycle.integration.test.ts
  */
 
 import { mkdir, mkdtemp, readFile, rename, rm, writeFile } from "node:fs/promises";
