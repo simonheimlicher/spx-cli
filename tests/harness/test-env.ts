@@ -53,37 +53,37 @@ export interface TestEnvOptions {
  * ```
  */
 /**
- * Installs npm dependencies in a fixture directory.
+ * Installs dependencies in a fixture directory.
  *
- * Runs `npm install --silent` in the specified directory and waits for completion.
+ * Runs `pnpm install --silent` in the specified directory and waits for completion.
  * Captures stderr output for error reporting.
  *
  * @param cwd - Directory containing package.json where dependencies should be installed
- * @throws Error if npm install exits with non-zero code or fails to spawn
+ * @throws Error if pnpm install exits with non-zero code or fails to spawn
  * @private
  */
 async function installDependencies(cwd: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    const npmProcess = spawn("npm", ["install", "--silent"], {
+    const pnpmProcess = spawn("pnpm", ["install", "--silent"], {
       cwd,
       stdio: "pipe", // Suppress output unless there's an error
     });
 
     let errorOutput = "";
-    npmProcess.stderr?.on("data", (data) => {
+    pnpmProcess.stderr?.on("data", (data) => {
       errorOutput += data.toString();
     });
 
-    npmProcess.on("close", (code) => {
+    pnpmProcess.on("close", (code) => {
       if (code === 0) {
         resolve();
       } else {
-        reject(new Error(`npm install failed with code ${code}: ${errorOutput}`));
+        reject(new Error(`pnpm install failed with code ${code}: ${errorOutput}`));
       }
     });
 
-    npmProcess.on("error", (error) => {
-      reject(new Error(`Failed to spawn npm install: ${error.message}`));
+    pnpmProcess.on("error", (error) => {
+      reject(new Error(`Failed to spawn pnpm install: ${error.message}`));
     });
   });
 }

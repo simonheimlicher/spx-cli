@@ -15,7 +15,7 @@ describe("TypeScript checking for scripts/", () => {
   describe("GIVEN project with scripts included in tsconfig", () => {
     it("WHEN running typecheck THEN scripts/ files are validated", async () => {
       // When: Run typecheck
-      const result = await execa("npm", ["run", "typecheck"], {
+      const result = await execa("pnpm", ["run", "typecheck"], {
         cwd: process.cwd(),
         reject: false,
       });
@@ -46,7 +46,7 @@ export {};
         );
 
         // When: Run typecheck
-        const result = await execa("npm", ["run", "typecheck"], {
+        const result = await execa("pnpm", ["run", "typecheck"], {
           cwd: process.cwd(),
           reject: false,
         });
