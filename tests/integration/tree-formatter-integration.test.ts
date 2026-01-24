@@ -3,13 +3,14 @@
  *
  * Verifies that trees built by buildTree() can be consumed by all formatters.
  */
-import { describe, it, expect } from "vitest";
-import { buildTree, type TreeBuildDeps } from "@/tree/build";
-import { formatText } from "@/reporter/text";
+import { DEFAULT_CONFIG } from "@/config/defaults";
 import { formatJSON } from "@/reporter/json";
 import { formatMarkdown } from "@/reporter/markdown";
 import { formatTable } from "@/reporter/table";
+import { formatText } from "@/reporter/text";
+import { buildTree, type TreeBuildDeps } from "@/tree/build";
 import type { WorkItem } from "@/types";
+import { describe, expect, it } from "vitest";
 
 /**
  * Test dependency: simple status resolver
@@ -86,7 +87,7 @@ describe("Feature 54 + Feature 65 Integration", () => {
 
     // When
     const tree = await buildTree(workItems, testDeps);
-    const output = formatJSON(tree);
+    const output = formatJSON(tree, DEFAULT_CONFIG);
 
     // Then
     expect(() => JSON.parse(output)).not.toThrow();

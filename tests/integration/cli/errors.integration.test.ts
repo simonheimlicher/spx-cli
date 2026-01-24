@@ -35,7 +35,7 @@ describe("CLI Error Handling", () => {
     const cwd = path.join(__dirname, "../../fixtures/repos/no-specs");
 
     // When
-    const result = await execa("node", [CLI_PATH, "status"], {
+    const result = await execa("node", [CLI_PATH, "spec", "status"], {
       cwd,
       reject: false,
     });
@@ -71,15 +71,15 @@ describe("CLI Error Handling", () => {
     // Then
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toMatch(/Usage:|Commands:/);
-    expect(result.stdout).toContain("status");
-    expect(result.stdout).toContain("next");
+    expect(result.stdout).toContain("spec");
+    expect(result.stdout).toContain("session");
   });
 
   it("GIVEN command with --help WHEN running THEN shows command help", async () => {
-    // Given: status --help
+    // Given: spec status --help
 
     // When
-    const result = await execa("node", [CLI_PATH, "status", "--help"], {
+    const result = await execa("node", [CLI_PATH, "spec", "status", "--help"], {
       reject: false,
     });
 
