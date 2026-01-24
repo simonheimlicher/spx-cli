@@ -1,17 +1,15 @@
 /**
- * Integration Tests for validateCircularDependencies()
+ * Level 2: Integration Tests for validateCircularDependencies()
+ * Story: story-43_validation-test-suite
  *
- * These tests CALL THE ACTUAL FUNCTION validateCircularDependencies() with real madge on fixture projects.
- * They verify that validate.ts correctly detects and reports circular dependencies.
+ * Tests validateCircularDependencies() with real madge on fixture projects.
+ * Per ADR-001: Level 2 runs real madge against fixture files.
  */
 
-import {
-  getTypeScriptScope,
-  validateCircularDependencies,
-  VALIDATION_SCOPES,
-} from "@scripts/run/validate";
-import { FIXTURES, withTestEnv } from "@test/harness/test-env";
 import { describe, expect, it } from "vitest";
+
+import { getTypeScriptScope, validateCircularDependencies, VALIDATION_SCOPES } from "@/validation";
+import { FIXTURES, withTestEnv } from "@test/harness/test-env";
 
 describe("validateCircularDependencies() integration", () => {
   describe("GIVEN fixture with circular dependencies", () => {

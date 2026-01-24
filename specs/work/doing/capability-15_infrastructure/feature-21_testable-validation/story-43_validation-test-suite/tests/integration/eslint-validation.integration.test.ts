@@ -1,18 +1,15 @@
 /**
- * Integration Tests for validateESLint()
+ * Level 2: Integration Tests for validateESLint()
+ * Story: story-43_validation-test-suite
  *
- * These tests CALL THE ACTUAL FUNCTION validate ESLint() with real ESLint on fixture projects.
- * They verify that validate.ts correctly interprets ESLint output.
+ * Tests validateESLint() with real ESLint on fixture projects.
+ * Per ADR-001: Level 2 runs real ESLint against fixture files.
  */
 
-import {
-  getTypeScriptScope,
-  validateESLint,
-  VALIDATION_SCOPES,
-  type ValidationContext,
-} from "@scripts/run/validate";
-import { FIXTURES, withTestEnv } from "@test/harness/test-env";
 import { describe, expect, it } from "vitest";
+
+import { getTypeScriptScope, validateESLint, VALIDATION_SCOPES, type ValidationContext } from "@/validation";
+import { FIXTURES, withTestEnv } from "@test/harness/test-env";
 
 describe("validateESLint() integration", () => {
   describe("GIVEN fixture with lint errors", () => {

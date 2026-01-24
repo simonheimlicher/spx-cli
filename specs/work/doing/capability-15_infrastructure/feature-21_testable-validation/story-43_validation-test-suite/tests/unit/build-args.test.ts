@@ -1,10 +1,14 @@
-import {
-  buildEslintArgs,
-  buildTypeScriptArgs,
-  EXECUTION_MODES,
-  VALIDATION_SCOPES,
-} from "@scripts/run/validate";
+/**
+ * Level 1: Unit tests for argument builders
+ * Story: story-43_validation-test-suite
+ *
+ * Tests pure functions for building CLI arguments.
+ * Per ADR-001: Pure functions separate from subprocess spawning.
+ */
+
 import { describe, expect, it } from "vitest";
+
+import { buildEslintArgs, buildTypeScriptArgs, EXECUTION_MODES, VALIDATION_SCOPES } from "@/validation";
 
 describe("buildEslintArgs()", () => {
   describe("GIVEN full project mode", () => {

@@ -1,13 +1,15 @@
 /**
- * Integration Tests for validateTypeScript()
+ * Level 2: Integration Tests for validateTypeScript()
+ * Story: story-43_validation-test-suite
  *
- * These tests CALL THE ACTUAL FUNCTION validateTypeScript() with real tsc on fixture projects.
- * They verify that validate.ts correctly interprets TypeScript compiler output.
+ * Tests validateTypeScript() with real tsc on fixture projects.
+ * Per ADR-001: Level 2 runs real tsc against fixture files.
  */
 
-import { getTypeScriptScope, validateTypeScript, VALIDATION_SCOPES } from "@scripts/run/validate";
-import { FIXTURES, withTestEnv } from "@test/harness/test-env";
 import { describe, expect, it } from "vitest";
+
+import { getTypeScriptScope, validateTypeScript, VALIDATION_SCOPES } from "@/validation";
+import { FIXTURES, withTestEnv } from "@test/harness/test-env";
 
 describe("validateTypeScript() integration", () => {
   describe("GIVEN fixture with type errors", () => {
