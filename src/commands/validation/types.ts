@@ -1,0 +1,54 @@
+/**
+ * Shared types for validation commands.
+ */
+
+/** Result from a validation command */
+export interface ValidationCommandResult {
+  /** Exit code (0 = success, 1 = validation failed, 0 with skipped = tool unavailable) */
+  exitCode: number;
+  /** Output to display */
+  output: string;
+}
+
+/** Common options for all validation commands */
+export interface CommonValidationOptions {
+  /** Working directory */
+  cwd: string;
+  /** Validation scope */
+  scope?: "full" | "production";
+  /** Specific files to validate */
+  files?: string[];
+  /** Suppress progress output */
+  quiet?: boolean;
+  /** Output as JSON */
+  json?: boolean;
+}
+
+/** Options for TypeScript command (same as common options) */
+export type TypeScriptCommandOptions = CommonValidationOptions;
+
+/** Options for lint command */
+export interface LintCommandOptions extends CommonValidationOptions {
+  /** Auto-fix issues */
+  fix?: boolean;
+}
+
+/** Options for circular command */
+export interface CircularCommandOptions {
+  cwd: string;
+  quiet?: boolean;
+  json?: boolean;
+}
+
+/** Options for knip command */
+export interface KnipCommandOptions {
+  cwd: string;
+  quiet?: boolean;
+  json?: boolean;
+}
+
+/** Options for all command */
+export interface AllCommandOptions extends CommonValidationOptions {
+  /** Auto-fix ESLint issues */
+  fix?: boolean;
+}

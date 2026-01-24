@@ -2,9 +2,10 @@
  * CLI entry point for spx
  */
 import { Command } from "commander";
-import { claudeDomain } from "./domains/claude/index.js";
-import { sessionDomain } from "./domains/session/index.js";
-import { specDomain } from "./domains/spec/index.js";
+import { claudeDomain } from "./domains/claude";
+import { sessionDomain } from "./domains/session";
+import { specDomain } from "./domains/spec";
+import { validationDomain } from "./domains/validation";
 
 const program = new Command();
 
@@ -17,5 +18,6 @@ program
 claudeDomain.register(program);
 sessionDomain.register(program);
 specDomain.register(program);
+validationDomain.register(program);
 
 program.parse();
