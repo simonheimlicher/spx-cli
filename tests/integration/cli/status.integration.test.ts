@@ -66,7 +66,7 @@ describe("spx spec status command", () => {
 describe("spx spec status --json", () => {
   /**
    * Level 2: Integration tests for --json flag
-   * Story: story-43_format-options
+   * Stories: story-43_format-options, story-31_cli-integration
    */
 
   it("GIVEN --json flag WHEN running status THEN outputs valid JSON", async () => {
@@ -85,6 +85,29 @@ describe("spx spec status --json", () => {
     expect(() => JSON.parse(stdout)).not.toThrow();
     const parsed = JSON.parse(stdout);
     expect(parsed.capabilities).toBeDefined();
+  });
+
+  it("GIVEN --json flag WHEN running status THEN includes config values", async () => {
+    // Given
+    const cwd = path.join(__dirname, "../../fixtures/repos/simple");
+
+    // When
+    const { stdout, exitCode } = await execa(
+      "node",
+      [CLI_PATH, "spec", "status", "--json"],
+      { cwd },
+    );
+
+    // Then
+    expect(exitCode).toBe(0);
+    const parsed = JSON.parse(stdout);
+
+    // Verify config is included in output (Story 31)
+    expect(parsed.config).toBeDefined();
+    expect(parsed.config.specs.root).toBe("specs");
+    expect(parsed.config.specs.work.dir).toBe("work");
+    expect(parsed.config.specs.work.statusDirs.doing).toBe("doing");
+    expect(parsed.config.sessions.dir).toBe(".spx/sessions");
   });
 });
 

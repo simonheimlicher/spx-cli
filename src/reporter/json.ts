@@ -4,7 +4,8 @@
  * Produces structured JSON with summary statistics and full tree data.
  * Part of Feature 65 (Output Formatting), Story 32.
  */
-import type { TreeNode, WorkItemTree } from "../tree/types.js";
+import type { SpxConfig } from "@/config/defaults";
+import type { TreeNode, WorkItemTree } from "@/tree/types";
 
 /** JSON indentation (2 spaces per ADR-002 and user requirements) */
 const JSON_INDENT = 2;
@@ -22,6 +23,10 @@ interface Summary {
  * JSON output structure
  */
 interface JSONOutput {
+  config: {
+    specs: SpxConfig["specs"];
+    sessions: SpxConfig["sessions"];
+  };
   summary: Summary;
   capabilities: unknown[];
 }
@@ -35,13 +40,18 @@ interface JSONOutput {
  * - Features/Stories: as-is
  *
  * @param tree - Work item tree to format
+ * @param config - SpxConfig used for path resolution
  * @returns JSON string with 2-space indentation
  */
-export function formatJSON(tree: WorkItemTree): string {
+export function formatJSON(tree: WorkItemTree, config: SpxConfig): string {
   const capabilities = tree.nodes.map((node) => nodeToJSON(node));
   const summary = calculateSummary(tree);
 
   const output: JSONOutput = {
+    config: {
+      specs: config.specs,
+      sessions: config.sessions,
+    },
     summary,
     capabilities,
   };

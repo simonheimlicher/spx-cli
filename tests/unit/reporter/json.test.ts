@@ -1,16 +1,13 @@
-import { describe, it, expect } from "vitest";
+import { DEFAULT_CONFIG } from "@/config/defaults";
 import { formatJSON } from "@/reporter/json";
-import {
-  buildSimpleTree,
-  buildTreeWithStories,
-  buildTreeWithMixedStatus,
-} from "../../helpers/tree-builder";
+import { describe, expect, it } from "vitest";
+import { buildSimpleTree, buildTreeWithMixedStatus, buildTreeWithStories } from "../../helpers/tree-builder";
 
 describe("formatJSON", () => {
   describe("GIVEN tree", () => {
     it("WHEN formatting THEN produces valid JSON", () => {
       const tree = buildSimpleTree();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
 
       expect(() => JSON.parse(output)).not.toThrow();
     });
@@ -19,7 +16,7 @@ describe("formatJSON", () => {
   describe("GIVEN tree with mixed status", () => {
     it("WHEN formatting THEN includes summary", () => {
       const tree = buildTreeWithMixedStatus();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
       const parsed = JSON.parse(output);
 
       expect(parsed.summary).toBeDefined();
@@ -30,7 +27,7 @@ describe("formatJSON", () => {
 
     it("WHEN formatting THEN counts capabilities and features only", () => {
       const tree = buildTreeWithMixedStatus();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
       const parsed = JSON.parse(output);
 
       // Tree has: 1 cap (IN_PROGRESS), 3 features (DONE, IN_PROGRESS, OPEN)
@@ -44,7 +41,7 @@ describe("formatJSON", () => {
   describe("GIVEN tree with stories", () => {
     it("WHEN formatting THEN includes all work item data", () => {
       const tree = buildTreeWithStories();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
       const parsed = JSON.parse(output);
 
       expect(parsed.capabilities).toBeDefined();
@@ -56,7 +53,7 @@ describe("formatJSON", () => {
 
     it("WHEN formatting THEN uses display numbers for capabilities", () => {
       const tree = buildSimpleTree();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
       const parsed = JSON.parse(output);
 
       // Internal number is 20, display should be 21
@@ -65,7 +62,7 @@ describe("formatJSON", () => {
 
     it("WHEN formatting THEN uses as-is numbers for features and stories", () => {
       const tree = buildTreeWithStories();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
       const parsed = JSON.parse(output);
 
       // Features and stories use internal number as-is
@@ -77,11 +74,24 @@ describe("formatJSON", () => {
   describe("GIVEN formatted JSON", () => {
     it("WHEN parsing THEN uses 2-space indentation", () => {
       const tree = buildSimpleTree();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
 
       // Check for 2-space indentation patterns
-      expect(output).toContain('  "summary"');
-      expect(output).toContain('  "capabilities"');
+      expect(output).toContain("  \"config\"");
+      expect(output).toContain("  \"summary\"");
+      expect(output).toContain("  \"capabilities\"");
+    });
+
+    it("WHEN formatting THEN includes config values", () => {
+      const tree = buildSimpleTree();
+      const output = formatJSON(tree, DEFAULT_CONFIG);
+      const parsed = JSON.parse(output);
+
+      expect(parsed.config).toBeDefined();
+      expect(parsed.config.specs.root).toBe(DEFAULT_CONFIG.specs.root);
+      expect(parsed.config.specs.work.dir).toBe(DEFAULT_CONFIG.specs.work.dir);
+      expect(parsed.config.specs.work.statusDirs).toEqual(DEFAULT_CONFIG.specs.work.statusDirs);
+      expect(parsed.config.sessions.dir).toBe(DEFAULT_CONFIG.sessions.dir);
     });
   });
 });

@@ -1,3 +1,4 @@
+import { DEFAULT_CONFIG } from "@/config/defaults";
 import { formatJSON } from "@/reporter/json";
 import { buildSimpleTree, buildTreeWithMixedStatus, buildTreeWithStories } from "@test/helpers/tree-builder";
 import { describe, expect, it } from "vitest";
@@ -6,7 +7,7 @@ describe("formatJSON", () => {
   describe("GIVEN tree", () => {
     it("WHEN formatting THEN produces valid JSON", () => {
       const tree = buildSimpleTree();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
 
       expect(() => JSON.parse(output)).not.toThrow();
     });
@@ -15,7 +16,7 @@ describe("formatJSON", () => {
   describe("GIVEN tree with mixed status", () => {
     it("WHEN formatting THEN includes summary", () => {
       const tree = buildTreeWithMixedStatus();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
       const parsed = JSON.parse(output);
 
       expect(parsed.summary).toBeDefined();
@@ -26,7 +27,7 @@ describe("formatJSON", () => {
 
     it("WHEN formatting THEN counts capabilities and features only", () => {
       const tree = buildTreeWithMixedStatus();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
       const parsed = JSON.parse(output);
 
       // Tree has: 1 cap (IN_PROGRESS), 3 features (DONE, IN_PROGRESS, OPEN)
@@ -40,7 +41,7 @@ describe("formatJSON", () => {
   describe("GIVEN tree with stories", () => {
     it("WHEN formatting THEN includes all work item data", () => {
       const tree = buildTreeWithStories();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
       const parsed = JSON.parse(output);
 
       expect(parsed.capabilities).toBeDefined();
@@ -52,7 +53,7 @@ describe("formatJSON", () => {
 
     it("WHEN formatting THEN uses display numbers for capabilities", () => {
       const tree = buildSimpleTree();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
       const parsed = JSON.parse(output);
 
       // Internal number is 20, display should be 21
@@ -61,7 +62,7 @@ describe("formatJSON", () => {
 
     it("WHEN formatting THEN uses as-is numbers for features and stories", () => {
       const tree = buildTreeWithStories();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
       const parsed = JSON.parse(output);
 
       // Features and stories use internal number as-is
@@ -73,7 +74,7 @@ describe("formatJSON", () => {
   describe("GIVEN formatted JSON", () => {
     it("WHEN parsing THEN uses 2-space indentation", () => {
       const tree = buildSimpleTree();
-      const output = formatJSON(tree);
+      const output = formatJSON(tree, DEFAULT_CONFIG);
 
       // Check for 2-space indentation patterns
       expect(output).toContain("  \"summary\"");

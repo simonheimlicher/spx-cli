@@ -70,7 +70,7 @@ export async function statusCommand(
   // Step 5: Format based on requested format
   switch (format) {
     case "json":
-      return formatJSON(tree);
+      return formatJSON(tree, DEFAULT_CONFIG);
     case "markdown":
       return formatMarkdown(tree);
     case "table":
