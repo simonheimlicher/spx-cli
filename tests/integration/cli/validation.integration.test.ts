@@ -74,6 +74,7 @@ describe("spx validation commands", () => {
   describe("spx validation all", () => {
     it(
       "GIVEN clean fixture WHEN running all validations THEN exits 0",
+      { timeout: 120000 }, // Allow 2 minutes for all validations
       async () => {
         // When: Run all validations on isolated fixture
         const result = await execa("node", [CLI_PATH, "validation", "all"], {
@@ -84,7 +85,6 @@ describe("spx validation commands", () => {
         // Then: Should pass
         expect(result.exitCode).toBe(0);
       },
-      { timeout: 120000 }, // Allow 2 minutes for all validations
     );
   });
 
