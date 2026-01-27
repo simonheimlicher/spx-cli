@@ -3,9 +3,9 @@
  *
  * Part of Feature 54 (Tree Building)
  */
+import { getWorkItemStatus } from "../status/state.js";
 import type { WorkItem } from "../types.js";
 import type { TreeNode, WorkItemTree } from "./types.js";
-import { getWorkItemStatus } from "../status/state.js";
 
 /**
  * Dependencies for tree building (for testing)
@@ -34,7 +34,7 @@ export interface TreeBuildDeps {
  */
 export async function buildTree(
   workItems: WorkItem[],
-  deps: TreeBuildDeps = {}
+  deps: TreeBuildDeps = {},
 ): Promise<WorkItemTree> {
   const getStatus = deps.getStatus || getWorkItemStatus;
 
@@ -43,12 +43,12 @@ export async function buildTree(
     workItems.map(async (item) => ({
       ...item,
       status: await getStatus(item.path),
-    }))
+    })),
   );
 
   // Step 2: Separate work items by kind
   const capabilities = itemsWithStatus.filter(
-    (item) => item.kind === "capability"
+    (item) => item.kind === "capability",
   );
   const features = itemsWithStatus.filter((item) => item.kind === "feature");
   const stories = itemsWithStatus.filter((item) => item.kind === "story");
@@ -88,7 +88,7 @@ export async function buildTree(
  */
 function createTreeNode(
   item: WorkItem & { status: string },
-  children: TreeNode[]
+  children: TreeNode[],
 ): TreeNode {
   return {
     kind: item.kind,
@@ -133,16 +133,14 @@ function isChildOf(childPath: string, parentPath: string): boolean {
  */
 function detectOrphans(
   items: (WorkItem & { status: string })[],
-  potentialParents: TreeNode[]
+  potentialParents: TreeNode[],
 ): void {
   for (const item of items) {
-    const hasParent = potentialParents.some((parent) =>
-      isChildOf(item.path, parent.path)
-    );
+    const hasParent = potentialParents.some((parent) => isChildOf(item.path, parent.path));
 
     if (!hasParent) {
       throw new Error(
-        `Orphan work item detected: ${item.kind} "${item.slug}" at ${item.path} has no valid parent`
+        `Orphan work item detected: ${item.kind} "${item.slug}" at ${item.path} has no valid parent`,
       );
     }
   }
@@ -152,11 +150,12 @@ function detectOrphans(
  * Roll up status from children to parents
  *
  * Recursively aggregates status from child nodes to parent nodes.
- * Rollup rules:
- * - Any child IN_PROGRESS → parent IN_PROGRESS
- * - All children DONE → parent DONE
- * - All children OPEN → parent OPEN
- * - Mixed DONE/OPEN → parent IN_PROGRESS
+ * Parent status requires BOTH own tests/DONE.md AND all children complete.
+ *
+ * Rollup rules (ownStatus = status from parent's own tests/DONE.md):
+ * - DONE: ownStatus is DONE AND all children are DONE
+ * - OPEN: ownStatus is OPEN AND all children are OPEN
+ * - IN_PROGRESS: everything else (any mismatch between own and child status)
  *
  * @param nodes - Tree nodes to process (modified in place)
  */
@@ -166,22 +165,25 @@ function rollupStatus(nodes: TreeNode[]): void {
       // First, recursively roll up status for children
       rollupStatus(node.children);
 
+      // Capture node's own status (from its tests/DONE.md)
+      const ownStatus = node.status;
+
       // Then, aggregate status from children
       const childStatuses = node.children.map((child) => child.status);
+      const allChildrenDone = childStatuses.every(
+        (status) => status === "DONE",
+      );
+      const allChildrenOpen = childStatuses.every(
+        (status) => status === "OPEN",
+      );
 
-      // Any child IN_PROGRESS → parent IN_PROGRESS
-      if (childStatuses.includes("IN_PROGRESS")) {
-        node.status = "IN_PROGRESS";
-      }
-      // All children DONE → parent DONE
-      else if (childStatuses.every((status) => status === "DONE")) {
+      // DONE: own status is DONE AND all children are DONE
+      if (ownStatus === "DONE" && allChildrenDone) {
         node.status = "DONE";
-      }
-      // All children OPEN → parent OPEN
-      else if (childStatuses.every((status) => status === "OPEN")) {
+      } // OPEN: own status is OPEN AND all children are OPEN
+      else if (ownStatus === "OPEN" && allChildrenOpen) {
         node.status = "OPEN";
-      }
-      // Mixed DONE/OPEN → parent IN_PROGRESS
+      } // IN_PROGRESS: everything else
       else {
         node.status = "IN_PROGRESS";
       }

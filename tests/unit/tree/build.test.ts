@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
 import { buildTree, type TreeBuildDeps } from "@/tree/build";
 import type { WorkItem } from "@/types";
+import { describe, expect, it } from "vitest";
 
 /**
  * Helper to create WorkItem with path
@@ -9,7 +9,7 @@ function createWorkItemWithPath(
   kind: "capability" | "feature" | "story",
   number: number,
   slug: string,
-  path: string
+  path: string,
 ): WorkItem {
   return {
     kind,
@@ -35,13 +35,13 @@ describe("buildTree - Parent-Child Links", () => {
           "capability",
           20,
           "test",
-          "/specs/capability-21_test"
+          "/specs/capability-21_test",
         ),
         createWorkItemWithPath(
           "feature",
           32,
           "feat",
-          "/specs/capability-21_test/feature-32_feat"
+          "/specs/capability-21_test/feature-32_feat",
         ),
       ];
 
@@ -61,19 +61,19 @@ describe("buildTree - Parent-Child Links", () => {
           "capability",
           20,
           "test",
-          "/specs/capability-21_test"
+          "/specs/capability-21_test",
         ),
         createWorkItemWithPath(
           "feature",
           32,
           "feat",
-          "/specs/capability-21_test/feature-32_feat"
+          "/specs/capability-21_test/feature-32_feat",
         ),
         createWorkItemWithPath(
           "story",
           21,
           "story",
-          "/specs/capability-21_test/feature-32_feat/story-21_story"
+          "/specs/capability-21_test/feature-32_feat/story-21_story",
         ),
       ];
 
@@ -92,19 +92,19 @@ describe("buildTree - Parent-Child Links", () => {
           "capability",
           20,
           "test",
-          "/specs/capability-21_test"
+          "/specs/capability-21_test",
         ),
         createWorkItemWithPath(
           "feature",
           32,
           "feat1",
-          "/specs/capability-21_test/feature-32_feat1"
+          "/specs/capability-21_test/feature-32_feat1",
         ),
         createWorkItemWithPath(
           "feature",
           43,
           "feat2",
-          "/specs/capability-21_test/feature-43_feat2"
+          "/specs/capability-21_test/feature-43_feat2",
         ),
       ];
 
@@ -121,7 +121,7 @@ describe("buildTree - Parent-Child Links", () => {
       ];
 
       await expect(buildTree(workItems, testDeps)).rejects.toThrow(
-        /orphan|parent/i
+        /orphan|parent/i,
       );
     });
   });
@@ -133,13 +133,13 @@ describe("buildTree - Parent-Child Links", () => {
           "capability",
           20,
           "cap1",
-          "/specs/capability-21_cap1"
+          "/specs/capability-21_cap1",
         ),
         createWorkItemWithPath(
           "capability",
           31,
           "cap2",
-          "/specs/capability-32_cap2"
+          "/specs/capability-32_cap2",
         ),
       ];
 
@@ -158,25 +158,25 @@ describe("buildTree - BSP Sorting", () => {
           "capability",
           20,
           "test",
-          "/specs/capability-21_test"
+          "/specs/capability-21_test",
         ),
         createWorkItemWithPath(
           "feature",
           65,
           "feat3",
-          "/specs/capability-21_test/feature-65_feat3"
+          "/specs/capability-21_test/feature-65_feat3",
         ),
         createWorkItemWithPath(
           "feature",
           32,
           "feat1",
-          "/specs/capability-21_test/feature-32_feat1"
+          "/specs/capability-21_test/feature-32_feat1",
         ),
         createWorkItemWithPath(
           "feature",
           43,
           "feat2",
-          "/specs/capability-21_test/feature-43_feat2"
+          "/specs/capability-21_test/feature-43_feat2",
         ),
       ];
 
@@ -195,31 +195,31 @@ describe("buildTree - BSP Sorting", () => {
           "capability",
           20,
           "test",
-          "/specs/capability-21_test"
+          "/specs/capability-21_test",
         ),
         createWorkItemWithPath(
           "feature",
           32,
           "feat",
-          "/specs/capability-21_test/feature-32_feat"
+          "/specs/capability-21_test/feature-32_feat",
         ),
         createWorkItemWithPath(
           "story",
           54,
           "story3",
-          "/specs/capability-21_test/feature-32_feat/story-54_story3"
+          "/specs/capability-21_test/feature-32_feat/story-54_story3",
         ),
         createWorkItemWithPath(
           "story",
           21,
           "story1",
-          "/specs/capability-21_test/feature-32_feat/story-21_story1"
+          "/specs/capability-21_test/feature-32_feat/story-21_story1",
         ),
         createWorkItemWithPath(
           "story",
           43,
           "story2",
-          "/specs/capability-21_test/feature-32_feat/story-43_story2"
+          "/specs/capability-21_test/feature-32_feat/story-43_story2",
         ),
       ];
 
@@ -237,19 +237,19 @@ describe("buildTree - BSP Sorting", () => {
           "capability",
           31,
           "cap2",
-          "/specs/capability-32_cap2"
+          "/specs/capability-32_cap2",
         ),
         createWorkItemWithPath(
           "capability",
           20,
           "cap1",
-          "/specs/capability-21_cap1"
+          "/specs/capability-21_cap1",
         ),
         createWorkItemWithPath(
           "capability",
           42,
           "cap3",
-          "/specs/capability-43_cap3"
+          "/specs/capability-43_cap3",
         ),
       ];
 
@@ -261,8 +261,47 @@ describe("buildTree - BSP Sorting", () => {
 });
 
 describe("buildTree - Status Rollup", () => {
-  describe("GIVEN all children DONE", () => {
+  describe("GIVEN own DONE and all children DONE", () => {
     it("WHEN rolling up status THEN parent is DONE", async () => {
+      const statusMap: Record<string, string> = {
+        "/specs/capability-21_test": "DONE",
+        "/specs/capability-21_test/feature-32_feat1": "DONE",
+        "/specs/capability-21_test/feature-43_feat2": "DONE",
+      };
+
+      const depsWithStatus: TreeBuildDeps = {
+        getStatus: async (path) => statusMap[path] || "OPEN",
+      };
+
+      const workItems: WorkItem[] = [
+        createWorkItemWithPath(
+          "capability",
+          20,
+          "test",
+          "/specs/capability-21_test",
+        ),
+        createWorkItemWithPath(
+          "feature",
+          32,
+          "feat1",
+          "/specs/capability-21_test/feature-32_feat1",
+        ),
+        createWorkItemWithPath(
+          "feature",
+          43,
+          "feat2",
+          "/specs/capability-21_test/feature-43_feat2",
+        ),
+      ];
+
+      const tree = await buildTree(workItems, depsWithStatus);
+
+      expect(tree.nodes[0].status).toBe("DONE");
+    });
+  });
+
+  describe("GIVEN own OPEN but all children DONE", () => {
+    it("WHEN rolling up status THEN parent is IN_PROGRESS (own work pending)", async () => {
       const statusMap: Record<string, string> = {
         "/specs/capability-21_test": "OPEN",
         "/specs/capability-21_test/feature-32_feat1": "DONE",
@@ -278,32 +317,32 @@ describe("buildTree - Status Rollup", () => {
           "capability",
           20,
           "test",
-          "/specs/capability-21_test"
+          "/specs/capability-21_test",
         ),
         createWorkItemWithPath(
           "feature",
           32,
           "feat1",
-          "/specs/capability-21_test/feature-32_feat1"
+          "/specs/capability-21_test/feature-32_feat1",
         ),
         createWorkItemWithPath(
           "feature",
           43,
           "feat2",
-          "/specs/capability-21_test/feature-43_feat2"
+          "/specs/capability-21_test/feature-43_feat2",
         ),
       ];
 
       const tree = await buildTree(workItems, depsWithStatus);
 
-      expect(tree.nodes[0].status).toBe("DONE");
+      expect(tree.nodes[0].status).toBe("IN_PROGRESS");
     });
   });
 
-  describe("GIVEN any child IN_PROGRESS", () => {
+  describe("GIVEN own DONE but any child IN_PROGRESS", () => {
     it("WHEN rolling up status THEN parent is IN_PROGRESS", async () => {
       const statusMap: Record<string, string> = {
-        "/specs/capability-21_test": "OPEN",
+        "/specs/capability-21_test": "DONE",
         "/specs/capability-21_test/feature-32_feat1": "DONE",
         "/specs/capability-21_test/feature-43_feat2": "IN_PROGRESS",
       };
@@ -317,19 +356,19 @@ describe("buildTree - Status Rollup", () => {
           "capability",
           20,
           "test",
-          "/specs/capability-21_test"
+          "/specs/capability-21_test",
         ),
         createWorkItemWithPath(
           "feature",
           32,
           "feat1",
-          "/specs/capability-21_test/feature-32_feat1"
+          "/specs/capability-21_test/feature-32_feat1",
         ),
         createWorkItemWithPath(
           "feature",
           43,
           "feat2",
-          "/specs/capability-21_test/feature-43_feat2"
+          "/specs/capability-21_test/feature-43_feat2",
         ),
       ];
 
@@ -339,7 +378,7 @@ describe("buildTree - Status Rollup", () => {
     });
   });
 
-  describe("GIVEN mixed DONE and OPEN", () => {
+  describe("GIVEN mixed DONE and OPEN children", () => {
     it("WHEN rolling up status THEN parent is IN_PROGRESS", async () => {
       const statusMap: Record<string, string> = {
         "/specs/capability-21_test": "OPEN",
@@ -356,19 +395,19 @@ describe("buildTree - Status Rollup", () => {
           "capability",
           20,
           "test",
-          "/specs/capability-21_test"
+          "/specs/capability-21_test",
         ),
         createWorkItemWithPath(
           "feature",
           32,
           "feat1",
-          "/specs/capability-21_test/feature-32_feat1"
+          "/specs/capability-21_test/feature-32_feat1",
         ),
         createWorkItemWithPath(
           "feature",
           43,
           "feat2",
-          "/specs/capability-21_test/feature-43_feat2"
+          "/specs/capability-21_test/feature-43_feat2",
         ),
       ];
 
@@ -378,8 +417,47 @@ describe("buildTree - Status Rollup", () => {
     });
   });
 
-  describe("GIVEN all children OPEN", () => {
+  describe("GIVEN own OPEN and all children OPEN", () => {
     it("WHEN rolling up status THEN parent is OPEN", async () => {
+      const statusMap: Record<string, string> = {
+        "/specs/capability-21_test": "OPEN",
+        "/specs/capability-21_test/feature-32_feat1": "OPEN",
+        "/specs/capability-21_test/feature-43_feat2": "OPEN",
+      };
+
+      const depsWithStatus: TreeBuildDeps = {
+        getStatus: async (path) => statusMap[path] || "OPEN",
+      };
+
+      const workItems: WorkItem[] = [
+        createWorkItemWithPath(
+          "capability",
+          20,
+          "test",
+          "/specs/capability-21_test",
+        ),
+        createWorkItemWithPath(
+          "feature",
+          32,
+          "feat1",
+          "/specs/capability-21_test/feature-32_feat1",
+        ),
+        createWorkItemWithPath(
+          "feature",
+          43,
+          "feat2",
+          "/specs/capability-21_test/feature-43_feat2",
+        ),
+      ];
+
+      const tree = await buildTree(workItems, depsWithStatus);
+
+      expect(tree.nodes[0].status).toBe("OPEN");
+    });
+  });
+
+  describe("GIVEN own IN_PROGRESS and all children OPEN", () => {
+    it("WHEN rolling up status THEN parent is IN_PROGRESS", async () => {
       const statusMap: Record<string, string> = {
         "/specs/capability-21_test": "IN_PROGRESS",
         "/specs/capability-21_test/feature-32_feat1": "OPEN",
@@ -395,25 +473,25 @@ describe("buildTree - Status Rollup", () => {
           "capability",
           20,
           "test",
-          "/specs/capability-21_test"
+          "/specs/capability-21_test",
         ),
         createWorkItemWithPath(
           "feature",
           32,
           "feat1",
-          "/specs/capability-21_test/feature-32_feat1"
+          "/specs/capability-21_test/feature-32_feat1",
         ),
         createWorkItemWithPath(
           "feature",
           43,
           "feat2",
-          "/specs/capability-21_test/feature-43_feat2"
+          "/specs/capability-21_test/feature-43_feat2",
         ),
       ];
 
       const tree = await buildTree(workItems, depsWithStatus);
 
-      expect(tree.nodes[0].status).toBe("OPEN");
+      expect(tree.nodes[0].status).toBe("IN_PROGRESS");
     });
   });
 });
