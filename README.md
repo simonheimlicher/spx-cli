@@ -137,6 +137,28 @@ specs/doing/
 
 Numbers use [BSP (Binary Space Partitioning)](https://en.wikipedia.org/wiki/Binary_space_partitioning) for easy insertion: start with 21, 32, 43... and insert between existing items.
 
+## Code Validation
+
+Run code quality checks through `spx validation`:
+
+```bash
+# Full validation pipeline (circular deps → ESLint → TypeScript)
+spx validation all
+
+# Individual checks
+spx validation lint           # ESLint
+spx validation lint --fix     # ESLint with auto-fix
+spx validation typescript     # TypeScript type checking
+spx validation circular       # Circular dependency detection
+spx validation knip           # Unused code detection
+
+# Production scope only (excludes tests/scripts)
+spx validation all --scope production
+spx validation lint --scope production
+```
+
+All commands support `--quiet` for CI and `--json` for machine-readable output.
+
 ## Development
 
 ```bash
@@ -147,7 +169,7 @@ pnpm install
 pnpm test
 
 # Run validation (required before commits)
-pnpm run validate
+pnpm run validate   # or: spx validation all
 
 # Build
 pnpm run build
