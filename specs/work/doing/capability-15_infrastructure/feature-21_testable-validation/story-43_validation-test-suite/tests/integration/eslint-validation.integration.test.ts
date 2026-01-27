@@ -9,12 +9,12 @@
 import { describe, expect, it } from "vitest";
 
 import { getTypeScriptScope, validateESLint, VALIDATION_SCOPES, type ValidationContext } from "@/validation";
-import { FIXTURES, HARNESS_TIMEOUT, withTestEnv } from "@test/harness/test-env";
+import { FIXTURES, HARNESS_TIMEOUT, withValidationEnv } from "@test/harness/with-validation-env";
 
 describe("validateESLint() integration", () => {
   describe("GIVEN fixture with lint errors", () => {
     it("WHEN validating THEN detects ESLint violations", async () => {
-      await withTestEnv({ fixture: FIXTURES.WITH_LINT_ERRORS }, async ({ path }) => {
+      await withValidationEnv({ fixture: FIXTURES.WITH_LINT_ERRORS }, async ({ path }) => {
         // Change to fixture directory
         const originalCwd = process.cwd();
         process.chdir(path);
@@ -47,7 +47,7 @@ describe("validateESLint() integration", () => {
 
   describe("GIVEN clean project", () => {
     it("WHEN validating THEN passes", async () => {
-      await withTestEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
+      await withValidationEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
         const originalCwd = process.cwd();
         process.chdir(path);
 

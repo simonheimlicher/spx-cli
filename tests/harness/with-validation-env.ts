@@ -65,7 +65,7 @@ export interface TestEnvOptions {
  * });
  * ```
  */
-export async function withTestEnv(
+export async function withValidationEnv(
   opts: TestEnvOptions,
   testFn: (context: TestEnvContext) => Promise<void>,
 ): Promise<void> {

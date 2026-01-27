@@ -7,8 +7,8 @@
  * Tests at Level 2+3: Real filesystem + CLI execution.
  */
 import { WORK_ITEM_STATUSES } from "@/types";
-import { countNodes, type FixtureConfig, generateFixtureTree, PRESETS } from "@test/helpers/fixture-generator";
-import { createFixture, type MaterializedFixture, materializeFixture } from "@test/helpers/fixture-writer";
+import { countNodes, type FixtureConfig, generateFixtureTree, PRESETS } from "@test/harness/fixture-generator";
+import { createFixture, type MaterializedFixture, materializeFixture } from "@test/harness/fixture-writer";
 import { execa } from "execa";
 import { resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";

@@ -1,5 +1,5 @@
 import { formatTable } from "@/reporter/table";
-import { buildSimpleTree, buildTreeWithStories } from "@test/helpers/tree-builder";
+import { buildSimpleTree, buildTreeWithStories } from "@test/harness/tree-builder";
 import { describe, expect, it } from "vitest";
 
 describe("formatTable", () => {

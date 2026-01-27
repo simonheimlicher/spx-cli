@@ -8,13 +8,13 @@
  * This file just verifies the harness infrastructure itself.
  */
 
-import { FIXTURES, HARNESS_TIMEOUT, withTestEnv } from "@test/harness/test-env";
+import { FIXTURES, HARNESS_TIMEOUT, withValidationEnv } from "@test/harness/with-validation-env";
 import { existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 describe("Test Harness Verification", () => {
   it("GIVEN clean fixture WHEN using harness THEN creates isolated temp directory", async () => {
-    await withTestEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
+    await withValidationEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
       // Verify temp directory is created and contains fixture
       expect(path).toContain("spx-test-");
       expect(path).toContain("clean-project");
@@ -25,7 +25,7 @@ describe("Test Harness Verification", () => {
   it("GIVEN any fixture WHEN harness completes THEN cleanup happens automatically", async () => {
     let tempPath = "";
 
-    await withTestEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
+    await withValidationEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
       tempPath = path;
       // Temp directory exists during test
       expect(existsSync(path)).toBe(true);

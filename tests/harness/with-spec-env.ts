@@ -53,16 +53,16 @@ export interface TestEnvContext {
  *   // path contains generated fixture
  * });
  */
-export async function withTestEnv<T>(
+export async function withSpecEnv<T>(
   fn: (ctx: TestEnvContext) => Promise<T>,
 ): Promise<T>;
 
-export async function withTestEnv<T>(
+export async function withSpecEnv<T>(
   options: TestEnvOptions,
   fn: (ctx: TestEnvContext) => Promise<T>,
 ): Promise<T>;
 
-export async function withTestEnv<T>(
+export async function withSpecEnv<T>(
   optionsOrFn: TestEnvOptions | ((ctx: TestEnvContext) => Promise<T>),
   maybeFn?: (ctx: TestEnvContext) => Promise<T>,
 ): Promise<T> {

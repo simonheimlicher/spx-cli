@@ -5,8 +5,8 @@
 import { findNextWorkItem } from "@/commands/spec/next";
 import type { WorkItemTree } from "@/tree/types";
 import { WORK_ITEM_KINDS, WORK_ITEM_STATUSES } from "@/types";
+import { buildTreePath, createNode } from "@test/harness/tree-builder";
 import { describe, expect, it } from "vitest";
-import { buildTreePath, createNode } from "../../helpers/tree-builder";
 
 describe("findNextWorkItem", () => {
   /**

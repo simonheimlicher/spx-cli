@@ -5,12 +5,12 @@
  *
  * @see story-32_fixture-writer.story.md
  */
-import { generateFixtureTree, PRESETS, type FixtureConfig } from "@test/helpers/fixture-generator";
+import { generateFixtureTree, PRESETS, type FixtureConfig } from "@test/harness/fixture-generator";
 import {
   createFixture,
   materializeFixture,
   type MaterializedFixture,
-} from "@test/helpers/fixture-writer";
+} from "@test/harness/fixture-writer";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { afterEach, describe, expect, it } from "vitest";
 

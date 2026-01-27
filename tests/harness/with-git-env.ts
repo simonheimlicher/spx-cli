@@ -59,7 +59,7 @@ export interface GitTestEnvContext {
  * Execute test with isolated git environment
  *
  * @example
- * await withGitTestEnv(async ({ path, exec, writeFile }) => {
+ * await withGitEnv(async ({ path, exec, writeFile }) => {
  *   await writeFile("src/math.ts", "export const add = (a, b) => a + b;");
  *   await writeFile("tests/math.test.ts", `
  *     import { expect, it } from "vitest";
@@ -71,7 +71,7 @@ export interface GitTestEnvContext {
  *   expect(result.exitCode).toBe(0);
  * });
  */
-export async function withGitTestEnv<T>(
+export async function withGitEnv<T>(
   fn: (ctx: GitTestEnvContext) => Promise<T>,
 ): Promise<T> {
   const tempDir = join(tmpdir(), `spx-git-test-${randomUUID()}`);
@@ -137,8 +137,8 @@ export async function withGitTestEnv<T>(
         }
         return {
           exitCode: result.exitCode ?? 0,
-          stdout: result.stdout ?? "",
-          stderr: result.stderr ?? "",
+          stdout: typeof result.stdout === "string" ? result.stdout : "",
+          stderr: typeof result.stderr === "string" ? result.stderr : "",
         };
       } catch (error) {
         if (

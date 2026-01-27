@@ -9,12 +9,12 @@
  *
  * @see story-43_e2e-validation.story.md
  */
-import { describe, it, expect, afterEach } from "vitest";
+import { PRESETS, generateFixtureTree } from "@test/harness/fixture-generator";
+import type { MaterializedFixture } from "@test/harness/fixture-writer";
+import { materializeFixture } from "@test/harness/fixture-writer";
 import { execa } from "execa";
 import { resolve } from "node:path";
-import { PRESETS, generateFixtureTree } from "@test/helpers/fixture-generator";
-import { materializeFixture } from "@test/helpers/fixture-writer";
-import type { MaterializedFixture } from "@test/helpers/fixture-writer";
+import { afterEach, describe, expect, it } from "vitest";
 
 // Path to CLI binary (relative to project root)
 const CLI_PATH = resolve(process.cwd(), "bin/spx.js");

@@ -1,9 +1,9 @@
-import { describe, it, expect } from "vitest";
 import { formatTable } from "@/reporter/table";
 import {
   buildSimpleTree,
   buildTreeWithStories,
-} from "../../helpers/tree-builder";
+} from "@test/harness/tree-builder";
+import { describe, expect, it } from "vitest";
 
 describe("formatTable", () => {
   describe("GIVEN tree", () => {

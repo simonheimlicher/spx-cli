@@ -5,7 +5,7 @@
 import type { WorkItemTree } from "@/tree/types";
 import { TreeValidationError, validateTree } from "@/tree/validate";
 import { WORK_ITEM_KINDS, WORK_ITEM_STATUSES } from "@/types";
-import { buildSimpleTree, buildTreeWithFeatures, buildTreeWithStories, createNode } from "@test/helpers/tree-builder";
+import { buildSimpleTree, buildTreeWithFeatures, buildTreeWithStories, createNode } from "@test/harness/tree-builder";
 import { describe, expect, it } from "vitest";
 
 describe("validateTree", () => {

@@ -1,11 +1,11 @@
-import { describe, it, expect } from "vitest";
 import { formatMarkdown } from "@/reporter/markdown";
 import {
   buildSimpleTree,
   buildTreeWithFeatures,
-  buildTreeWithStories,
   buildTreeWithStatus,
-} from "../../helpers/tree-builder";
+  buildTreeWithStories,
+} from "@test/harness/tree-builder";
+import { describe, expect, it } from "vitest";
 
 describe("formatMarkdown", () => {
   describe("GIVEN tree", () => {

@@ -2,7 +2,7 @@
  * Factory functions for generating test work items
  */
 import type { WorkItem, WorkItemKind } from "@/types";
-import { DEFAULT_BSP_NUMBER, MAX_BSP_NUMBER, MIN_BSP_NUMBER } from "./constants";
+import { DEFAULT_BSP_NUMBER, MAX_BSP_NUMBER, MIN_BSP_NUMBER, WORK_ITEM_KINDS } from "./constants";
 
 /**
  * Generate a random BSP number in the valid range [10, 99]
@@ -42,7 +42,7 @@ export function createWorkItemName(params: {
   const slug = params.slug ?? `test-${Math.random().toString(36).slice(2, 8)}`;
 
   // Reverse mapping: capabilities add 1 to get directory number
-  const directoryNumber = params.kind === "capability" ? number + 1 : number;
+  const directoryNumber = params.kind === WORK_ITEM_KINDS[0] ? number + 1 : number;
 
   return `${params.kind}-${directoryNumber}_${slug}`;
 }
@@ -92,8 +92,7 @@ export function createWorkItem(
  * ```
  */
 export function createRandomWorkItem(params?: Partial<WorkItem>): WorkItem {
-  const kinds: WorkItemKind[] = ["capability", "feature", "story"];
-  const kind = params?.kind ?? kinds[Math.floor(Math.random() * kinds.length)];
+  const kind = params?.kind ?? WORK_ITEM_KINDS[Math.floor(Math.random() * WORK_ITEM_KINDS.length)];
 
   return createWorkItem({
     kind,

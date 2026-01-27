@@ -3,7 +3,7 @@
  * Story: story-65_test-factories
  */
 import { WORK_ITEM_KINDS } from "@/types";
-import { createRandomWorkItem, createWorkItem, createWorkItemName } from "@test/fixtures/factories";
+import { createRandomWorkItem, createWorkItem, createWorkItemName } from "@test/harness/factories";
 import { describe, expect, it } from "vitest";
 
 describe("createWorkItemName", () => {

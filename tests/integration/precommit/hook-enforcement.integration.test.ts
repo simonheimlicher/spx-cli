@@ -8,8 +8,8 @@
  *
  * @see specs/work/doing/capability-15_infrastructure/feature-65_precommit-test-enforcement/precommit-test-enforcement.feature.md
  */
+import { withGitEnv } from "@test/harness/with-git-env";
 import { describe, expect, it } from "vitest";
-import { withGitTestEnv } from "../../helpers/with-git-test-env.js";
 
 /** Timeout for git+lefthook+vitest integration tests */
 const GIT_INTEGRATION_TIMEOUT = 30_000;
@@ -20,7 +20,7 @@ describe("Feature: Pre-Commit Test Enforcement", () => {
       "GIVEN staged changes with failing test WHEN committing THEN commit is blocked",
       { timeout: GIT_INTEGRATION_TIMEOUT },
       async () => {
-        await withGitTestEnv(async ({ exec, writeFile }) => {
+        await withGitEnv(async ({ exec, writeFile }) => {
           // Given: Source file and failing test
           await writeFile(
             "src/math.ts",
@@ -58,7 +58,7 @@ it("intentionally fails to test pre-commit blocking", () => {
     it("GIVEN staged changes with passing test WHEN committing THEN commit succeeds", {
       timeout: GIT_INTEGRATION_TIMEOUT,
     }, async () => {
-      await withGitTestEnv(async ({ exec, writeFile }) => {
+      await withGitEnv(async ({ exec, writeFile }) => {
         // Given: Source file and passing test
         await writeFile(
           "src/math.ts",
@@ -97,7 +97,7 @@ it("correctly tests addition", () => {
     it("GIVEN only non-test files staged WHEN committing THEN commit succeeds without running tests", {
       timeout: GIT_INTEGRATION_TIMEOUT,
     }, async () => {
-      await withGitTestEnv(async ({ exec, writeFile }) => {
+      await withGitEnv(async ({ exec, writeFile }) => {
         // Given: Only a README file (no ts files that would trigger tests)
         await writeFile("README.md", "# Test Project\n\nThis is a test.\n");
 

@@ -9,12 +9,12 @@
 import { describe, expect, it } from "vitest";
 
 import { getTypeScriptScope, validateTypeScript, VALIDATION_SCOPES } from "@/validation";
-import { FIXTURES, HARNESS_TIMEOUT, withTestEnv } from "@test/harness/test-env";
+import { FIXTURES, HARNESS_TIMEOUT, withValidationEnv } from "@test/harness/with-validation-env";
 
 describe("validateTypeScript() integration", () => {
   describe("GIVEN fixture with type errors", () => {
     it("WHEN validating THEN detects TypeScript errors", async () => {
-      await withTestEnv({ fixture: FIXTURES.WITH_TYPE_ERRORS }, async ({ path }) => {
+      await withValidationEnv({ fixture: FIXTURES.WITH_TYPE_ERRORS }, async ({ path }) => {
         // Change to fixture directory so tsc uses the fixture's tsconfig.json
         const originalCwd = process.cwd();
         process.chdir(path);
@@ -43,7 +43,7 @@ describe("validateTypeScript() integration", () => {
 
   describe("GIVEN clean project", () => {
     it("WHEN validating THEN passes", async () => {
-      await withTestEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
+      await withValidationEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
         const originalCwd = process.cwd();
         process.chdir(path);
 

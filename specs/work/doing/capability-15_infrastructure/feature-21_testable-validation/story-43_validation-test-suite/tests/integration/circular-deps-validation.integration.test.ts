@@ -9,12 +9,12 @@
 import { describe, expect, it } from "vitest";
 
 import { getTypeScriptScope, validateCircularDependencies, VALIDATION_SCOPES } from "@/validation";
-import { FIXTURES, HARNESS_TIMEOUT, withTestEnv } from "@test/harness/test-env";
+import { FIXTURES, HARNESS_TIMEOUT, withValidationEnv } from "@test/harness/with-validation-env";
 
 describe("validateCircularDependencies() integration", () => {
   describe("GIVEN fixture with circular dependencies", () => {
     it("WHEN validating THEN detects circular imports", async () => {
-      await withTestEnv({ fixture: FIXTURES.WITH_CIRCULAR_DEPS }, async ({ path }) => {
+      await withValidationEnv({ fixture: FIXTURES.WITH_CIRCULAR_DEPS }, async ({ path }) => {
         // Change to fixture directory for madge analysis
         const originalCwd = process.cwd();
         process.chdir(path);
@@ -43,7 +43,7 @@ describe("validateCircularDependencies() integration", () => {
 
   describe("GIVEN clean project", () => {
     it("WHEN validating THEN passes with no circular dependencies", async () => {
-      await withTestEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
+      await withValidationEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
         const originalCwd = process.cwd();
         process.chdir(path);
 

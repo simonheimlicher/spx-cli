@@ -1,14 +1,14 @@
 import { existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { FIXTURES, HARNESS_TIMEOUT, withTestEnv } from "./test-env";
+import { FIXTURES, HARNESS_TIMEOUT, withValidationEnv } from "./with-validation-env";
 
-describe("withTestEnv()", () => {
+describe("withValidationEnv()", () => {
   it(
     "creates temp directory with clean project fixture",
     async () => {
       let capturedPath = "";
 
-      await withTestEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
+      await withValidationEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
         capturedPath = path;
 
         // Verify temp directory exists during test
@@ -30,7 +30,7 @@ describe("withTestEnv()", () => {
   it(
     "creates temp directory with type errors fixture",
     async () => {
-      await withTestEnv({ fixture: FIXTURES.WITH_TYPE_ERRORS }, async ({ path }) => {
+      await withValidationEnv({ fixture: FIXTURES.WITH_TYPE_ERRORS }, async ({ path }) => {
         expect(existsSync(path)).toBe(true);
         expect(path).toContain("with-type-errors");
       });
@@ -41,7 +41,7 @@ describe("withTestEnv()", () => {
   it(
     "creates temp directory with lint errors fixture",
     async () => {
-      await withTestEnv({ fixture: FIXTURES.WITH_LINT_ERRORS }, async ({ path }) => {
+      await withValidationEnv({ fixture: FIXTURES.WITH_LINT_ERRORS }, async ({ path }) => {
         expect(existsSync(path)).toBe(true);
         expect(path).toContain("with-lint-errors");
       });
@@ -52,7 +52,7 @@ describe("withTestEnv()", () => {
   it(
     "creates temp directory with circular deps fixture",
     async () => {
-      await withTestEnv({ fixture: FIXTURES.WITH_CIRCULAR_DEPS }, async ({ path }) => {
+      await withValidationEnv({ fixture: FIXTURES.WITH_CIRCULAR_DEPS }, async ({ path }) => {
         expect(existsSync(path)).toBe(true);
         expect(path).toContain("with-circular-deps");
       });
@@ -73,7 +73,7 @@ describe("withTestEnv()", () => {
       let capturedPath = "";
 
       await expect(
-        withTestEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
+        withValidationEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
           capturedPath = path;
           // Verify directory exists during callback
           expect(existsSync(path)).toBe(true);
@@ -91,7 +91,7 @@ describe("withTestEnv()", () => {
     "propagates error when fixture directory doesn't exist",
     async () => {
       await expect(
-        withTestEnv(
+        withValidationEnv(
           { fixture: "nonexistent-fixture" as typeof FIXTURES.CLEAN_PROJECT },
           async () => {},
         ),
@@ -103,7 +103,7 @@ describe("withTestEnv()", () => {
   it(
     "copies all fixture files to temp directory",
     async () => {
-      await withTestEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
+      await withValidationEnv({ fixture: FIXTURES.CLEAN_PROJECT }, async ({ path }) => {
         const { join } = await import("node:path");
         // Verify key files were copied
         expect(existsSync(join(path, "package.json"))).toBe(true);

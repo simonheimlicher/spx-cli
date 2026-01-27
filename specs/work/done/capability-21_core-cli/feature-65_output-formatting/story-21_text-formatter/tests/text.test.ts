@@ -4,7 +4,7 @@ import {
   buildTreeWithFeatures,
   buildTreeWithStatus,
   buildTreeWithStories,
-} from "@test/helpers/tree-builder";
+} from "@test/harness/tree-builder";
 import { describe, expect, it } from "vitest";
 
 describe("formatText", () => {

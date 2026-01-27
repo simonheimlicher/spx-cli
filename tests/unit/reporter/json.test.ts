@@ -1,8 +1,8 @@
 import { DEFAULT_CONFIG } from "@/config/defaults";
 import { formatJSON } from "@/reporter/json";
 import { WORK_ITEM_KINDS } from "@/types";
+import { buildSimpleTree, buildTreeWithMixedStatus, buildTreeWithStories } from "@test/harness/tree-builder";
 import { describe, expect, it } from "vitest";
-import { buildSimpleTree, buildTreeWithMixedStatus, buildTreeWithStories } from "../../helpers/tree-builder";
 
 describe("formatJSON", () => {
   describe("GIVEN tree", () => {

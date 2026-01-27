@@ -13,7 +13,7 @@ import {
   type FixtureNode,
   generateFixtureTree,
   PRESETS,
-} from "@test/helpers/fixture-generator";
+} from "@test/harness/fixture-generator";
 import { describe, expect, it } from "vitest";
 
 describe("generateFixtureTree", () => {
